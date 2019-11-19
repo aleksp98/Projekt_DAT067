@@ -21,10 +21,10 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
                                     <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/counter">Log in</NavLink>
                                 </NavItem>
                                 <NavItem>
-                                    <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
+                                    <NavLink tag={Link} className="text-dark" to="/fetch-data">Register</NavLink>
                                 </NavItem>
                             </ul>
                         </Collapse>
@@ -33,7 +33,7 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
             </header>
         );
     }
-
+   
     private toggle = () => {
         this.setState({
             isOpen: !this.state.isOpen
