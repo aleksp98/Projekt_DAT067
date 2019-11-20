@@ -23,7 +23,7 @@ render(){
 
       <header className="header">
         <div className="headerController">
-          <a href="#" value="Register" onClick={() => {this.setState({ visible: !this.state.visible, type: "Register" });}}>Register</a>
+          <a href="#" value="Register" onClick={() => {this.setState({ visible: !this.state.visible, type: "Register Test(Tabort sen)" });}}>Register</a>
           <a href="#" value="Login" onClick={() => {this.setState({ visible: !this.state.visible, type: "Login" });}}>Login</a>
         </div>
 
