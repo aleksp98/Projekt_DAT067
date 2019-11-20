@@ -18,7 +18,7 @@ class App extends Component {
 render(){
   return (
     <section>
-<h1>lägger till detta bara för att testa, ta bort det</h1>
+<h1>lägger till detta bara för att testa, ta bort det bla bla bla</h1>
       {!this.state.visible ? <Form form={this.state.type} /> : null}
 
       <header className="header">
