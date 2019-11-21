@@ -187,6 +187,7 @@ footer {
   background-color: transparent;
   border: none;
   box-shadow: 0 2px 2px -2px grey;
+  text-align: center;
 }
 
 .cover form a {
@@ -237,4 +238,32 @@ footer {
 
 .RegisterForm div:first-of-type input {
   width: 50% !important; 
+}
+.eyeIcon {
+  position: absolute;
+  right: 15%;
+  
+  cursor: pointer;
+}
+.errorMsg {
+  color: red;
+  position: absolute;
+  right: 18%;
+}
+
+.inputDesignFirstname{
+  position: absolute;
+  }
+
+  .inputDesignLastname{
+    position: absolute;
+  }
+  .inputDesignEmail{
+    position: absolute;
+  }
+    .inputDesignPassword{
+      position: absolute;
+  }
+  .inputDesignConfirmPassword{
+    position: absolute;
 }
