@@ -4,6 +4,7 @@
 aleksp98 - Aleksander Pantić\
 Makalunga - Johan Blom\
 Orgardj - Jonathan Örgård\
+jonte134 - Jonathan Edfeldt\
 Feel free to add more names so we know who everyone is on git :)
 
 ### Scrumboard
