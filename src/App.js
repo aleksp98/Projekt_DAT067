@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
 import './Script/JS';
-import ALink from './Layout/ALink';
+//import ALink from './Layout/ALink';
 import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
+import ImageSlider from './Components/ImageSlider';
+
 
 class App extends Component {
 
@@ -16,9 +18,11 @@ class App extends Component {
   /* Fråga hur man passerar en onclick via en jsx component */
   
 render(){
+
+
   return (
     <section>
-<h1>lägger till detta bara för att testa, ta bort det bla bla bla</h1>
+      
       {!this.state.visible ? <Form form={this.state.type} /> : null}
 
       <header className="header">
@@ -37,7 +41,10 @@ render(){
 
       </header>
 
-      <Section id="Start" value="Start" />
+      <Section id="Start" value="Start">
+        <ImageSlider />
+        
+      </Section>
 
       <Section id="Translation" value="Translation" />
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import $ from "jquery";
+//import $ from "jquery";
 
 class button extends React.Component {
     onClick = (e) => {

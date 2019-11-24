@@ -6,35 +6,62 @@ import Recaptcha from 'react-recaptcha';
 
 /*
 
-                 <Recaptcha
-    sitekey="xxxxxxxxxxxxxxxxxxxx"
-    render="explicit"
-    onloadCallback={callback}
-  />
+               
 
 */
 
 
 export default class form extends React.Component {
 
-    
-    render() {
+    constructor(props){
+        super(props);
 
-        
-        alert(this.props.form);
+        this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
+        this.verifyCallback = this.verifyCallback.bind(this);
+
+        this.state = {
+            isVerified: false
+        }
+    }
+
+    recaptchaLoaded(){
+        console.log("Capcha loaded successfully!");
+    }
+
+    handleRegister(e){
+        if(this.state.isVerified){
+            alert("You have registred");
+        }
+        else{
+            e.preventDefault(); //Hindrar att formuläret submitas   JE
+            alert("Please verify that you are a human");
+        }
+    }
+
+    verifyCallback(response){
+        if(response){
+            this.setState({
+                isVerified: true
+            })
+        }
+    }
+
+    render() {    
+        //alert(this.props.form);
         
         if(this.props.form === "Login"){
             return (
                 
                 <div className="cover">
-                    <form method="post">
+                    <form>
                         <a href="true">X</a>
                         <h3>Please {this.props.form}</h3>
-                        <div>
+                        <div className="inputDiv">
                             <img src={UserIcon} alt="UserIcon" />
                             <input type="email" name="email" placeholder="E-mail" required />
                         </div>
-                        <div>
+                        <div className="inputDiv">
                             <img src={PasswordIcon} alt="PasswordIcon" />
                             <input type="password" name="password" placeholder="Password" required />
                         </div>
@@ -50,23 +77,29 @@ export default class form extends React.Component {
         else if(this.props.form === "Register"){
             return (
                 <div className="cover">
-                    <form method="post" className="RegisterForm">
+                    <form className="RegisterForm">
                         <a href="true">X</a>
                         <h3>Please {this.props.form}</h3>
-                        <div>
+                        <div className="inputDiv"> 
                             <input type="text" name="firstname" placeholder="Lastname" required />
                             <input type="text" name="surname" placeholder="Firstname" required />
                         </div>
-                        <div>
+                        <div className="inputDiv">
                             <input type="email" name="email" placeholder="E-mail" required />
                         </div>
-                        <div>
+                        <div className="inputDiv">
                             <input type="password" name="password" placeholder="Password" required />
                         </div>
                         
-                        <button>Login</button>
+                        <button onClick={this.handleRegister}>Login</button>
 
-       
+                        <Recaptcha 
+                            className="reCapcha"
+                            sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                            render="explicit"
+                            onloadCallback={this.recaptchaLoaded}
+                            verifyCallback={this.verifyCallback}
+                        />
 
                         <footer>
                             <ALink href="true" value="Already have an account? Sign in" />
