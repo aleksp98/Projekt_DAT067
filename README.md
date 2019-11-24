@@ -3,7 +3,7 @@
 #### Team members
 aleksp98 - Aleksander Pantić\
 Makalunga - Johan Blom\
-Orgardj - Jonathan Örgård
+Orgardj - Jonathan Örgård\
 Feel free to add more names so we know who everyone is on git :)
 
 ### Scrumboard
