@@ -4,6 +4,7 @@
 aleksp98 - Aleksander Pantić\
 Makalunga - Johan Blom\
 Orgardj - Jonathan Örgård
+Feel free to add more names so we know who everyone is on git :)
 
 ### Scrumboard
 https://trello.com/b/F2fMJDab/datamanagment
