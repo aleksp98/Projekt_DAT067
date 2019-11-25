@@ -5,6 +5,11 @@ import PasswordIcon from '../Image/password.ico';
 import Recaptcha from 'react-recaptcha';
 import EyeIcon from '../Image/icon-eye-7.jpg';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+
+
+
 
 
 
@@ -12,6 +17,7 @@ export default class form extends React.Component {
 
     
     
+
         constructor(props) {
             super(props);
 
@@ -22,13 +28,17 @@ export default class form extends React.Component {
             this.state = {
               fields: {},
               errors: {},
-              isVerified: false
+              isVerified: false,
+              snackbaropen: false,
+              snackbarmsg: ''
+
             }
       
             this.handleChange = this.handleChange.bind(this);
             this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
       
           };
+
 
           recaptchaLoaded(){
             console.log("Capcha loaded successfully!");
@@ -52,6 +62,10 @@ export default class form extends React.Component {
             }
         }
     
+
+          snackbarClose = (event) =>{
+              this.setState({snackbaropen:false});
+          }
       
           handleChange(e) {
             let fields = this.state.fields;
@@ -69,8 +83,7 @@ export default class form extends React.Component {
                     fields["email"] = "";
                     fields["password"] = "";
                     fields["ConfirmPassword"] = "";
-                    this.setState({fields:fields});
-                    alert("Form submitted");
+                    this.setState({fields:fields, snackbaropen:true, snackbarmsg:"Registration successful!"});
                 }
           
               }
@@ -138,8 +151,6 @@ export default class form extends React.Component {
         
         const {isPasswordShown} = this.state;
         
-        //alert(this.props.form);
-        
         if(this.props.form === "Login"){
             return (
                 
@@ -179,6 +190,24 @@ export default class form extends React.Component {
         else if(this.props.form === "Register"){
             return (
                 <div className="cover">
+                    <Snackbar 
+                        anchorOrigin={{vertical:'bottom',horizontal:'center'}}
+                        open = {this.state.snackbaropen}
+                        autoHideDuration = {3000}
+                        onClose={this.snackbarClose}
+                        message = {<span id="message-id">{this.state.snackbarmsg}</span>}
+                        action={[
+                            <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.snackbarClose}
+                            >
+                                x
+                            </IconButton>
+                        ]}
+                    />
+                    
                     <form method="post" name="userRegistrationForm"  onSubmit= {this.submituserRegistrationForm}>
                         <a href="true">X</a>
                         <h3>{this.props.form}</h3>

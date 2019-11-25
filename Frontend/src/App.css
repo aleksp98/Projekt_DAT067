@@ -137,6 +137,7 @@ footer {
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+
   overflow-y: scroll;
   box-shadow: 0px 2px 5px 0px black;
 }
