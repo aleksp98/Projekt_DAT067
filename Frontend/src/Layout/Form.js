@@ -4,14 +4,35 @@ import UserIcon from '../Image/user-512.png';
 import PasswordIcon from '../Image/password.ico';
 import Recaptcha from 'react-recaptcha';
 import EyeIcon from '../Image/icon-eye-7.jpg';
+<<<<<<< HEAD
+=======
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+>>>>>>> ab94241... Registration Snackbar, with materialUI
 
 
 
 
+<<<<<<< HEAD
+=======
+
+/*
+
+                 <Recaptcha
+    sitekey="xxxxxxxxxxxxxxxxxxxx"
+    render="explicit"
+    onloadCallback={callback}
+  />
+
+*/
+
+
+>>>>>>> ab94241... Registration Snackbar, with materialUI
 export default class form extends React.Component {
 
     
     
+<<<<<<< HEAD
         constructor(props) {
             super(props);
 
@@ -23,6 +44,15 @@ export default class form extends React.Component {
               fields: {},
               errors: {},
               isVerified: false
+=======
+        constructor() {
+            super();
+            this.state = {
+              fields: {},
+              errors: {},
+              snackbaropen: false,
+              snackbarmsg: ''
+>>>>>>> ab94241... Registration Snackbar, with materialUI
             }
       
             this.handleChange = this.handleChange.bind(this);
@@ -30,6 +60,7 @@ export default class form extends React.Component {
       
           };
 
+<<<<<<< HEAD
           recaptchaLoaded(){
             console.log("Capcha loaded successfully!");
         }
@@ -52,6 +83,11 @@ export default class form extends React.Component {
             }
         }
     
+=======
+          snackbarClose = (event) =>{
+              this.setState({snackbaropen:false});
+          }
+>>>>>>> ab94241... Registration Snackbar, with materialUI
       
           handleChange(e) {
             let fields = this.state.fields;
@@ -69,8 +105,12 @@ export default class form extends React.Component {
                     fields["email"] = "";
                     fields["password"] = "";
                     fields["ConfirmPassword"] = "";
+<<<<<<< HEAD
                     this.setState({fields:fields});
                     alert("Form submitted");
+=======
+                    this.setState({fields:fields, snackbaropen:true, snackbarmsg:"Registration successful!"});
+>>>>>>> ab94241... Registration Snackbar, with materialUI
                 }
           
               }
@@ -138,12 +178,19 @@ export default class form extends React.Component {
         
         const {isPasswordShown} = this.state;
         
+<<<<<<< HEAD
         //alert(this.props.form);
         
+=======
+>>>>>>> ab94241... Registration Snackbar, with materialUI
         if(this.props.form === "Login"){
             return (
                 
                 <div className="cover">
+<<<<<<< HEAD
+=======
+
+>>>>>>> ab94241... Registration Snackbar, with materialUI
                     <form method="post" >
                         <a href="true">X</a>
                         <h3>Please {this.props.form}</h3>
@@ -179,6 +226,27 @@ export default class form extends React.Component {
         else if(this.props.form === "Register"){
             return (
                 <div className="cover">
+<<<<<<< HEAD
+=======
+                    <Snackbar 
+                        anchorOrigin={{vertical:'bottom',horizontal:'center'}}
+                        open = {this.state.snackbaropen}
+                        autoHideDuration = {3000}
+                        onClose={this.snackbarClose}
+                        message = {<span id="message-id">{this.state.snackbarmsg}</span>}
+                        action={[
+                            <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.snackbarClose}
+                            >
+                                x
+                            </IconButton>
+                        ]}
+                    />
+                    
+>>>>>>> ab94241... Registration Snackbar, with materialUI
                     <form method="post" name="userRegistrationForm"  onSubmit= {this.submituserRegistrationForm}>
                         <a href="true">X</a>
                         <h3>{this.props.form}</h3>
@@ -232,6 +300,7 @@ export default class form extends React.Component {
                         <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
 
                         </div>
+<<<<<<< HEAD
                         <button onClick={this.handleRegister}>Create account</button>
 
                         <Recaptcha 
@@ -242,6 +311,11 @@ export default class form extends React.Component {
                             verifyCallback={this.verifyCallback}
                         />
 
+=======
+                        <button>Create account</button>
+
+       
+>>>>>>> ab94241... Registration Snackbar, with materialUI
 
                         <footer>
                             <ALink href="true" value="Already have an account? Sign in" />
