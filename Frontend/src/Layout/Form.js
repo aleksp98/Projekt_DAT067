@@ -8,32 +8,50 @@ import EyeIcon from '../Image/icon-eye-7.jpg';
 
 
 
-/*
-
-                 <Recaptcha
-    sitekey="xxxxxxxxxxxxxxxxxxxx"
-    render="explicit"
-    onloadCallback={callback}
-  />
-
-*/
-
-
 export default class form extends React.Component {
 
     
     
-        constructor() {
-            super();
+        constructor(props) {
+            super(props);
+
+            this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
+        this.verifyCallback = this.verifyCallback.bind(this);
+
             this.state = {
               fields: {},
-              errors: {}
+              errors: {},
+              isVerified: false
             }
       
             this.handleChange = this.handleChange.bind(this);
             this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
       
           };
+
+          recaptchaLoaded(){
+            console.log("Capcha loaded successfully!");
+        }
+
+        handleRegister(e){
+            if(this.state.isVerified){
+                alert("You have registred");
+            }
+            else{
+                e.preventDefault(); //Hindrar att formuläret submitas   JE
+                alert("Please verify that you are a human");
+            }
+        }
+    
+        verifyCallback(response){
+            if(response){
+                this.setState({
+                    isVerified: true
+                })
+            }
+        }
+    
       
           handleChange(e) {
             let fields = this.state.fields;
@@ -214,9 +232,16 @@ export default class form extends React.Component {
                         <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
 
                         </div>
-                        <button>Create account</button>
+                        <button onClick={this.handleRegister}>Create account</button>
 
-       
+                        <Recaptcha 
+                            className="reCapcha"
+                            sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                            render="explicit"
+                            onloadCallback={this.recaptchaLoaded}
+                            verifyCallback={this.verifyCallback}
+                        />
+
 
                         <footer>
                             <ALink href="true" value="Already have an account? Sign in" />
