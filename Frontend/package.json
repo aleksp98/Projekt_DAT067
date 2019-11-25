@@ -3,11 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-<<<<<<< HEAD
-=======
     "@material-ui/core": "^4.7.0",
     "@material-ui/icons": "^4.5.1",
->>>>>>> ab94241... Registration Snackbar, with materialUI
     "jquery": "^3.4.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
