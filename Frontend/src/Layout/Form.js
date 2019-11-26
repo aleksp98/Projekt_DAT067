@@ -5,89 +5,120 @@ import PasswordIcon from '../Image/password.ico';
 import Recaptcha from 'react-recaptcha';
 import EyeIcon from '../Image/icon-eye-7.jpg';
 
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
 
 
 
-/*
 
-                 <Recaptcha
-    sitekey="xxxxxxxxxxxxxxxxxxxx"
-    render="explicit"
-    onloadCallback={callback}
-  />
-
-*/
 
 
 export default class form extends React.Component {
 
+    
+    
+
+        constructor(props) {
+            super(props);
+
+            this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
+        this.handleRegister = this.handleRegister.bind(this);
+        this.verifyCallback = this.verifyCallback.bind(this);
+
+            this.state = {
+              fields: {},
+              errors: {},
+              isVerified: false,
+              snackbaropen: false,
+              snackbarmsg: ''
+
+            }
+      
+            this.handleChange = this.handleChange.bind(this);
+            this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
+      
+          };
 
 
-    constructor() {
-        super();
-        this.state = {
-            fields: {},
-            errors: {}
+          recaptchaLoaded(){
+            console.log("Capcha loaded successfully!");
         }
 
-        this.handleChange = this.handleChange.bind(this);
-        this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
-
-    };
-
-    handleChange(e) {
-        let fields = this.state.fields;
-        fields[e.target.name] = e.target.value;
-        this.setState({
-            fields
-        });
-    }
-    submituserRegistrationForm(e) {
-        e.preventDefault();
-        if (this.validateForm()) {
-            let user = {};
-            user["email"] = this.state.fields.email;
-            user["password"] = this.state.fields.password;
-
-            let fields = {};
-            fields["firstname"] = "";
-            fields["lastname"] = "";
-            fields["email"] = "";
-            fields["password"] = "";
-            fields["ConfirmPassword"] = "";
-            this.setState({ fields: fields });
-
-            const url = 'https://localhost:5001/api/User/SaveUser';
-            const headers = new Headers();
-            headers.append('Content-Type', 'application/json');
-            const requestOptions = {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(user)
-            };
-            const request = new Request(url, requestOptions);
-            fetch(request).then(alert("Form submitted"));
+        handleRegister(e){
+            if(this.state.isVerified){
+                alert("You have registred");
+            }
+            else{
+                e.preventDefault(); //Hindrar att formuläret submitas   JE
+                alert("Please verify that you are a human");
+            }
         }
-
-    }
-
-    validateForm() {
-        let fields = this.state.fields;
-        let errors = {};
-        let formIsValid = true;
-
-
-
-        if (!fields["password"].match(/(?=.{8,})/)) {
-            formIsValid = false;
-            errors["password"] = "The password must be at least 8 characters";
-
+    
+        verifyCallback(response){
+            if(response){
+                this.setState({
+                    isVerified: true
+                })
+            }
         }
+    
 
-        else if (!fields["password"].match(/(?=.*[a-z])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one lowercase";
+          snackbarClose = (event) =>{
+              this.setState({snackbaropen:false});
+          }
+      
+          handleChange(e) {
+            let fields = this.state.fields;
+            fields[e.target.name] = e.target.value;
+            this.setState({
+              fields
+            });
         }
+            submituserRegistrationForm(e) {
+                e.preventDefault();
+                if (this.validateForm()) {
+                    let user = {};
+                    user["email"] = this.state.fields.email;
+                    user["password"] = this.state.fields.password;
+
+                    let fields = {};
+                    fields["firstname"] = "";
+                    fields["lastname"] = "";
+                    fields["email"] = "";
+                    fields["password"] = "";
+                    fields["ConfirmPassword"] = "";
+
+                    const url = 'https://localhost:5001/api/User/SaveUser';
+                    const headers = new Headers();
+                    headers.append('Content-Type', 'application/json');
+                    const requestOptions = {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify(user)
+                    };
+                    const request = new Request(url, requestOptions);
+                    fetch(request).then(this.setState({ fields: fields, snackbaropen: true, snackbarmsg: "Registration successful!" }));
+                }
+          
+              }
+            
+              validateForm() {
+                let fields = this.state.fields;
+                let errors = {};
+                let formIsValid = true;
+                
+                
+            
+                  if(!fields["password"].match(/(?=.{8,})/)) {
+                      formIsValid = false;
+                      errors["password"] = "The password must be at least 8 characters";
+                  
+                  }
+                  
+                  else if (!fields["password"].match(/(?=.*[a-z])/)) {
+                    formIsValid = false;
+                    errors["password"] = "Must have at least one lowercase";
+                  }
 
         else if (!fields["password"].match(/(?=.*[A-Z])/)) {
             formIsValid = false;
@@ -131,12 +162,10 @@ export default class form extends React.Component {
         this.setState({ isPasswordShown: !isPasswordShown });
     }
     render() {
-
-        const { isPasswordShown } = this.state;
-
-        //alert(this.props.form);
-
-        if (this.props.form === "Login") {
+        
+        const {isPasswordShown} = this.state;
+        
+        if(this.props.form === "Login"){
             return (
                 <div className="cover">
                     <form method="post">
@@ -175,7 +204,25 @@ export default class form extends React.Component {
         else if (this.props.form === "Register") {
             return (
                 <div className="cover">
-                    <form method="post" name="userRegistrationForm" onSubmit={this.submituserRegistrationForm}>
+                    <Snackbar 
+                        anchorOrigin={{vertical:'bottom',horizontal:'center'}}
+                        open = {this.state.snackbaropen}
+                        autoHideDuration = {3000}
+                        onClose={this.snackbarClose}
+                        message = {<span id="message-id">{this.state.snackbarmsg}</span>}
+                        action={[
+                            <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.snackbarClose}
+                            >
+                                x
+                            </IconButton>
+                        ]}
+                    />
+                    
+                    <form method="post" name="userRegistrationForm"  onSubmit= {this.submituserRegistrationForm}>
                         <a href="true">X</a>
                         <h3>{this.props.form}</h3>
 
@@ -227,7 +274,16 @@ export default class form extends React.Component {
                             <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
 
                         </div>
-                        <button>Create account</button>
+                        <button onClick={this.handleRegister}>Create account</button>
+
+                        <Recaptcha 
+                            className="reCapcha"
+                            sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                            render="explicit"
+                            onloadCallback={this.recaptchaLoaded}
+                            verifyCallback={this.verifyCallback}
+                        />
+
 
                         <footer>
                             <ALink href="true" value="Already have an account? Sign in" />
