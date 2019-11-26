@@ -1,10 +1,10 @@
-﻿using NGCI.Model;
+﻿using API.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NGCI.Service
+namespace API.Service
 {
     public interface IUserService
     {

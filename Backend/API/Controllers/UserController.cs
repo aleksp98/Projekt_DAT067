@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NGCI.Model;
-using NGCI.Service;
+using API.Model;
+using API.Service;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace NGCI.Controllers
+namespace API.Controllers
 {
     [Route("api/[controller]")]
     public class UserController : Controller

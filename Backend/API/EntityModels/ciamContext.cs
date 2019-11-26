@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace NGCI.EntityModels
+namespace API.EntityModels
 {
     public partial class ciamContext : DbContext
     {
@@ -43,6 +43,18 @@ namespace NGCI.EntityModels
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasColumnName("password")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.First_name)
+                    .IsRequired()
+                    .HasColumnName("first_name")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Last_name)
+                    .IsRequired()
+                    .HasColumnName("last_name")
                     .HasMaxLength(255)
                     .IsUnicode(false);
             });

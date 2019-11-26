@@ -15,110 +15,114 @@ import IconButton from '@material-ui/core/IconButton';
 
 export default class form extends React.Component {
 
-    
-    
 
-        constructor(props) {
-            super(props);
 
-            this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
+
+    constructor(props) {
+        super(props);
+
+        this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
         this.verifyCallback = this.verifyCallback.bind(this);
 
-            this.state = {
-              fields: {},
-              errors: {},
-              isVerified: false,
-              snackbaropen: false,
-              snackbarmsg: ''
+        this.state = {
+            fields: {},
+            errors: {},
+            isVerified: false,
+            snackbaropen: false,
+            snackbarmsg: ''
 
-            }
-      
-            this.handleChange = this.handleChange.bind(this);
-            this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
-      
-          };
-
-
-          recaptchaLoaded(){
-            console.log("Capcha loaded successfully!");
         }
 
-        handleRegister(e){
-            if(this.state.isVerified){
-                alert("You have registred");
-            }
-            else{
-                e.preventDefault(); //Hindrar att formuläret submitas   JE
-                alert("Please verify that you are a human");
-            }
-        }
-    
-        verifyCallback(response){
-            if(response){
-                this.setState({
-                    isVerified: true
-                })
-            }
-        }
-    
+        this.handleChange = this.handleChange.bind(this);
+        this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
 
-          snackbarClose = (event) =>{
-              this.setState({snackbaropen:false});
-          }
-      
-          handleChange(e) {
-            let fields = this.state.fields;
-            fields[e.target.name] = e.target.value;
+    };
+
+
+    recaptchaLoaded() {
+        console.log("Capcha loaded successfully!");
+    }
+
+    handleRegister(e) {
+        if (this.state.isVerified) {
+            alert("You have registred");
+        }
+        else {
+            e.preventDefault(); //Hindrar att formuläret submitas   JE
+            alert("Please verify that you are a human");
+        }
+    }
+
+    verifyCallback(response) {
+        if (response) {
             this.setState({
-              fields
-            });
+                isVerified: true
+            })
         }
-            submituserRegistrationForm(e) {
-                e.preventDefault();
-                if (this.validateForm()) {
-                    let user = {};
-                    user["email"] = this.state.fields.email;
-                    user["password"] = this.state.fields.password;
+    }
 
-                    let fields = {};
-                    fields["firstname"] = "";
-                    fields["lastname"] = "";
-                    fields["email"] = "";
-                    fields["password"] = "";
-                    fields["ConfirmPassword"] = "";
 
-                    const url = 'https://localhost:5001/api/User/SaveUser';
-                    const headers = new Headers();
-                    headers.append('Content-Type', 'application/json');
-                    const requestOptions = {
-                        method: 'POST',
-                        headers,
-                        body: JSON.stringify(user)
-                    };
-                    const request = new Request(url, requestOptions);
-                    fetch(request).then(this.setState({ fields: fields, snackbaropen: true, snackbarmsg: "Registration successful!" }));
-                }
-          
-              }
-            
-              validateForm() {
-                let fields = this.state.fields;
-                let errors = {};
-                let formIsValid = true;
-                
-                
-            
-                  if(!fields["password"].match(/(?=.{8,})/)) {
-                      formIsValid = false;
-                      errors["password"] = "The password must be at least 8 characters";
-                  
-                  }
-                  
-                  else if (!fields["password"].match(/(?=.*[a-z])/)) {
-                    formIsValid = false;
-                    errors["password"] = "Must have at least one lowercase";
-                  }
+    snackbarClose = (event) => {
+        this.setState({ snackbaropen: false });
+    }
+
+    handleChange(e) {
+        let fields = this.state.fields;
+        fields[e.target.name] = e.target.value;
+        this.setState({
+            fields
+        });
+    }
+    submituserRegistrationForm(e) {
+        e.preventDefault();
+        if (this.validateForm()) {
+            let user = {};
+            user["email"] = this.state.fields.email;
+            user["password"] = this.state.fields.password;
+            user["first_name"] = this.state.fields.firstname;
+            user["last_name"] = this.state.fields.lastname;
+            console.log(user);
+            console.log(JSON.stringify(user));
+
+            let fields = {};
+            fields["firstname"] = "";
+            fields["lastname"] = "";
+            fields["email"] = "";
+            fields["password"] = "";
+            fields["ConfirmPassword"] = "";
+
+            const url = 'https://localhost:5001/api/User/SaveUser';
+            const headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            const requestOptions = {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(user)
+            };
+            const request = new Request(url, requestOptions);
+            fetch(request).then(this.setState({ fields: fields, snackbaropen: true, snackbarmsg: "Registration successful!" }));
+        }
+
+    }
+
+    validateForm() {
+        let fields = this.state.fields;
+        let errors = {};
+        let formIsValid = true;
+
+
+
+        if (!fields["password"].match(/(?=.{8,})/)) {
+            formIsValid = false;
+            errors["password"] = "The password must be at least 8 characters";
+
+        }
+
+        else if (!fields["password"].match(/(?=.*[a-z])/)) {
+            formIsValid = false;
+            errors["password"] = "Must have at least one lowercase";
+        }
 
         else if (!fields["password"].match(/(?=.*[A-Z])/)) {
             formIsValid = false;
@@ -162,10 +166,10 @@ export default class form extends React.Component {
         this.setState({ isPasswordShown: !isPasswordShown });
     }
     render() {
-        
-        const {isPasswordShown} = this.state;
-        
-        if(this.props.form === "Login"){
+
+        const { isPasswordShown } = this.state;
+
+        if (this.props.form === "Login") {
             return (
                 <div className="cover">
                     <form method="post">
@@ -204,25 +208,25 @@ export default class form extends React.Component {
         else if (this.props.form === "Register") {
             return (
                 <div className="cover">
-                    <Snackbar 
-                        anchorOrigin={{vertical:'bottom',horizontal:'center'}}
-                        open = {this.state.snackbaropen}
-                        autoHideDuration = {3000}
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                        open={this.state.snackbaropen}
+                        autoHideDuration={3000}
                         onClose={this.snackbarClose}
-                        message = {<span id="message-id">{this.state.snackbarmsg}</span>}
+                        message={<span id="message-id">{this.state.snackbarmsg}</span>}
                         action={[
                             <IconButton
-                            key="close"
-                            aria-label="Close"
-                            color="inherit"
-                            onClick={this.snackbarClose}
+                                key="close"
+                                aria-label="Close"
+                                color="inherit"
+                                onClick={this.snackbarClose}
                             >
                                 x
                             </IconButton>
                         ]}
                     />
-                    
-                    <form method="post" name="userRegistrationForm"  onSubmit= {this.submituserRegistrationForm}>
+
+                    <form method="post" name="userRegistrationForm" onSubmit={this.submituserRegistrationForm}>
                         <a href="true">X</a>
                         <h3>{this.props.form}</h3>
 
@@ -231,14 +235,18 @@ export default class form extends React.Component {
                                 className="inputDesignFirstname"
                                 name="firstname"
                                 placeholder="Firstname *" required
+                                value={this.state.fields.firstname}
+                                onChange={this.handleChange}
                             />
 
                         </div>
                         <div>
                             <input type="text"
                                 className="inputDesignLastname"
-                                name="surname"
+                                name="lastname"
                                 placeholder="Lastname *" required
+                                value={this.state.fields.lastname}
+                                onChange={this.handleChange}
 
                             />
                         </div>
@@ -276,7 +284,7 @@ export default class form extends React.Component {
                         </div>
                         <button onClick={this.handleRegister}>Create account</button>
 
-                        <Recaptcha 
+                        <Recaptcha
                             className="reCapcha"
                             sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
                             render="explicit"

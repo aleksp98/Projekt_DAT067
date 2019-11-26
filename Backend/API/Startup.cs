@@ -1,4 +1,4 @@
-using NGCI.Service;
+using API.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace NGCI
+namespace API
 {
     public class Startup
     {

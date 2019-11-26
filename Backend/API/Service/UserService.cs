@@ -1,6 +1,6 @@
-﻿using NGCI.Model;
-using NGCI.Service;
-using NGCI.EntityModels;
+﻿using API.Model;
+using API.Service;
+using API.EntityModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NGCI.Service
+namespace API.Service
 {
     public class UserService : IUserService
     {
@@ -21,7 +21,9 @@ namespace NGCI.Service
                               {
                                   Id = a.Id,
                                   Email = a.Email,
-                                  Password = a.Password
+                                  Password = a.Password,
+                                  First_name = a.First_name,
+                                  Last_name = a.Last_name
                               }).ToListAsync();
             }
         }
@@ -37,7 +39,9 @@ namespace NGCI.Service
                     user = new Users()
                     {
                         Email = userItem.Email,
-                        Password = userItem.Password
+                        Password = userItem.Password,
+                        First_name = userItem.First_name,
+                        Last_name = userItem.Last_name
                     };
                     db.Users.Add(user);
 
@@ -46,6 +50,8 @@ namespace NGCI.Service
                 {
                     user.Email = userItem.Email;
                     user.Password = userItem.Password;
+                    user.First_name = userItem.First_name;
+                    user.Last_name = userItem.Last_name;
                 }
 
                 return await db.SaveChangesAsync() >= 1;
