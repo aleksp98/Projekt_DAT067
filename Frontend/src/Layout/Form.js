@@ -77,13 +77,27 @@ export default class form extends React.Component {
             submituserRegistrationForm(e) {
                 e.preventDefault();
                 if (this.validateForm()) {
+                    let user = {};
+                    user["email"] = this.state.fields.email;
+                    user["password"] = this.state.fields.password;
+
                     let fields = {};
                     fields["firstname"] = "";
                     fields["lastname"] = "";
                     fields["email"] = "";
                     fields["password"] = "";
                     fields["ConfirmPassword"] = "";
-                    this.setState({fields:fields, snackbaropen:true, snackbarmsg:"Registration successful!"});
+
+                    const url = 'https://localhost:5001/api/User/SaveUser';
+                    const headers = new Headers();
+                    headers.append('Content-Type', 'application/json');
+                    const requestOptions = {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify(user)
+                    };
+                    const request = new Request(url, requestOptions);
+                    fetch(request).then(this.setState({ fields: fields, snackbaropen: true, snackbarmsg: "Registration successful!" }));
                 }
           
               }
@@ -106,77 +120,78 @@ export default class form extends React.Component {
                     errors["password"] = "Must have at least one lowercase";
                   }
 
-                  else if (!fields["password"].match(/(?=.*[A-Z])/)) {
-                    formIsValid = false;
-                    errors["password"] = "Must have at least one uppercase";
-                  }
-                  
-                     else if (!fields["password"].match(/(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/)) {
-                      formIsValid = false;
-                      errors["password"] = "Must have at least one special character";
-                    }
-                    
-                    else if (!fields["password"].match(/(?=.*[0-9])/)) {
-                        formIsValid = false;
-                        errors["password"] = "Must have at least one number";
-                      }
-                  
-        
-                   else if(!(fields["ConfirmPassword"] == fields["password"])){
-                      formIsValid = false;
-                      errors["ConfirmPassword"] = "The passwords must match";
-                  }
-                
-                  
-                  this.setState({
-                    errors: errors
-                  });
-                  return formIsValid;
-                
-            
-                };
-
-      
-        
-      
-      state = {
-        isPasswordShown : false
+        else if (!fields["password"].match(/(?=.*[A-Z])/)) {
+            formIsValid = false;
+            errors["password"] = "Must have at least one uppercase";
         }
 
-        togglePasswordVisiblity = () => {
-            const {isPasswordShown} = this.state;
-            this.setState({isPasswordShown : !isPasswordShown});
+        else if (!fields["password"].match(/(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/)) {
+            formIsValid = false;
+            errors["password"] = "Must have at least one special character";
         }
+
+        else if (!fields["password"].match(/(?=.*[0-9])/)) {
+            formIsValid = false;
+            errors["password"] = "Must have at least one number";
+        }
+
+
+        else if (!(fields["ConfirmPassword"] == fields["password"])) {
+            formIsValid = false;
+            errors["ConfirmPassword"] = "The passwords must match";
+        }
+
+
+        this.setState({
+            errors: errors
+        });
+        return formIsValid;
+
+
+    };
+
+
+
+
+    state = {
+        isPasswordShown: false
+    }
+
+    togglePasswordVisiblity = () => {
+        const { isPasswordShown } = this.state;
+        this.setState({ isPasswordShown: !isPasswordShown });
+    }
     render() {
         
         const {isPasswordShown} = this.state;
         
         if(this.props.form === "Login"){
             return (
-                
                 <div className="cover">
-                    <form method="post" >
+                    <form method="post">
                         <a href="true">X</a>
                         <h3>Please {this.props.form}</h3>
                         <div>
                             <img src={UserIcon} alt="UserIcon" />
-                            <input type="email" 
-                            name="email" 
-                            placeholder="E-mail" required
-                           
-                             />
+                            <input type="email"
+                                name="email"
+                                placeholder="E-mail" required
+                                value={this.state.fields.email}
+                                onChange={this.handleChange}
+                            />
                         </div>
                         <div>
                             <img src={PasswordIcon} alt="PasswordIcon" />
-                            <input type={(isPasswordShown) ? "text" : "password"} 
-                            className="form-conntrol" 
-                            name="password" 
-                            placeholder="Password" required
-                            
-                             />
-                            <img className="eyeIcon" 
-                            onClick ={this.togglePasswordVisiblity}
-                            src={EyeIcon} alt ="EyeIcon"/>
+                            <input type={(isPasswordShown) ? "text" : "password"}
+                                className="form-conntrol"
+                                name="password"
+                                placeholder="Password" required
+                                value={this.state.fields.password}
+                                onChange={this.handleChange}
+                            />
+                            <img className="eyeIcon"
+                                onClick={this.togglePasswordVisiblity}
+                                src={EyeIcon} alt="EyeIcon" />
                         </div>
                         <button>Login</button>
                         <footer>
@@ -184,10 +199,9 @@ export default class form extends React.Component {
                         </footer>
                     </form>
                 </div>
-
             )
         }
-        else if(this.props.form === "Register"){
+        else if (this.props.form === "Register") {
             return (
                 <div className="cover">
                     <Snackbar 
@@ -211,54 +225,53 @@ export default class form extends React.Component {
                     <form method="post" name="userRegistrationForm"  onSubmit= {this.submituserRegistrationForm}>
                         <a href="true">X</a>
                         <h3>{this.props.form}</h3>
-                        
+
                         <div>
-                            <input type="text" 
-                            className="inputDesignFirstname" 
-                            name="firstname" 
-                            placeholder ="Firstname *" required 
+                            <input type="text"
+                                className="inputDesignFirstname"
+                                name="firstname"
+                                placeholder="Firstname *" required
                             />
-                            
+
                         </div>
                         <div>
-                        <input type="text" 
-                            className="inputDesignLastname"
-                            name="surname" 
-                            placeholder="Lastname *" required 
-                            
+                            <input type="text"
+                                className="inputDesignLastname"
+                                name="surname"
+                                placeholder="Lastname *" required
+
                             />
                         </div>
                         <div>
-                            <input type="email" 
-                            name="email" 
-                            className="inputDesignEmail"
-                            placeholder="E-mail address *" required
-                            value={this.state.fields.email} 
-                            onChange={this.handleChange} 
+                            <input type="email"
+                                name="email"
+                                className="inputDesignEmail"
+                                placeholder="E-mail address *" required
+                                value={this.state.fields.email}
+                                onChange={this.handleChange}
                             />
                         </div>
-                        
+
                         <div>
-                            <input type="password" 
-                            className="inputDesignPassword"
-                            name="password" 
-                            placeholder="Password *" required 
-                            value={this.state.fields.password}
-                            onChange={this.handleChange}
+                            <input type="password"
+                                className="inputDesignPassword"
+                                name="password"
+                                placeholder="Password *" required
+                                value={this.state.fields.password}
+                                onChange={this.handleChange}
                             />
                             <p className="errorMsg">{this.state.errors.password}</p>
                         </div>
 
-                       
                         <div>
-                        <input type="password" 
-                        className="inputDesignConfirmPassword"
-                        name="ConfirmPassword" 
-                        placeholder="Confirm Password *" required 
-                        value={this.state.fields.ConfirmPassword}
-                        onChange={this.handleChange}
-                        />
-                        <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
+                            <input type="password"
+                                className="inputDesignConfirmPassword"
+                                name="ConfirmPassword"
+                                placeholder="Confirm Password *" required
+                                value={this.state.fields.ConfirmPassword}
+                                onChange={this.handleChange}
+                            />
+                            <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
 
                         </div>
                         <button onClick={this.handleRegister}>Create account</button>
@@ -277,9 +290,8 @@ export default class form extends React.Component {
                         </footer>
                     </form>
                 </div>
-
             )
         }
     }
-  }
+}
 
