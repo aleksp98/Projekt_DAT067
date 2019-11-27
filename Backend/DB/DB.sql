@@ -1,11 +1,13 @@
 -- This script will create a ciam database
 
--- Comment out following line if you want to rebuild the DB
-DROP DATABASE ciam;
+-- Comment out following two lines if you want to rebuild the DB
+-- DROP DATABASE ciam;
+-- GO
 
 -- Create ciam DB
 -- IF NOT EXISTS does not seem to work on mssql so will throw warning if DB already exists
 CREATE DATABASE ciam;
+GO
 USE ciam;
 GO
 
