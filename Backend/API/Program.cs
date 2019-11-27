@@ -13,7 +13,9 @@ namespace API
     {
         public static void Main(string[] args)
         {
+             Console.WriteLine("Start Backend \n \n");
             CreateHostBuilder(args).Build().Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
