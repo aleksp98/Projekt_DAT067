@@ -7,6 +7,7 @@ import EyeIcon from '../Image/icon-eye-7.jpg';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import { bool } from 'prop-types';
 
 
 
@@ -23,6 +24,9 @@ export default class form extends React.Component {
 
         this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
+        //lagt av mig
+        this.handleLogin = this.handleLogin.bind(this);
+
         this.verifyCallback = this.verifyCallback.bind(this);
 
         this.state = {
@@ -38,6 +42,10 @@ export default class form extends React.Component {
         this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
 
     };
+
+
+
+
 
 
     recaptchaLoaded() {
@@ -68,6 +76,7 @@ export default class form extends React.Component {
     }
 
     handleChange(e) {
+
         let fields = this.state.fields;
         fields[e.target.name] = e.target.value;
         this.setState({
@@ -82,6 +91,7 @@ export default class form extends React.Component {
             user["password"] = this.state.fields.password;
             user["first_name"] = this.state.fields.firstname;
             user["last_name"] = this.state.fields.lastname;
+            
             console.log(user);
             console.log(JSON.stringify(user));
 
@@ -105,6 +115,45 @@ export default class form extends React.Component {
         }
 
     }
+
+    handleLogin(){
+         
+        alert("inside");
+        
+        let user = {};
+        //läsa från FÄLTEN
+        const mail= this.state.fields.email;
+        //const mail= "stenen@xmail2.net";
+       // console.log(JSON.stringify(user));
+
+        const url = 'https://localhost:5001/api/User/CheckUser/' + mail;
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        const requestOptions = {
+            method: 'GET'
+        };
+        const request = new Request(url, requestOptions);
+     
+         
+        fetch(request).then(function(response) {
+            return response.text().then(function(text) {
+             // myArticle.innerHTML = text;
+            if(text == "true")
+            {
+                alert("TRUE");
+            }else if(text == "false"){
+                alert("FALSE");
+            }
+            });
+          });
+
+
+
+    
+    
+       
+    }
+
 
     validateForm() {
         let fields = this.state.fields;
@@ -197,7 +246,7 @@ export default class form extends React.Component {
                                 onClick={this.togglePasswordVisiblity}
                                 src={EyeIcon} alt="EyeIcon" />
                         </div>
-                        <button>Login</button>
+                        <button onClick={this.handleLogin}>Login</button>
                         <footer>
                             <ALink href="true" value="Forgot Password?" />
                         </footer>

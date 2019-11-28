@@ -33,6 +33,19 @@ namespace API.Controllers
             return Ok(await _userService.SaveUser(model));
         }
 
+
+
+        [HttpGet]
+        [Route("CheckUser/{email}")]
+        public IActionResult CheckUser(string email)
+        { 
+         ObjectResult temp = Ok(_userService.CheckUser(email));
+         return temp;
+
+        }
+
+
+
         [HttpDelete]
         [Route("DeleteUser/{Id}")]
         public async Task<IActionResult> DeleteUser(int Id)
