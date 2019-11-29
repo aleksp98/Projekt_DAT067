@@ -28,7 +28,8 @@ namespace API.Service
             }
         }
 
-
+          //check if email exist and is active
+          //returns bool
         public bool CheckUser(string Email)
         {  bool temp = false;
              using (ciamContext db = new ciamContext())
@@ -43,10 +44,6 @@ namespace API.Service
             }
         }
         
-
-
-
-
         public async Task<bool> SaveUser(UserItem userItem)
         {
             using (ciamContext db = new ciamContext())

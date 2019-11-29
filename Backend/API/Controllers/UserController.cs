@@ -34,7 +34,8 @@ namespace API.Controllers
         }
 
 
-
+        //Check if account is active
+        //returns to frontend 200 and bool value
         [HttpGet]
         [Route("CheckUser/{email}")]
         public IActionResult CheckUser(string email)

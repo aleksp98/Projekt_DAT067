@@ -24,7 +24,7 @@ export default class form extends React.Component {
 
         this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
-        //lagt av mig
+        //Login button
         this.handleLogin = this.handleLogin.bind(this);
 
         this.verifyCallback = this.verifyCallback.bind(this);
@@ -35,18 +35,12 @@ export default class form extends React.Component {
             isVerified: false,
             snackbaropen: false,
             snackbarmsg: ''
-
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
 
     };
-
-
-
-
-
 
     recaptchaLoaded() {
         console.log("Capcha loaded successfully!");
@@ -115,17 +109,11 @@ export default class form extends React.Component {
         }
 
     }
-
+     //Listener to login button(when pressed)
     handleLogin(){
-         
-        alert("inside");
-        
         let user = {};
-        //läsa från FÄLTEN
+    
         const mail= this.state.fields.email;
-        //const mail= "stenen@xmail2.net";
-       // console.log(JSON.stringify(user));
-
         const url = 'https://localhost:5001/api/User/CheckUser/' + mail;
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -133,11 +121,10 @@ export default class form extends React.Component {
             method: 'GET'
         };
         const request = new Request(url, requestOptions);
-     
-         
+
+     //ful lösning vet inte hur man hämtar till bool i Javascript 
         fetch(request).then(function(response) {
             return response.text().then(function(text) {
-             // myArticle.innerHTML = text;
             if(text == "true")
             {
                 alert("TRUE");
@@ -145,13 +132,7 @@ export default class form extends React.Component {
                 alert("FALSE");
             }
             });
-          });
-
-
-
-    
-    
-       
+          });  
     }
 
 
@@ -159,8 +140,6 @@ export default class form extends React.Component {
         let fields = this.state.fields;
         let errors = {};
         let formIsValid = true;
-
-
 
         if (!fields["password"].match(/(?=.{8,})/)) {
             formIsValid = false;
