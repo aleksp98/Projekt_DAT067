@@ -58,6 +58,16 @@ namespace API.Service
             }
         }
 
+        public async Task<bool> LoginUser(UserItem userItem)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                Users user = db.Users.Where
+                         (x => x.Email == userItem.Email && x.Password == userItem.Password).FirstOrDefault();
+                return user != null;
+            }
+        }
+
         public async Task<bool> DeleteUser(int userId)
         {
             using (ciamContext db = new ciamContext())

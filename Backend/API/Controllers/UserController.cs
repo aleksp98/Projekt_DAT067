@@ -33,6 +33,13 @@ namespace API.Controllers
             return Ok(await _userService.SaveUser(model));
         }
 
+        [HttpPost]
+        [Route("LoginUser")]
+        public async Task<IActionResult> LoginUser([FromBody] UserItem model)
+        {
+            return Ok(await _userService.LoginUser(model));
+        }
+
         [HttpDelete]
         [Route("DeleteUser/{Id}")]
         public async Task<IActionResult> DeleteUser(int Id)

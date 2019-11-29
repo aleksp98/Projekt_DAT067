@@ -10,6 +10,7 @@ namespace API.Service
     {
         Task<List<UserItem>> GetUsers();
         Task<bool> SaveUser(UserItem user);
+        Task<bool> LoginUser(UserItem user);
         Task<bool> DeleteUser(int Id);
     }
 }
