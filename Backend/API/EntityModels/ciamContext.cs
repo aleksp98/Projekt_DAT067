@@ -58,11 +58,9 @@ namespace API.EntityModels
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                     entity.Property(e => e.Verified)
+                entity.Property(e => e.Verified)
                     .IsRequired()
-                    .HasColumnName("verified")
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                    .HasColumnName("verified");
             });
 
             OnModelCreatingPartial(modelBuilder);
