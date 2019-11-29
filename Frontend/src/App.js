@@ -6,7 +6,9 @@ import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
-
+import { BrowserRouter as Router,Switch,Route} from 'react-router-dom';
+import registeredPage from './Layout/registeredPage';
+import loginPage from './Layout/loginPage';
 class App extends Component {
 
     state = {
@@ -17,6 +19,20 @@ class App extends Component {
 
     render() {
         return (
+          
+           
+           <Router>
+           <Switch>
+               <Route path = "/registeredPage" exact strict component ={registeredPage}/>
+               
+               <Route path = "/loginPage" exact strict component ={loginPage}/>
+               
+               <Route path = "/#" exact strict Component = {App}/>
+               
+               
+               
+              
+            
             <section>
 
                 {!this.state.visible ? <Form form={this.state.type} /> : null}
@@ -48,12 +64,13 @@ class App extends Component {
 
                 <Footer />
 
-
+              
 
             </section>
-
-
-
+            </Switch>
+            </Router>
+            
+            
 
         );
     }

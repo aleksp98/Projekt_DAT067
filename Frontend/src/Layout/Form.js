@@ -7,13 +7,13 @@ import EyeIcon from '../Image/icon-eye-7.jpg';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import {Link} from 'react-router-dom';
+import registeredPage from './registeredPage';
+import {withRouter} from 'react-router-dom';
 
 
 
-
-
-
-export default class form extends React.Component {
+ class form extends React.Component {
 
 
 
@@ -38,6 +38,9 @@ export default class form extends React.Component {
         this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
 
     };
+    state = {
+        visible: true
+    }
 
 
     recaptchaLoaded() {
@@ -46,7 +49,7 @@ export default class form extends React.Component {
 
     handleRegister(e) {
         if (this.state.isVerified) {
-            alert("You have registred");
+            
         }
         else {
             e.preventDefault(); //Hindrar att formuläret submitas   JE
@@ -84,6 +87,7 @@ export default class form extends React.Component {
             user["last_name"] = this.state.fields.lastname;
             console.log(user);
             console.log(JSON.stringify(user));
+            this.redirect();
 
             let fields = {};
             fields["firstname"] = "";
@@ -104,6 +108,10 @@ export default class form extends React.Component {
             fetch(request).then(this.setState({ fields: fields, snackbaropen: true, snackbarmsg: "Registration successful!" }));
         }
 
+    }
+    redirect(){
+        this.props.history.push('/registeredPage')
+        
     }
 
     validateForm() {
@@ -303,3 +311,4 @@ export default class form extends React.Component {
     }
 }
 
+export default withRouter(form);
