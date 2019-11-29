@@ -43,6 +43,30 @@ namespace API.Service
                 return temp;
             }
         }
+
+
+         //check if email exist and is active
+          //returns bool
+        public async Task<bool> ConfirmMail(string token)
+        {  
+             using (ciamContext db = new ciamContext())
+            {  //temporärt kollar Email istället för token (inte insatt än)
+                Users user =
+                     db.Users.Where(x => x.Email == token).FirstOrDefault();
+                if (user != null)
+                {
+                    Console.WriteLine("Inside true {0} \n \n",token);
+                   user.Verified = true;
+                }
+                return await db.SaveChangesAsync() >= 1;
+            }
+        }
+
+
+
+
+
+
         
         public async Task<bool> SaveUser(UserItem userItem)
         {

@@ -111,8 +111,6 @@ export default class form extends React.Component {
     }
      //Listener to login button(when pressed)
     handleLogin(){
-        let user = {};
-    
         const mail= this.state.fields.email;
         const url = 'https://localhost:5001/api/User/CheckUser/' + mail;
         const headers = new Headers();
