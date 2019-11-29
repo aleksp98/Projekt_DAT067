@@ -28,6 +28,22 @@ namespace API.Service
             }
         }
 
+          //check if email exist and is active
+          //returns bool
+        public bool CheckUser(string Email)
+        {  bool temp = false;
+             using (ciamContext db = new ciamContext())
+            {
+                Users user =
+                     db.Users.Where(x => x.Email == Email && x.Verified ==true).FirstOrDefault();
+                if (user != null)
+                {
+                   temp = true;
+                }
+                return temp;
+            }
+        }
+        
         public async Task<bool> SaveUser(UserItem userItem)
         {
             using (ciamContext db = new ciamContext())
@@ -41,7 +57,7 @@ namespace API.Service
                         Email = userItem.Email,
                         Password = userItem.Password,
                         First_name = userItem.First_name,
-                        Last_name = userItem.Last_name
+                        Last_name = userItem.Last_name,
                     };
                     db.Users.Add(user);
 

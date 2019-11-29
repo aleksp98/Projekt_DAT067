@@ -7,6 +7,7 @@ import EyeIcon from '../Image/icon-eye-7.jpg';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+import { bool } from 'prop-types';
 
 
 
@@ -23,6 +24,9 @@ export default class form extends React.Component {
 
         this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
+        //Login button
+        this.handleLogin = this.handleLogin.bind(this);
+
         this.verifyCallback = this.verifyCallback.bind(this);
 
         this.state = {
@@ -31,14 +35,12 @@ export default class form extends React.Component {
             isVerified: false,
             snackbaropen: false,
             snackbarmsg: ''
-
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
 
     };
-
 
     recaptchaLoaded() {
         console.log("Capcha loaded successfully!");
@@ -68,6 +70,7 @@ export default class form extends React.Component {
     }
 
     handleChange(e) {
+
         let fields = this.state.fields;
         fields[e.target.name] = e.target.value;
         this.setState({
@@ -82,6 +85,7 @@ export default class form extends React.Component {
             user["password"] = this.state.fields.password;
             user["first_name"] = this.state.fields.firstname;
             user["last_name"] = this.state.fields.lastname;
+            
             console.log(user);
             console.log(JSON.stringify(user));
 
@@ -105,13 +109,37 @@ export default class form extends React.Component {
         }
 
     }
+     //Listener to login button(when pressed)
+    handleLogin(){
+        let user = {};
+    
+        const mail= this.state.fields.email;
+        const url = 'https://localhost:5001/api/User/CheckUser/' + mail;
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        const requestOptions = {
+            method: 'GET'
+        };
+        const request = new Request(url, requestOptions);
+
+     //ful lösning vet inte hur man hämtar till bool i Javascript 
+        fetch(request).then(function(response) {
+            return response.text().then(function(text) {
+            if(text == "true")
+            {
+                alert("TRUE");
+            }else if(text == "false"){
+                alert("FALSE");
+            }
+            });
+          });  
+    }
+
 
     validateForm() {
         let fields = this.state.fields;
         let errors = {};
         let formIsValid = true;
-
-
 
         if (!fields["password"].match(/(?=.{8,})/)) {
             formIsValid = false;
@@ -197,7 +225,7 @@ export default class form extends React.Component {
                                 onClick={this.togglePasswordVisiblity}
                                 src={EyeIcon} alt="EyeIcon" />
                         </div>
-                        <button>Login</button>
+                        <button onClick={this.handleLogin}>Login</button>
                         <footer>
                             <ALink href="true" value="Forgot Password?" />
                         </footer>

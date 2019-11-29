@@ -40,6 +40,21 @@ namespace API.Controllers
             return Ok(await _userService.LoginUser(model));
         }
 
+
+
+        //Check if account is active
+        //returns to frontend 200 and bool value
+        [HttpGet]
+        [Route("CheckUser/{email}")]
+        public IActionResult CheckUser(string email)
+        { 
+         ObjectResult temp = Ok(_userService.CheckUser(email));
+         return temp;
+
+        }
+
+
+
         [HttpDelete]
         [Route("DeleteUser/{Id}")]
         public async Task<IActionResult> DeleteUser(int Id)
