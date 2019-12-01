@@ -1,8 +1,11 @@
-class BodyData extends React.Component {
+import React from 'react';
+
+class translation extends React.Component {
     state = {
       query: "",
       data: [],
-      filteredData: []
+      filteredData: [],
+        visible: true
     };
   
     handleInputChange = event => {
@@ -42,16 +45,42 @@ class BodyData extends React.Component {
   
     render() {
       return (
-        <div className="searchForm">
-          <form>
+        <div id="translation form">
+            <div className="searchForm">
+            <form>
+                <input
+                placeholder="Search for.."
+                value={this.state.query}
+                onChange={this.handleInputChange}
+                />
+            </form>
+            <div>{this.state.filteredData.map(i => <p>{i.name}</p>)}</div>
+            </div>
+            
+            <div className="newTextName">
+            <form>
             <input
-              placeholder="Search for..."
-              value={this.state.query}
-              onChange={this.handleInputChange}
+                placeholder="enter new name.."
+                value={this.state.query}
+                onChange={this.handleInputChange}
             />
-          </form>
-          <div>{this.state.filteredData.map(i => <p>{i.name}</p>)}</div>
+            </form>
+            <div>{this.state.filteredData.map(i => <p>{i.name}</p>)}</div>
+            </div>
+
+            <div className="editTextName">
+            <form>
+            <input
+                placeholder="enter new name.."
+                value={this.state.query}
+                onChange={this.handleInputChange}
+            />
+            </form>
+            <div>{this.state.filteredData.map(i => <p>{i.name}</p>)}</div>
+            </div>
         </div>
       );
     }
   }
+
+  export default translation;
