@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Mail;
 
 class Mail{
-    private const string Path = @"Backend\API\Service\test.html";
+    //private const string Path = @"\Backend\API\Service\test.html";
 
     public static void sendMail(string email, string firstName, string lastName) {
 
@@ -16,8 +16,21 @@ var fromAddress2 = new MailAddress("Sigma@testmail.com", "From Name");
 var toAddress = new MailAddress(email, firstName+"" +lastName);
 const string fromPassword = "Klusina123";
 const string subject = "testar mail";
-//string text = "Hi "+ firstName +" "+ lastName+ " this is your confirmation mail";
-string html = File.ReadAllText(Path);
+           //put generated token here instead
+const string token = "ashkfshdkdl565!f**am";
+
+const string activateLink = "http://localhost:3000/"+token;
+
+string FullName = firstName+ " " + lastName;
+
+
+ Console.WriteLine(activateLink);
+
+string html = File.ReadAllText("test.html");
+
+html = html.Replace("~ActivationLink~",activateLink);
+
+html = html.Replace("~FullName~",FullName);
 
 string body = html;
 var smtp = new SmtpClient      {     
@@ -27,8 +40,10 @@ var smtp = new SmtpClient      {
      DeliveryMethod = SmtpDeliveryMethod.Network,      
         Credentials = new NetworkCredential(fromAddress.Address, fromPassword)      };
 using (var message = new MailMessage(fromAddress2, toAddress)     
-      {             Subject = subject,             Body = body  , IsBodyHtml=true         })
-{  smtp.Send(message);}
+      {             Subject = subject,             
+                     Body = body, 
+                     IsBodyHtml=true         })
+         { smtp.Send(message);}
 
 
 
