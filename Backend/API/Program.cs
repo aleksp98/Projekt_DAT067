@@ -12,9 +12,9 @@ namespace API
     public class Program
     {
         public static void Main(string[] args)
-        { 
-             Console.WriteLine("inside main \n \n \n");
+          
             CreateHostBuilder(args).Build().Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
