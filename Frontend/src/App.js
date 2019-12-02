@@ -6,6 +6,9 @@ import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
+import { BrowserRouter as Router,Switch,Route} from 'react-router-dom';
+//import Route from 'react-router-dom/Route';
+import {sendHTTP} from './EmailConfirmation'
 
 class App extends Component {
 
@@ -17,8 +20,22 @@ class App extends Component {
 
     render() {
         return (
-            <section>
 
+
+            <Router>
+                 <Switch>
+                <Route path="/testing/:token" exact strict render={
+                 ({match}) => {
+                   sendHTTP(match.params.token);
+
+                     return( <h1>Thank you for verifying</h1>);
+
+
+                   }
+                   }/>
+
+              
+            <section>
                 {!this.state.visible ? <Form form={this.state.type} /> : null}
 
                 <header className="header">
@@ -47,13 +64,15 @@ class App extends Component {
 
 
                 <Footer />
+                
+                
+                
 
-
+          
 
             </section>
-
-
-
+            </Switch>
+            </Router>
 
         );
     }

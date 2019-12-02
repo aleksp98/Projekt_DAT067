@@ -43,6 +43,33 @@ namespace API.Controllers
             return ok ;
         }
 
+
+        //Check if account is active
+        //returns to frontend 200 and bool value
+        [HttpGet]
+        [Route("CheckUser/{email}")]
+        public IActionResult CheckUser(string email)
+        { 
+         ObjectResult temp = Ok(_userService.CheckUser(email));
+         return temp;
+
+        }
+
+
+         //Check if account is active
+        //returns to frontend 200 and bool value
+        [HttpGet]
+        [Route("ConfirmMail/{token}")]
+        public async Task<IActionResult> ConfirmMail(string token)
+        { 
+            Console.WriteLine("Inside ConfirmMail {0} \n \n",token);
+         ObjectResult temp = Ok(await _userService.ConfirmMail(token));
+         return temp;
+
+        }
+
+
+
         [HttpDelete]
         [Route("DeleteUser/{Id}")]
         public async Task<IActionResult> DeleteUser(int Id)
