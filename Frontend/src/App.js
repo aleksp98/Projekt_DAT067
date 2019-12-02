@@ -27,6 +27,10 @@ class App extends Component {
                 <Route path="/testing/:token" exact strict render={
                  ({match}) => {
                    sendHTTP(match.params.token);
+
+                     return( <h1>Thank you for verifying</h1>);
+
+
                    }
                    }/>
 
