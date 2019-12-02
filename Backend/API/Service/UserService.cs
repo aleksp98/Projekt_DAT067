@@ -49,13 +49,14 @@ namespace API.Service
           //returns bool
         public async Task<bool> ConfirmMail(string token)
         {  
+
+            Console.WriteLine(token);
              using (ciamContext db = new ciamContext())
-            {  //temporärt kollar Email istället för token (inte insatt än)
+            {  //change use x.Token instead of -> x.Email (OBS need to put in token in database)
                 Users user =
                      db.Users.Where(x => x.Email == token).FirstOrDefault();
                 if (user != null)
                 {
-                    Console.WriteLine("Inside true {0} \n \n",token);
                    user.Verified = true;
                 }
                 return await db.SaveChangesAsync() >= 1;

@@ -16,10 +16,10 @@ var fromAddress2 = new MailAddress("Sigma@testmail.com", "From Name");
 var toAddress = new MailAddress(email, firstName+"" +lastName);
 const string fromPassword = "Klusina123";
 const string subject = "testar mail";
-           //put generated token here instead
-const string token = "ashkfshdkdl565!f**am";
+   //put generated token here instead of -> email
+string token = email;
 
-const string activateLink = "http://localhost:3000/"+token;
+string activateLink = "http://localhost:3000/confirmation/"+token;
 
 string FullName = firstName+ " " + lastName;
 

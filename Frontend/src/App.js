@@ -24,13 +24,23 @@ class App extends Component {
 
             <Router>
                  <Switch>
-                <Route path="/testing/:token" exact strict render={
+                <Route path="/confirmation/:token" exact strict render={
                  ({match}) => {
-                   sendHTTP(match.params.token);
+                var temp = sendHTTP(match.params.token);
 
-                     return( <h1>Thank you for verifying</h1>);
-
-
+                temp.then(function(response) {
+                    return response.text().then(function(text) {
+                    if(text == "true")
+                    {
+                        alert('true');
+                       // return( <h1>Thank you for verifying</h1>);
+                    }else if(text == "false"){
+                        
+                       // return( <h1>Not working</h1>);
+                       alert('false');
+                    }
+                    });
+                  });  
                    }
                    }/>
 

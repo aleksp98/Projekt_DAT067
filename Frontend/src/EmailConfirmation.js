@@ -1,5 +1,6 @@
-
-export const sendHTTP = (n)=>{
+//if good respons return 1
+//if bad response return -1
+export function sendHTTP (n){
    const token= n;
 const url = 'https://localhost:5001/api/User/ConfirmMail/' + token;
 const headers = new Headers();
@@ -9,5 +10,6 @@ const requestOptions = {
 };
 const request = new Request(url, requestOptions);
 
-fetch(request).then();
+return fetch(request);
+
 }
