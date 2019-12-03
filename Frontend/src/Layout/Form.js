@@ -89,6 +89,13 @@ import { bool } from 'prop-types';
             user["first_name"] = this.state.fields.firstname;
             user["last_name"] = this.state.fields.lastname;
 
+            var randomstring = require("randomstring");
+            user["token"] = randomstring.generate();
+            
+            console.log(user);
+            console.log(JSON.stringify(user));
+
+
            /* console.log(user);
             console.log(JSON.stringify(user));*/
             this.redirect();
@@ -114,6 +121,11 @@ import { bool } from 'prop-types';
         }
 
     }
+     //Listener to login button(when pressed)
+    handleLogin(){
+        const mail= this.state.fields.email;
+        const url = 'https://localhost:5001/api/User/CheckUser/' + mail;
+
 
     redirect(){
         this.props.history.push('/registeredPage')
@@ -130,6 +142,7 @@ import { bool } from 'prop-types';
         user["password"] = this.state.fields.password;
 
         const url = 'https://localhost:5001/api/User/LoginUser';
+
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         const requestOptions = {

@@ -11,6 +11,9 @@ namespace API.Model
         public string Password { get; set; }
         public string First_name { get; set; }
         public string Last_name { get; set; }
-        public bool Verified { get; set; }
+
+        public bool Verified{ get; set; }
+        public string Token{ get; set; }
+
     }
 }

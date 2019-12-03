@@ -26,7 +26,27 @@ namespace API.Controllers
             return Ok(await _userService.GetUsers());
         }
 
-         //Check if account is active
+
+        [HttpPost]
+        [Route("SaveUser")]
+        public async Task<IActionResult> SaveUser([FromBody] UserItem model)
+        {
+           
+              Console.WriteLine("SaveUser start 1\n \n \n \n");
+             OkObjectResult ok = Ok(await _userService.SaveUser(model));   
+
+
+             //kalla på funktionen här under
+             Console.WriteLine("Email: {0}      FirstName: {1}\n \n \n \n",model.Email,model.First_name);
+
+             Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
+             
+            return ok ;
+        }
+
+
+        //Check if account is active
+
         //returns to frontend 200 and bool value
         [HttpGet]
         [Route("CheckUser/{email}")]
@@ -43,12 +63,28 @@ namespace API.Controllers
             return Ok(await _userService.SaveUser(model));
         }
 
+
+         //Check if account is active
+        //returns to frontend 200 and bool value
+        [HttpGet]
+        [Route("ConfirmMail/{token}")]
+        public async Task<IActionResult> ConfirmMail(string token)
+        { 
+            Console.WriteLine("Inside ConfirmMail {0} \n \n",token);
+         ObjectResult temp = Ok(await _userService.ConfirmMail(token));
+         return temp;
+
+        }
+
+
+
         [HttpPost]
         [Route("LoginUser")]
         public async Task<IActionResult> LoginUser([FromBody] UserItem model)
         {
             return Ok(await _userService.LoginUser(model));
         }
+
 
         [HttpDelete]
         [Route("DeleteUser/{Id}")]
