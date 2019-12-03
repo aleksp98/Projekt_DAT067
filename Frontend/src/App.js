@@ -6,31 +6,63 @@ import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
-import { BrowserRouter as Router,Switch,Route} from 'react-router-dom';
+import { BrowserRouter as Router,Switch,Route,Link} from 'react-router-dom';
 //import Route from 'react-router-dom/Route';
 import {sendHTTP} from './EmailConfirmation'
 import { string } from 'prop-types';
+//import { Link } from '@material-ui/core';
 
 
 class App extends Component {
 
     state = {
         visible: true
+   
     }
 
     /* Fråga hur man passerar en onclick via en jsx component */
 
-
-
-
-
-
      render() {
         return (
 
+            //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
+            //beroende pa responsen fran fetch
+            <Router>
+                 <Link to= "/">Home</Link>
+                 <Switch>
+                <Route path="/confirmation/:token" exact strict render={
+                 ({match}) => {
 
 
+                   
+                 
 
+                var temp = sendHTTP(match.params.token);
+                
+
+                  var result;
+          
+                var hets = temp.then(function(response) {
+
+                    var that = this;
+
+                    return response.text().then(function(text) {
+                    if(text == "true")
+                    {
+                       alert('Registreringen funkar');
+                     
+                    }
+                    else{
+                        alert('Du lyckades inte registreras');
+                      
+                }
+                   
+                    });
+                  }); 
+
+                  return  <h1>Välkommen till klubben. Om du fick ett fel försök igen senare</h1>;
+                   }
+                   }/>
 
               
             <section>
@@ -62,54 +94,17 @@ class App extends Component {
 
 
                 <Footer />
-             
-            //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
-            //beroende pa responsen fran fetch
-            //fixa så att man automatiskt kommer till main route
-            <Router>
-                <Route path="/confirmation/:token" exact strict render={
-                 ({match}) => {
-
-                    alert('sending to mail');
-                  var temp = sendHTTP(match.params.token);
-                
-          
-                   temp.then(function(response) {
-                    return response.text().then(function(text) {
-                    if(text == "true")
-                    {
-                        //ändra till snackbar
-                       alert('Registreringen funkar');
-                    }
-                    else{
-                        //ändra till snackbar
-                        alert('Du lyckades inte registreras');
-                }
-                   
-                    });
-                  }); 
-
-
-                  
-
-                   }
-                   }/>
-            </Router>
-
-
-
-
-
-
-
                 
                 
                 
 
           
+         <Route path="/"/>
 
             </section>
-         
+            </Switch>
+            </Router>
+
         );
     }
 }
