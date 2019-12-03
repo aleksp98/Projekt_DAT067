@@ -125,7 +125,7 @@ import { bool } from 'prop-types';
     handleLogin(){
         const mail= this.state.fields.email;
         const url = 'https://localhost:5001/api/User/CheckUser/' + mail;
-
+    }
 
     redirect(){
         this.props.history.push('/registeredPage')

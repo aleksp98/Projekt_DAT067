@@ -12,8 +12,6 @@ import {sendHTTP} from './EmailConfirmation'
 import { string } from 'prop-types';
 //import { Link } from '@material-ui/core';
 
-
-import { BrowserRouter as Router,Switch,Route} from 'react-router-dom';
 import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
 

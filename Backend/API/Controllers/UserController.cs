@@ -56,13 +56,14 @@ namespace API.Controllers
 
         }
 
+          /*
         [HttpPost]
         [Route("SaveUser")]
         public async Task<IActionResult> SaveUser([FromBody] UserItem model)
         {
             return Ok(await _userService.SaveUser(model));
         }
-
+   */
 
          //Check if account is active
         //returns to frontend 200 and bool value
