@@ -14,7 +14,7 @@ class translation extends React.Component {
       }
   
       getData = () => {
-          fetch(`http://localhost:4000/restaurants`) //query db example
+          fetch(`http://localhost:4000/xxxx`) //query db example
           .then(response => response.json())
           .then(responseData => {
               // console.log(responseData)
