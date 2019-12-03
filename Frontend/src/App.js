@@ -12,7 +12,7 @@ import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
 
 import Cookies from 'js-cookie'
-
+import { withRouter } from 'react-router-dom';
 export const getAccessToken = () => Cookies.get('access_token')
 export const getRefreshToken = () => Cookies.get('refresh_token')
 export const isAuthenticated = () => !!getAccessToken()
