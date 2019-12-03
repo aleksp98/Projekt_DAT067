@@ -7,28 +7,27 @@ import EyeIcon from '../Image/icon-eye-7.jpg';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+
+import {Link} from 'react-router-dom';
+import registeredPage from './registeredPage';
+import {withRouter} from 'react-router-dom';
+
 import { bool } from 'prop-types';
 
 
 
 
-
-
-export default class form extends React.Component {
-
-
-
+ class form extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
-        //Login button
-        this.handleLogin = this.handleLogin.bind(this);
+        // this.handleLogin = this.handleLogin.bind(this);
 
         this.verifyCallback = this.verifyCallback.bind(this);
-
+        
         this.state = {
             fields: {},
             errors: {},
@@ -39,20 +38,23 @@ export default class form extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
+        this.submituserLoginForm = this.submituserLoginForm.bind(this);
 
     };
+    state = {
+        visible: true
+    }
 
     recaptchaLoaded() {
         console.log("Capcha loaded successfully!");
     }
 
     handleRegister(e) {
-        if (this.state.isVerified) {
-            alert("You have registred");
-        }
-        else {
+
+        if (!this.state.isVerified) {
+
             e.preventDefault(); //Hindrar att formuläret submitas   JE
-            alert("Please verify that you are a human");
+            this.setState({ snackbaropen: true, snackbarmsg: "Please verify that you are a human" });
         }
     }
 
@@ -77,6 +79,7 @@ export default class form extends React.Component {
             fields
         });
     }
+
     submituserRegistrationForm(e) {
         e.preventDefault();
         if (this.validateForm()) {
@@ -85,11 +88,18 @@ export default class form extends React.Component {
             user["password"] = this.state.fields.password;
             user["first_name"] = this.state.fields.firstname;
             user["last_name"] = this.state.fields.lastname;
+
             var randomstring = require("randomstring");
             user["token"] = randomstring.generate();
             
             console.log(user);
             console.log(JSON.stringify(user));
+
+
+           /* console.log(user);
+            console.log(JSON.stringify(user));*/
+            this.redirect();
+
 
             let fields = {};
             fields["firstname"] = "";
@@ -115,25 +125,60 @@ export default class form extends React.Component {
     handleLogin(){
         const mail= this.state.fields.email;
         const url = 'https://localhost:5001/api/User/CheckUser/' + mail;
+
+
+    redirect(){
+        this.props.history.push('/registeredPage')
+        
+    }
+
+    //Listener to login button(when pressed)
+    submituserLoginForm(e) {
+        e.preventDefault();
+        let _this = this;
+
+        let user = {};
+        user["email"] = this.state.fields.email;
+        user["password"] = this.state.fields.password;
+
+        const url = 'https://localhost:5001/api/User/LoginUser';
+
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         const requestOptions = {
-            method: 'GET'
+            method: 'POST',
+            headers,
+            body: JSON.stringify(user)
         };
         const request = new Request(url, requestOptions);
 
-     //ful lösning vet inte hur man hämtar till bool i Javascript 
-        fetch(request).then(function(response) {
-            return response.text().then(function(text) {
-            if(text == "true")
-            {
-                alert("TRUE");
-            }else if(text == "false"){
-                alert("FALSE");
-            }
+        //ful lösning vet inte hur man hämtar till bool i Javascript 
+        fetch(request).then(function (response) {
+            return response.text().then(function (text) {
+                if (text === "true") {
+                    const url = 'https://localhost:5001/api/User/CheckUser/' + user.email;
+                    const requestOptions = {
+                        method: 'GET'
+                    };
+                    const request = new Request(url, requestOptions);
+                    fetch(request).then(function (response) {
+                        return response.text().then(function (text) {
+                            if (text === "true") {
+                                _this.setState({ snackbaropen: true, snackbarmsg: "Login successful!" });
+                            }
+                            else {
+                                _this.setState({ snackbaropen: true, snackbarmsg: "Account not verified, please check you email" });
+                            }
+                        });
+                    });
+                }
+                else {
+                    _this.setState({ snackbaropen: true, snackbarmsg: "Wrong username or password" });
+                }
             });
-          });  
+        });
     }
+
 
 
     validateForm() {
@@ -200,7 +245,24 @@ export default class form extends React.Component {
         if (this.props.form === "Login") {
             return (
                 <div className="cover">
-                    <form method="post">
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                        open={this.state.snackbaropen}
+                        autoHideDuration={3000}
+                        onClose={this.snackbarClose}
+                        message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="Close"
+                                color="inherit"
+                                onClick={this.snackbarClose}
+                            >
+                                x
+                            </IconButton>
+                        ]}
+                    />
+                    <form method="post" name="userLoginForm" onSubmit={this.submituserLoginForm}>
                         <a href="true">X</a>
                         <h3>Please {this.props.form}</h3>
                         <div>
@@ -225,7 +287,7 @@ export default class form extends React.Component {
                                 onClick={this.togglePasswordVisiblity}
                                 src={EyeIcon} alt="EyeIcon" />
                         </div>
-                        <button onClick={this.handleLogin}>Login</button>
+                        <button>Login</button>
                         <footer>
                             <ALink href="true" value="Forgot Password?" />
                         </footer>
@@ -253,7 +315,6 @@ export default class form extends React.Component {
                             </IconButton>
                         ]}
                     />
-
                     <form method="post" name="userRegistrationForm" onSubmit={this.submituserRegistrationForm}>
                         <a href="true">X</a>
                         <h3>{this.props.form}</h3>
@@ -331,3 +392,4 @@ export default class form extends React.Component {
     }
 }
 
+export default withRouter(form);

@@ -13,6 +13,17 @@ import { string } from 'prop-types';
 //import { Link } from '@material-ui/core';
 
 
+import { BrowserRouter as Router,Switch,Route} from 'react-router-dom';
+import registeredPage from './Layout/registeredPage';
+import loginPage from './Layout/loginPage';
+
+import Cookies from 'js-cookie'
+
+export const getAccessToken = () => Cookies.get('access_token')
+export const getRefreshToken = () => Cookies.get('refresh_token')
+export const isAuthenticated = () => !!getAccessToken()
+
+
 class App extends Component {
 
     state = {
@@ -24,6 +35,7 @@ class App extends Component {
 
      render() {
         return (
+
 
             //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
             //beroende pa responsen fran fetch
@@ -65,7 +77,25 @@ class App extends Component {
                    }/>
 
               
+  
+
+          
+           
+   
+               <Route path = "/registeredPage" exact strict component ={registeredPage}/>
+               
+               <Route path = "/loginPage" exact strict component ={loginPage}/>
+               
+               <Route path = "/#" exact strict Component = {App}/>
+               
+               
+               
+              
+            
+
             <section>
+
+
                 {!this.state.visible ? <Form form={this.state.type} /> : null}
 
                 <header className="header">
@@ -98,8 +128,10 @@ class App extends Component {
                 
                 
 
+
           
          <Route path="/"/>
+
 
             </section>
             </Switch>

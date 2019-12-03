@@ -1,8 +1,8 @@
 -- This script will create a ciam database
 
 -- Comment out following two lines if you want to rebuild the DB
--- DROP DATABASE ciam;
--- GO
+DROP DATABASE ciam;
+GO
 
 -- Create ciam DB
 -- IF NOT EXISTS does not seem to work on mssql so will throw warning if DB already exists
@@ -19,7 +19,9 @@ CREATE TABLE users (
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
 	token VARCHAR(255),
-	verified BIT
+
+	verified BIT DEFAULT 0
+
 );
 GO
 

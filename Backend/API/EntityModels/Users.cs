@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.OleDb;
 
 namespace API.EntityModels
 {
@@ -12,6 +13,7 @@ namespace API.EntityModels
         public string Last_name { get; set; }
         public string Token {get;set;}
         public bool Verified{get;set;}
+
     }
 
 }
