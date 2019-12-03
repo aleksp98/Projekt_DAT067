@@ -6,6 +6,11 @@ import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
+import Cookies from 'js-cookie'
+
+export const getAccessToken = () => Cookies.get('access_token')
+export const getRefreshToken = () => Cookies.get('refresh_token')
+export const isAuthenticated = () => !!getAccessToken()
 
 class App extends Component {
 
@@ -17,7 +22,9 @@ class App extends Component {
 
     render() {
         return (
+
             <section>
+
 
                 {!this.state.visible ? <Form form={this.state.type} /> : null}
 

@@ -26,6 +26,16 @@ namespace API.Controllers
             return Ok(await _userService.GetUsers());
         }
 
+         //Check if account is active
+        //returns to frontend 200 and bool value
+        [HttpGet]
+        [Route("CheckUser/{email}")]
+        public async Task<IActionResult> CheckUser(string email)
+        { 
+         return Ok(await _userService.CheckUser(email));
+
+        }
+
         [HttpPost]
         [Route("SaveUser")]
         public async Task<IActionResult> SaveUser([FromBody] UserItem model)
@@ -33,19 +43,12 @@ namespace API.Controllers
             return Ok(await _userService.SaveUser(model));
         }
 
-
-        //Check if account is active
-        //returns to frontend 200 and bool value
-        [HttpGet]
-        [Route("CheckUser/{email}")]
-        public IActionResult CheckUser(string email)
-        { 
-         ObjectResult temp = Ok(_userService.CheckUser(email));
-         return temp;
-
+        [HttpPost]
+        [Route("LoginUser")]
+        public async Task<IActionResult> LoginUser([FromBody] UserItem model)
+        {
+            return Ok(await _userService.LoginUser(model));
         }
-
-
 
         [HttpDelete]
         [Route("DeleteUser/{Id}")]
