@@ -22,14 +22,5 @@ https://discord.gg/bw45Y9j
 
 
 ### Setup
-
-#### Frontend
-npm install --save react-recaptcha \
-npm install jquery \
-npm install react-scroll \
-npm install materil-ui
-
-#### Backend
-dotnet add package Microsoft.EntityFrameworkCore.Tools \
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer \
-dotnet add package Microsoft.EntityFrameworkCore.Design
+Run the setup file in the root directory to execute all setup scripts. Then run the start script to start all processes. \
+Setup/start scripts for individual components exist in each directory where its relevant.

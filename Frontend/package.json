@@ -6,9 +6,11 @@
     "@material-ui/core": "^4.7.0",
     "@material-ui/icons": "^4.5.1",
     "jquery": "^3.4.1",
+    "material-ui": "^0.20.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-recaptcha": "^2.3.10",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-scroll": "^1.7.14"
   },
@@ -32,5 +34,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "css-loader": "^3.2.0"
   }
 }
