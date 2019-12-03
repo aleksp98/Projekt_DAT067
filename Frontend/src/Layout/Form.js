@@ -85,6 +85,8 @@ export default class form extends React.Component {
             user["password"] = this.state.fields.password;
             user["first_name"] = this.state.fields.firstname;
             user["last_name"] = this.state.fields.lastname;
+            var randomstring = require("randomstring");
+            user["token"] = randomstring.generate();
             
             console.log(user);
             console.log(JSON.stringify(user));

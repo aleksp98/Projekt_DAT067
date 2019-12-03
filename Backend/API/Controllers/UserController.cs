@@ -38,7 +38,7 @@ namespace API.Controllers
              //kalla på funktionen här under
              Console.WriteLine("Email: {0}      FirstName: {1}\n \n \n \n",model.Email,model.First_name);
 
-             Mail.sendMail(model.Email,model.First_name,model.Last_name);
+             Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
              
             return ok ;
         }

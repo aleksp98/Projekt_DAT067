@@ -6,7 +6,7 @@ using System.Net.Mail;
 class Mail{
     //private const string Path = @"\Backend\API\Service\test.html";
 
-    public static void sendMail(string email, string firstName, string lastName) {
+    public static void sendMail(string email, string firstName, string lastName, string token) {
 
  Console.WriteLine("Inne i sendMail Email: {0}      FirstName: {1}   LastName: {2}\n \n \n \n",email,firstName,lastName);
 
@@ -16,8 +16,7 @@ var fromAddress2 = new MailAddress("Sigma@testmail.com", "From Name");
 var toAddress = new MailAddress(email, firstName+"" +lastName);
 const string fromPassword = "Testarmail";
 const string subject = "testar mail";
-   //put generated token here instead of -> email
-string token = email;
+
 
 string activateLink = "http://localhost:3000/confirmation/"+token;
 

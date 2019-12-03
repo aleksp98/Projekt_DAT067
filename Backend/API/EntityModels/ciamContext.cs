@@ -58,6 +58,12 @@ namespace API.EntityModels
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                    entity.Property(e => e.Token)
+                    .IsRequired()
+                    .HasColumnName("Token")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                      entity.Property(e => e.Verified)
                     .IsRequired()
                     .HasColumnName("verified")

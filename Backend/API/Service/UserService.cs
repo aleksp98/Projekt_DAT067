@@ -23,7 +23,8 @@ namespace API.Service
                                   Email = a.Email,
                                   Password = a.Password,
                                   First_name = a.First_name,
-                                  Last_name = a.Last_name
+                                  Last_name = a.Last_name,
+                                  Token = a.Token
                               }).ToListAsync();
             }
         }
@@ -83,6 +84,7 @@ namespace API.Service
                         Password = userItem.Password,
                         First_name = userItem.First_name,
                         Last_name = userItem.Last_name,
+                        Token = userItem.Token
                     };
                     db.Users.Add(user);
 
@@ -93,6 +95,7 @@ namespace API.Service
                     user.Password = userItem.Password;
                     user.First_name = userItem.First_name;
                     user.Last_name = userItem.Last_name;
+                    user.Token = userItem.Token;
                 }
 
                 return await db.SaveChangesAsync() >= 1;
