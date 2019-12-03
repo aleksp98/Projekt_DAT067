@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
-
+//byt till en rikitg SMTP server som kan användas
 class Mail{
     //private const string Path = @"\Backend\API\Service\test.html";
 
@@ -14,7 +14,7 @@ var fromAddress = new MailAddress("untzSten@gmail.com", "From Name");
 var fromAddress2 = new MailAddress("Sigma@testmail.com", "From Name");
 
 var toAddress = new MailAddress(email, firstName+"" +lastName);
-const string fromPassword = "Klusina123";
+const string fromPassword = "Testarmail";
 const string subject = "testar mail";
    //put generated token here instead of -> email
 string token = email;
@@ -34,7 +34,7 @@ html = html.Replace("~FullName~",FullName);
 
 string body = html;
 var smtp = new SmtpClient      {     
-   Host = "smtp.gmail.com",   
+   Host = "smtp.gmail.com",  
      Port = 587,  
       EnableSsl = true,  
      DeliveryMethod = SmtpDeliveryMethod.Network,      

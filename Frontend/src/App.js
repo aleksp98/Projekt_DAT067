@@ -20,35 +20,17 @@ class App extends Component {
 
     /* Fråga hur man passerar en onclick via en jsx component */
 
+
+
+
+
+
      render() {
         return (
 
-            //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
-            //beroende pa responsen fran fetch
-            <Router>
-                 <Switch>
-                <Route path="/confirmation/:token" exact strict render={
-                 ({match}) => {
-                var temp = sendHTTP(match.params.token);
-                
 
-                  var result;
-          
-                var hets = temp.then(function(response) {
-                    return response.text().then(function(text) {
-                    if(text == "true")
-                    {
-                       alert('Registreringen funkar');
-                    }
-                    else{
-                        alert('Du lyckades inte registreras');
-                
-                }
-                   
-                    });
-                  }); 
-                   }
-                   }/>
+
+
 
               
             <section>
@@ -80,6 +62,46 @@ class App extends Component {
 
 
                 <Footer />
+             
+            //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
+            //beroende pa responsen fran fetch
+            //fixa så att man automatiskt kommer till main route
+            <Router>
+                <Route path="/confirmation/:token" exact strict render={
+                 ({match}) => {
+
+                    alert('sending to mail');
+                  var temp = sendHTTP(match.params.token);
+                
+          
+                   temp.then(function(response) {
+                    return response.text().then(function(text) {
+                    if(text == "true")
+                    {
+                        //ändra till snackbar
+                       alert('Registreringen funkar');
+                    }
+                    else{
+                        //ändra till snackbar
+                        alert('Du lyckades inte registreras');
+                }
+                   
+                    });
+                  }); 
+
+
+                  
+
+                   }
+                   }/>
+            </Router>
+
+
+
+
+
+
+
                 
                 
                 
@@ -87,9 +109,7 @@ class App extends Component {
           
 
             </section>
-            </Switch>
-            </Router>
-
+         
         );
     }
 }
