@@ -271,3 +271,69 @@ footer {
 .inputDesignConfirmPassword {
     position: absolute;
 }
+
+.headerDesign {
+    width: 100%;
+    height: 170px;
+    background-color: #474646;
+    text-align: center;
+    color: white;
+    z-index: 50;
+    top: 0;
+    transition: 0.5s;
+    
+}
+.headerDesign a {
+    display: block;
+    float: right;
+    line-height: 20px;
+    margin-top: 5px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1em;
+    box-sizing: border-box;
+    padding: 5px;
+}
+.headerDesign a:first-of-type {
+    margin-right: 15%;
+}
+
+.headerDesign a:hover {
+    text-decoration: underline;
+}
+
+.headerDesign h1 {
+font-size: 2em;
+margin-block-start: 0px;
+margin-block-end: 0px;
+position: relative;
+color: white;
+text-shadow: 1px 2px black;
+transition: 0.5s;
+}
+.h1Design {
+    top: 30%;
+}
+.messageDesign {
+    text-align: center;
+    color: black;
+    
+}
+.divDesign {
+    position: relative;
+    top: 10vh;
+}
+.messageDesign2 {
+    text-align: center;
+    color: black;
+    font-size: 1em;
+    
+}
+.linkDesign {
+    text-align: center;
+    
+}
+.logoDesign{
+    text-align: center;
+}
