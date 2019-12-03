@@ -7,14 +7,17 @@ import EyeIcon from '../Image/icon-eye-7.jpg';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
+
+import {Link} from 'react-router-dom';
+import registeredPage from './registeredPage';
+import {withRouter} from 'react-router-dom';
+
 import { bool } from 'prop-types';
 
 
 
 
-
-
-export default class form extends React.Component {
+ class form extends React.Component {
 
     constructor(props) {
         super(props);
@@ -38,13 +41,18 @@ export default class form extends React.Component {
         this.submituserLoginForm = this.submituserLoginForm.bind(this);
 
     };
+    state = {
+        visible: true
+    }
 
     recaptchaLoaded() {
         console.log("Capcha loaded successfully!");
     }
 
     handleRegister(e) {
+
         if (!this.state.isVerified) {
+
             e.preventDefault(); //Hindrar att formuläret submitas   JE
             this.setState({ snackbaropen: true, snackbarmsg: "Please verify that you are a human" });
         }
@@ -81,6 +89,11 @@ export default class form extends React.Component {
             user["first_name"] = this.state.fields.firstname;
             user["last_name"] = this.state.fields.lastname;
 
+           /* console.log(user);
+            console.log(JSON.stringify(user));*/
+            this.redirect();
+
+
             let fields = {};
             fields["firstname"] = "";
             fields["lastname"] = "";
@@ -101,6 +114,12 @@ export default class form extends React.Component {
         }
 
     }
+
+    redirect(){
+        this.props.history.push('/registeredPage')
+        
+    }
+
     //Listener to login button(when pressed)
     submituserLoginForm(e) {
         e.preventDefault();
@@ -146,6 +165,7 @@ export default class form extends React.Component {
             });
         });
     }
+
 
 
     validateForm() {
@@ -359,3 +379,4 @@ export default class form extends React.Component {
     }
 }
 
+export default withRouter(form);
