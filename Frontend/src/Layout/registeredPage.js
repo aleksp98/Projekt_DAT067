@@ -2,7 +2,7 @@ import React from 'react';
 import '../App';
 import {Link} from 'react-router-dom';
 import logo from '../Image/CIAM-logo.png'
-import { withRouter } from 'react-router-dom';
+
 
   export default class registeredPage extends React.Component  {
     render() {
