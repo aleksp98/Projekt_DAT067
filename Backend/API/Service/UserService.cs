@@ -55,7 +55,7 @@ namespace API.Service
              using (ciamContext db = new ciamContext())
             {  //change use x.Token instead of -> x.Email (OBS need to put in token in database)
                 Users user =
-                     db.Users.Where(x => x.Email == token).FirstOrDefault();
+                     db.Users.Where(x => x.Token == token).FirstOrDefault();
                 if (user != null)
                 {
                    user.Verified = true;
