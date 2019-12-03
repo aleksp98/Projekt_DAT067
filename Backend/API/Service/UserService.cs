@@ -23,11 +23,22 @@ namespace API.Service
                                   Email = a.Email,
                                   Password = a.Password,
                                   First_name = a.First_name,
-                                  Last_name = a.Last_name
+                                  Last_name = a.Last_name,
+                                  Verified = a.Verified
                               }).ToListAsync();
             }
         }
 
+          //check if email exist and is active
+          //returns bool
+        public async Task<bool> CheckUser(string Email)
+        {
+             using (ciamContext db = new ciamContext())
+            {
+                return null != db.Users.Where(x => x.Email == Email && x.Verified == true).FirstOrDefault();
+            }
+        }
+        
         public async Task<bool> SaveUser(UserItem userItem)
         {
             using (ciamContext db = new ciamContext())
@@ -41,7 +52,7 @@ namespace API.Service
                         Email = userItem.Email,
                         Password = userItem.Password,
                         First_name = userItem.First_name,
-                        Last_name = userItem.Last_name
+                        Last_name = userItem.Last_name,
                     };
                     db.Users.Add(user);
 
@@ -53,8 +64,16 @@ namespace API.Service
                     user.First_name = userItem.First_name;
                     user.Last_name = userItem.Last_name;
                 }
-
                 return await db.SaveChangesAsync() >= 1;
+            }
+        }
+
+        public async Task<bool> LoginUser(UserItem userItem)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                return null != db.Users.Where
+                         (x => x.Email == userItem.Email && x.Password == userItem.Password).FirstOrDefault();
             }
         }
 

@@ -57,6 +57,10 @@ namespace API.EntityModels
                     .HasColumnName("last_name")
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Verified)
+                    .IsRequired()
+                    .HasColumnName("verified");
             });
 
             OnModelCreatingPartial(modelBuilder);
