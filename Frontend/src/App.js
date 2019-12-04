@@ -6,72 +6,120 @@ import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
-import { BrowserRouter as Router,Switch,Route} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { sendHTTP } from './EmailConfirmation'
+import { string } from 'prop-types';
+import ImageSlider from './Components/ImageSlider';
+
 import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
+import Cookies from 'js-cookie';
+
+export const getAccessToken = () => Cookies.get('access_token')
+export const getRefreshToken = () => Cookies.get('refresh_token')
+export const getSession = () => Cookies.get("session")
+export const isAuthenticated = () => !!getAccessToken()
+
+
+
 class App extends Component {
 
     state = {
-        visible: true
+        visibleForm: true,
+        isAuthenticated: isAuthenticated(),
+        session: getSession()
     }
 
     /* Fråga hur man passerar en onclick via en jsx component */
 
     render() {
         return (
-          
-           
-           <Router>
-           <Switch>
-               <Route path = "/registeredPage" exact strict component ={registeredPage}/>
-               
-               <Route path = "/loginPage" exact strict component ={loginPage}/>
-               
-               <Route path = "/#" exact strict Component = {App}/>
-               
-               
-               
-              
-            
-            <section>
+            //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
+            //beroende pa responsen fran fetch
+            <Router>
+                <Switch>
+                    <Route path="/confirmation/:token" exact strict render={
+                        ({ match }) => {
 
-                {!this.state.visible ? <Form form={this.state.type} /> : null}
+                            var temp = sendHTTP(match.params.token);
 
-                <header className="header">
-                    <div className="headerController">
-                        <a href="#" value="Register" onClick={() => { this.setState({ visible: !this.state.visible, type: "Register" }); }}>Register</a>
-                        <a href="#" value="Login" onClick={() => { this.setState({ visible: !this.state.visible, type: "Login" }); }}>Login</a>
-                    </div>
+                            var result;
+                                                          
+                            var hets = temp.then(function (response) {
+
+                                var that = this;
+
+                                return response.text().then(function (text) {
+                                    if (text == "true") {
+                                        alert('Registreringen funkar');
+
+                                    }
+                                    else {
+                                        alert('Du lyckades inte registreras');
+
+                                    }
+
+                                });
+                            });
+                            return (
+                            <section>
+                            <h1>Välkommen till klubben. Om du fick ett fel försök igen senare</h1>
+                            <Link to="/">
+                            <p>Go to startpage</p>
+                            </Link>
+                            </section>
+                            );
+                        }
+                    } />
+
+                    <Route path="/registeredPage" exact strict component={registeredPage} />
+
+                    <Route path="/loginPage" exact strict component={loginPage} />
+
+                    <Route path="/#" exact strict Component={App} />
+
+                    <section>
+
+                        {!this.state.visibleForm ? 
+                            <Form form={this.state.type}>
+                                <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a> 
+                                
+                                <p className="linkDesign" onClick={() => { this.setState({ type: "Login"}); }}>click here to login</p>
+                            </Form> 
+                        : null}
+
+                        <header className="header">
+                            <div className="headerController">
+                                {this.state.session ? <div> {JSON.parse(this.state.session).username} </div> : null}
+                                    <a href="#" value="Register" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Register" }); }}>Register</a>
+                                {!this.state.isAuthenticated ?
+                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> :
+                                    <a href="#" value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}>Logout</a>
+                                }
+                            </div>
+
+                            
+                            <h1>Customer Identity and Access Management</h1>
 
 
-                    <h1>Customer Identity and Access Management</h1>
+                            <Navigation />
 
+                        </header>
 
-                    <Navigation />
+                        <Section id="Start" value="Start">
+                            <ImageSlider />
+                        </Section>
 
+                        <Section id="Translation" value="Translation" />
 
+                        <Section id="Upload" value="Upload" />
 
-                </header>
+                        <Section id="About" value="About" />
 
-                <Section id="Start" value="Start" />
-
-                <Section id="Translation" value="Translation" />
-
-                <Section id="Upload" value="Upload" />
-
-                <Section id="About" value="About" />
-
-
-                <Footer />
-
-              
-
-            </section>
-            </Switch>
+                        <Footer />
+                    </section>
+                </Switch>
             </Router>
-            
-            
-
         );
     }
 }
