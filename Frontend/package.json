@@ -38,6 +38,7 @@
     ]
   },
   "devDependencies": {
+    "@types/js-cookie": "^2.2.4",
     "css-loader": "^3.2.0"
   }
 }

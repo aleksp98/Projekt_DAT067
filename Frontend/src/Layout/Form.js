@@ -4,20 +4,21 @@ import UserIcon from '../Image/user-512.png';
 import PasswordIcon from '../Image/password.ico';
 import Recaptcha from 'react-recaptcha';
 import EyeIcon from '../Image/icon-eye-7.jpg';
+import * as Cookies from "js-cookie";
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import registeredPage from './registeredPage';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { bool } from 'prop-types';
 
 
 
 
- class form extends React.Component {
+class form extends React.Component {
 
     constructor(props) {
         super(props);
@@ -27,7 +28,7 @@ import { bool } from 'prop-types';
         // this.handleLogin = this.handleLogin.bind(this);
 
         this.verifyCallback = this.verifyCallback.bind(this);
-        
+
         this.state = {
             fields: {},
             errors: {},
@@ -91,15 +92,6 @@ import { bool } from 'prop-types';
 
             var randomstring = require("randomstring");
             user["token"] = randomstring.generate();
-            
-            console.log(user);
-            console.log(JSON.stringify(user));
-
-
-           /* console.log(user);
-            console.log(JSON.stringify(user));*/
-            this.redirect();
-
 
             let fields = {};
             fields["firstname"] = "";
@@ -118,18 +110,20 @@ import { bool } from 'prop-types';
             };
             const request = new Request(url, requestOptions);
             fetch(request).then(this.setState({ fields: fields, snackbaropen: true, snackbarmsg: "Registration successful!" }));
+
+            this.redirect('/registeredPage');
         }
 
     }
-     //Listener to login button(when pressed)
-    handleLogin(){
-        const mail= this.state.fields.email;
+    //Listener to login button(when pressed)
+    handleLogin() {
+        const mail = this.state.fields.email;
         const url = 'https://localhost:5001/api/User/CheckUser/' + mail;
     }
 
-    redirect(){
-        this.props.history.push('/registeredPage')
-        
+    redirect(path) {
+        this.props.history.push(path)
+
     }
 
     //Listener to login button(when pressed)
@@ -140,7 +134,6 @@ import { bool } from 'prop-types';
         let user = {};
         user["email"] = this.state.fields.email;
         user["password"] = this.state.fields.password;
-
         const url = 'https://localhost:5001/api/User/LoginUser';
 
         const headers = new Headers();
@@ -152,7 +145,6 @@ import { bool } from 'prop-types';
         };
         const request = new Request(url, requestOptions);
 
-        //ful lösning vet inte hur man hämtar till bool i Javascript 
         fetch(request).then(function (response) {
             return response.text().then(function (text) {
                 if (text === "true") {
@@ -164,7 +156,11 @@ import { bool } from 'prop-types';
                     fetch(request).then(function (response) {
                         return response.text().then(function (text) {
                             if (text === "true") {
+                                Cookies.remove("session");
+                                Cookies.set("session", { "username": user.email, "password": user.password }, { expires: 14 });
+                                Cookies.set("access_token", "placeholder", { expires: 14 });
                                 _this.setState({ snackbaropen: true, snackbarmsg: "Login successful!" });
+                                _this.redirect('/loginPage');
                             }
                             else {
                                 _this.setState({ snackbaropen: true, snackbarmsg: "Account not verified, please check you email" });

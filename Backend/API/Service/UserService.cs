@@ -62,12 +62,6 @@ namespace API.Service
             }
         }
 
-
-
-
-
-
-        
         public async Task<bool> SaveUser(UserItem userItem)
         {
             using (ciamContext db = new ciamContext())

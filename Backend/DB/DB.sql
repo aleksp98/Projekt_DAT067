@@ -19,9 +19,7 @@ CREATE TABLE users (
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
 	token VARCHAR(255),
-
 	verified BIT DEFAULT 0
-
 );
 GO
 
