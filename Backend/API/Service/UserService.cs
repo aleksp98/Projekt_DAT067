@@ -23,8 +23,39 @@ namespace API.Service
                                   Email = a.Email,
                                   Password = a.Password,
                                   First_name = a.First_name,
-                                  Last_name = a.Last_name
+                                  Last_name = a.Last_name,
+                                  Token = a.Token,
+                                  Verified = a.Verified
                               }).ToListAsync();
+            }
+        }
+
+          //check if email exist and is active
+          //returns bool
+        public async Task<bool> CheckUser(string Email)
+        {
+             using (ciamContext db = new ciamContext())
+            {
+                return null != db.Users.Where(x => x.Email == Email && x.Verified == true).FirstOrDefault();
+            }
+        }
+
+
+         //check if email exist and is active
+          //returns bool
+        public async Task<bool> ConfirmMail(string token)
+        {  
+
+            Console.WriteLine(token);
+             using (ciamContext db = new ciamContext())
+            {  //change use x.Token instead of -> x.Email (OBS need to put in token in database)
+                Users user =
+                     db.Users.Where(x => x.Token == token).FirstOrDefault();
+                if (user != null)
+                {
+                   user.Verified = true;
+                }
+                return await db.SaveChangesAsync() >= 1;
             }
         }
 
@@ -41,7 +72,8 @@ namespace API.Service
                         Email = userItem.Email,
                         Password = userItem.Password,
                         First_name = userItem.First_name,
-                        Last_name = userItem.Last_name
+                        Last_name = userItem.Last_name,
+                        Token = userItem.Token
                     };
                     db.Users.Add(user);
 
@@ -52,9 +84,18 @@ namespace API.Service
                     user.Password = userItem.Password;
                     user.First_name = userItem.First_name;
                     user.Last_name = userItem.Last_name;
+                    user.Token = userItem.Token;
                 }
-
                 return await db.SaveChangesAsync() >= 1;
+            }
+        }
+
+        public async Task<bool> LoginUser(UserItem userItem)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                return null != db.Users.Where
+                         (x => x.Email == userItem.Email && x.Password == userItem.Password).FirstOrDefault();
             }
         }
 

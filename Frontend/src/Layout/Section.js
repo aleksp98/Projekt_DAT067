@@ -4,9 +4,10 @@ import React from 'react';
 class section extends React.Component {
     render() {
         return (
-            <section id={this.props.id}>
+            <section className={this.props.id}>
 
                 <h3>Hello, welcome to {this.props.value}</h3>
+                {this.props.children}
 
             </section>
         )
