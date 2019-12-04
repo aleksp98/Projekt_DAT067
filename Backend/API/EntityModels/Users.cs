@@ -13,7 +13,5 @@ namespace API.EntityModels
         public string Last_name { get; set; }
         public string Token {get;set;}
         public bool Verified{get;set;}
-
     }
-
 }

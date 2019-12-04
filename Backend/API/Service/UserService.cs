@@ -24,11 +24,8 @@ namespace API.Service
                                   Password = a.Password,
                                   First_name = a.First_name,
                                   Last_name = a.Last_name,
-
                                   Token = a.Token,
-
                                   Verified = a.Verified
-
                               }).ToListAsync();
             }
         }

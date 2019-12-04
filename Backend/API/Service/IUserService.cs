@@ -12,10 +12,7 @@ namespace API.Service
         Task<bool> SaveUser(UserItem user);
         Task<bool> LoginUser(UserItem user);
         Task<bool> DeleteUser(int Id);
-
         Task<bool> ConfirmMail(string token);
-
         Task<bool> CheckUser(string email);
-
     }
 }
