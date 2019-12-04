@@ -9,10 +9,11 @@ import Form from './Layout/Form';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { sendHTTP } from './EmailConfirmation'
 import { string } from 'prop-types';
+import ImageSlider from './Components/ImageSlider';
 
 import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
 export const getAccessToken = () => Cookies.get('access_token')
 export const getRefreshToken = () => Cookies.get('refresh_token')
@@ -24,7 +25,7 @@ export const isAuthenticated = () => !!getAccessToken()
 class App extends Component {
 
     state = {
-        visible: true,
+        visibleForm: true,
         isAuthenticated: isAuthenticated(),
         session: getSession()
     }
@@ -36,7 +37,6 @@ class App extends Component {
             //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
             //beroende pa responsen fran fetch
             <Router>
-                
                 <Switch>
                     <Route path="/confirmation/:token" exact strict render={
                         ({ match }) => {
@@ -80,19 +80,25 @@ class App extends Component {
 
                     <section>
 
-                        {!this.state.visible ? <Form form={this.state.type} /> : null}
+                        {!this.state.visibleForm ? 
+                            <Form form={this.state.type}>
+                                <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a> 
+                                
+                                <p className="linkDesign" onClick={() => { this.setState({ type: "Login"}); }}>click here to login</p>
+                            </Form> 
+                        : null}
 
                         <header className="header">
                             <div className="headerController">
                                 {this.state.session ? <div> {JSON.parse(this.state.session).username} </div> : null}
-                                <a href="#" value="Register" onClick={() => { this.setState({ visible: !this.state.visible, type: "Register" }); }}>Register</a>
+                                    <a href="#" value="Register" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Register" }); }}>Register</a>
                                 {!this.state.isAuthenticated ?
-                                    <a href="#" value="Login" onClick={() => { this.setState({ visible: !this.state.visible, type: "Login" }); }}>Login</a> :
+                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> :
                                     <a href="#" value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}>Logout</a>
                                 }
                             </div>
 
-
+                            
                             <h1>Customer Identity and Access Management</h1>
 
 
@@ -100,7 +106,9 @@ class App extends Component {
 
                         </header>
 
-                        <Section id="Start" value="Start" />
+                        <Section id="Start" value="Start">
+                            <ImageSlider />
+                        </Section>
 
                         <Section id="Translation" value="Translation" />
 
@@ -109,7 +117,6 @@ class App extends Component {
                         <Section id="About" value="About" />
 
                         <Footer />
-
                     </section>
                 </Switch>
             </Router>
