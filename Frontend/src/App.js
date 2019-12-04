@@ -44,7 +44,7 @@ class App extends Component {
                             var temp = sendHTTP(match.params.token);
 
                             var result;
-
+                                                          
                             var hets = temp.then(function (response) {
 
                                 var that = this;
@@ -61,7 +61,14 @@ class App extends Component {
 
                                 });
                             });
-                            return <h1>Välkommen till klubben. Om du fick ett fel försök igen senare</h1>;
+                            return (
+                            <section>
+                            <h1>Välkommen till klubben. Om du fick ett fel försök igen senare</h1>
+                            <Link to="/">
+                            <p>Go to startpage</p>
+                            </Link>
+                            </section>
+                            );
                         }
                     } />
 
@@ -110,8 +117,6 @@ class App extends Component {
                         <Section id="About" value="About" />
 
                         <Footer />
-
-
                     </section>
                 </Switch>
             </Router>
