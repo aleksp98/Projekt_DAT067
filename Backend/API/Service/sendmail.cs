@@ -1,60 +1,42 @@
+
+// using SendGrid's C# Library
+// https://github.com/sendgrid/sendgrid-csharp
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System;
 using System.IO;
-using System.Net;
-using System.Net.Mail;
-//byt till en rikitg SMTP server som kan användas
-class Mail
+using System.Threading.Tasks;
+
+//dotnet add package SendGrid
+
+//Tror ni maste skapa er egna API environment
+//howTo https://github.com/sendgrid/sendgrid-csharp#setup-environment-variables
+public class Mail
 {
-    //private const string Path = @"\Backend\API\Service\test.html";
-
-    public static void sendMail(string email, string firstName, string lastName, string token)
-    {
-
-        Console.WriteLine("Inne i sendMail Email: {0}      FirstName: {1}   LastName: {2}\n \n \n \n", email, firstName, lastName);
-
-        var fromAddress = new MailAddress("untzSten@gmail.com", "From Name");
-        var fromAddress2 = new MailAddress("Sigma@testmail.com", "From Name");
-
-        var toAddress = new MailAddress(email, firstName + "" + lastName);
-        const string fromPassword = "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";
-        const string subject = "testar mail";
-        const string username = "apikey";
-
-        string activateLink = "http://localhost:3000/confirmation/" + token;
-
-        string FullName = firstName + " " + lastName;
-
-        Console.WriteLine(activateLink);
-
-        string html = File.ReadAllText("test.html");
-
-        html = html.Replace("~ActivationLink~", activateLink);
-
-        html = html.Replace("~FullName~", FullName);
-
-        string body = html;
-        var smtp = new SmtpClient
+ 
+       
+          //  Execute().Wait();
+     
+        public static async Task sendMail(string email, string firstName, string lastName, string token)
         {
-            Host = "smtp.sendgrid.net",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            Credentials = new NetworkCredential(username, fromPassword)
-        };
-        using (var message = new MailMessage(fromAddress2, toAddress)
-        {
-            Subject = subject,
-            Body = body,
-            IsBodyHtml = true
-        })
-        { smtp.Send(message); }
 
-    }
+            Console.WriteLine("Inne i sendMail Email: {0}      FirstName: {1}   LastName: {2}\n \n \n \n", email, firstName, lastName);
 
+            string activateLink = "http://localhost:3000/confirmation/" + token;
 
+                              //satta upp er egna windows Environment
+            var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("VolvoTest@chalmers.se", "Admin");
+            var subject = "Sending with SendGrid is Fun";
+            var to = new EmailAddress(email, firstName+ " "+ lastName);
+            var plainTextContent = "";
+            string html = File.ReadAllText("test.html");
+            html = html.Replace("~ActivationLink~", activateLink);
+            html = html.Replace("~FullName~", firstName+ " "+ lastName);
 
-
-
-
-
+            var htmlContent = html;
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
 }
