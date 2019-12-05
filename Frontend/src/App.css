@@ -1,6 +1,7 @@
 
-h3 {
+* {    
     margin: 0;
+    padding: 0;
 }
 
 /*  Layout  JE  */
@@ -22,7 +23,7 @@ section section {
     background-color: white;
     margin-block-end: 0px;
     box-sizing: border-box;
-    padding: 10px;
+    overflow: hidden;
 }
 
     section section:first-of-type {
@@ -30,6 +31,12 @@ section section {
         height: calc(100vh - 170px);
         background-color: white;
     }
+    
+.Start h3 {
+    position: absolute;
+    z-index: 10;
+  }
+  
 
 footer {
     width: 100%;
@@ -96,17 +103,156 @@ footer {
         width: 25%;
         float: left;
         margin: 0px !important;
+        cursor: pointer;
     }
 
     .NavigationBar > .active {
-        /*
-   * border-bottom: 1px solid white;
-   */
         box-shadow: 0 2px 2px -2px white;
     }
 
+/*  Dropdown in Navbar  */
+
+.dropdown {
+    width: 10%;
+    position: relative;
+    display: block;
+    float: right;
+    margin-right: 15%;
+    cursor: pointer;
+    line-height: 20px;
+    margin-top: 5px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1em;
+    box-sizing: border-box;
+    padding: 5px;
+    text-align: right;
+}
+
+.dropdown p img {
+    width: 12px;
+    transform: rotate(-90deg);
+    margin-left: 10px;
+    transition: 0.3s;
+}
+
+.dropdown:hover img {
+    transform: rotate(0deg);
+}
+  
+  .dropdown-content {
+    height: 135px;
+    display: none;
+    position: absolute;
+    width: 100%;
+    background-color: rgba(105,103,100, 0.8);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,1);
+    z-index: 40;
+    margin-block-start: 5px;
+  }
+
+  .dropdown-content p {
+      border-bottom: 1px solid black;
+      height: 45px;
+      line-height: 45px;
+      margin: 0px;
+      box-sizing: border-box;
+      font-size: 0.9em;
+      text-align: center;
+  }
+
+.dropdown-content p:hover {
+    text-decoration: underline;
+}
+
+.dropdown-content p:last-of-type {
+    border-bottom: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content p a {
+    width: 100%;
+    height: 45px;
+    float: none;
+    margin: 0;
+    padding: 0;
+    line-height: 45px;
+}
+
+/*  Scrollbar   JE  */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px black; 
+    border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
 /*  Start JE  */
 
+.sliderContainer {
+    width: 400%;
+    height:  calc(100vh - 170px);
+    position: relative;
+    animation-name: slider;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+  }
+  
+  .img02 {
+    width: 25%;
+    height: 100%;
+  }
+  
+  @keyframes slider {
+    0%   {
+      right: 0%;
+    }
+    20%  {
+      right: 0%;
+    }
+    25%  {
+      right: 100%;
+    }
+    45%  {
+      right: 100%;
+    }
+    50%  {
+      right: 200%;
+    }
+    70% {
+      right: 200%;
+    }
+    75% {
+      right: 300%;
+    }
+    95% {
+      right: 300%;
+    }
+    100% {
+      right: 0%;
+    }
+  }
+  
 
 /*  Translation JE  */
 
@@ -163,8 +309,11 @@ footer {
 }
 
     .cover form {
+        height: auto !important;
         width: 40%;
-        height: 50%;
+        max-height: 80% !important;
+        min-height: 50% !important;
+        overflow-y: auto;
         background-color: rgba(255, 249, 249, 1);
         display: block;
         margin: auto;
@@ -173,7 +322,6 @@ footer {
         -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
-        overflow-y: scroll;
         box-shadow: 0px 2px 5px 0px black;
     }
 
@@ -192,6 +340,7 @@ footer {
             float: left;
             margin-bottom: 15px;
             box-shadow: 0 2px 2px -2px grey;
+            overflow: hidden;
         }
 
             .cover form div:focus-within {
@@ -216,15 +365,35 @@ footer {
                     outline: none;
                 }
 
-        .cover form button {
+        .cover form button {      
             width: 30%;
-            height: 40px;
-            float: right;
-            margin-right: 35%;
+            height: 45px;
             background-color: transparent;
             border: none;
             box-shadow: 0 2px 2px -2px grey;
             text-align: center;
+            display: block;
+            float: left;
+            margin: 10px 0px 0px 15%;
+        }
+
+        #g-recaptcha {
+            box-shadow: none;
+            box-shadow: none;
+            display: block;
+            float: right;
+            transform: scale(0.6);
+            transform-origin:0 0;
+            margin: 0;
+            width: auto;
+            margin: 10px 0px 60px 10px;
+            overflow: visible;
+        }
+
+        #g-recaptcha div {
+            box-shadow: none;
+            margin: 0;
+            overflow: visible;
         }
 
         .cover form a {
@@ -265,16 +434,8 @@ footer {
                     background-color: transparent !important;
                 }
 
-.RegisterForm {
-    height: 70% !important;
-}
-
-    .RegisterForm div input {
+    .userRegistrationForm div input {
         width: 100% !important;
-    }
-
-    .RegisterForm div:first-of-type input {
-        width: 50% !important;
     }
 
 .eyeIcon {
@@ -288,6 +449,23 @@ footer {
     position: absolute;
     right: 18%;
 }
+
+.registrationCompleted {
+    width: 40%;
+    height: 80%;
+    background-color: rgba(255, 249, 249, 1);
+    display: block;
+    margin: auto;
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    box-shadow: 0px 2px 5px 0px black;
+    overflow-y: auto;
+}
+
+/*      Varför?
 
 .inputDesignFirstname {
     position: absolute;
@@ -308,3 +486,33 @@ footer {
 .inputDesignConfirmPassword {
     position: absolute;
 }
+
+*/
+
+.messageDesign {
+    text-align: center;
+    color: black;
+    
+}
+
+.divDesign {
+    position: relative;
+    top: 10vh;
+}
+
+.messageDesign2 {
+    text-align: center;
+    color: black;
+    font-size: 1em;
+}
+
+.linkDesign {
+    text-align: center;  
+    cursor: pointer;  
+}
+
+.logoDesign{
+    text-align: center;
+}
+
+

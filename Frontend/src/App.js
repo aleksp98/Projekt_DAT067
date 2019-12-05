@@ -6,62 +6,135 @@ import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
-import Cookies from 'js-cookie'
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
+import { sendHTTP } from './EmailConfirmation'
+import { string } from 'prop-types';
+import ImageSlider from './Components/ImageSlider';
 
-export const getAccessToken = () => Cookies.get('access_token')
-export const getRefreshToken = () => Cookies.get('refresh_token')
-export const isAuthenticated = () => !!getAccessToken()
+import Arrow from './Image/arrow.png';
+
+import registeredPage from './Layout/registeredPage';
+import loginPage from './Layout/loginPage';
+import Settings from './Layout/Settings';
+import Account from './Layout/Account';
+
+import Cookies from 'js-cookie';
+
+export const getAccessToken = () => Cookies.get('access_token');
+export const getRefreshToken = () => Cookies.get('refresh_token');
+export const getSession = () => Cookies.get("session");
+export const isAuthenticated = () => !!getAccessToken();
+
 
 class App extends Component {
 
     state = {
-        visible: true
+        visibleForm: true,
+        isAuthenticated: isAuthenticated(),
+        session: getSession()
     }
 
-    /* Fråga hur man passerar en onclick via en jsx component */
-
     render() {
+
         return (
+            //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
+            //beroende pa responsen fran fetch
+            <Router>
+                <Switch>
+                    <Route path="/confirmation/:token" exact strict render={
+                        ({ match }) => {
 
-            <section>
+                            var temp = sendHTTP(match.params.token);
+
+                            var result;
+                                                          
+                            var hets = temp.then(function (response) {
+
+                                var that = this;
+
+                                return response.text().then(function (text) {
+                                    if (text == "true") {
+                                        alert('Registreringen funkar');
+
+                                    }
+                                    else {
+                                        alert('Du lyckades inte registreras');
+
+                                    }
+
+                                });
+                            });
+                            return (
+                            <section>
+                            <h1>Välkommen till klubben. Om du fick ett fel försök igen senare</h1>
+                            <Link to="/">
+                            <p>Go to startpage</p>
+                            </Link>
+                            </section>
+                            );
+                        }
+                    } />
+
+                    <Route path="/Settings" exact strict component={Settings} />
+                    <Route path="/Account" exact strict component={Account} />
+                    
+                    <Route path="/registeredPage" exact strict component={registeredPage} />
+                    <Route path="/loginPage" exact strict component={loginPage} />
 
 
-                {!this.state.visible ? <Form form={this.state.type} /> : null}
+                    <section>
 
-                <header className="header">
-                    <div className="headerController">
-                        <a href="#" value="Register" onClick={() => { this.setState({ visible: !this.state.visible, type: "Register" }); }}>Register</a>
-                        <a href="#" value="Login" onClick={() => { this.setState({ visible: !this.state.visible, type: "Login" }); }}>Login</a>
-                    </div>
+                        {!this.state.visibleForm ? 
+                            <Form form={this.state.type}>
+                                <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a> 
+                                
+                                <p className="linkDesign" onClick={() => { this.setState({ type: "Login"}); }}>click here to login</p>
+                            </Form> 
+                        : null}
+
+                        <header className="header">
+                            <div className="headerController">
+                                {!this.state.isAuthenticated ?
+                                <div>
+                                    <a href="#" value="Register" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Register" }); }}>Register</a>
+                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> 
+                                </div> :                           
+                                    <div className="dropdown">
+                                        <p> 
+                                            {this.state.session ? <div> {JSON.parse(this.state.session).username} </div> : "Default Name"}
+                                            <img src={Arrow} className="arrow" alt="rotateArrow" />
+                                        </p>
+                                        <div className="dropdown-content">
+                                            <p value="Account"><Link to="/Account">Account</Link></p>
+                                            <p value="Settings"><Link to="/Settings">Settings</Link></p>
+                                            <p value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}>Logout</p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            
+                            <h1>Customer Identity and Access Management</h1>
 
 
-                    <h1>Customer Identity and Access Management</h1>
+                            <Navigation />
 
+                        </header>
 
-                    <Navigation />
+                        <Section id="Start" value="Start">
+                            <ImageSlider />
+                        </Section>
 
+                        <Section id="Translation" value="Translation" />
 
+                        <Section id="Upload" value="Upload" />
 
-                </header>
+                        <Section id="About" value="About" />
 
-                <Section id="Start" value="Start" />
-
-                <Section id="Translation" value="Translation" />
-
-                <Section id="Upload" value="Upload" />
-
-                <Section id="About" value="About" />
-
-
-                <Footer />
-
-
-
-            </section>
-
-
-
-
+                        <Footer />
+                    </section>
+                </Switch>
+            </Router>
         );
     }
 }
