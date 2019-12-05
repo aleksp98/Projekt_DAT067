@@ -256,41 +256,66 @@ footer {
 
 /*  Translation JE  */
 
-#translation{
+#translationmodule{
     width: 100%;
     height: 100%;
     position: relative;
-    text-align: center;
+    text-align: left;
 }
+    #translationmodule input {
+        width: 85%;
+        height: 20px;
+        float: none;
+        margin: 5px;
+    }
+    #translationmodule label {margin: 10px;}
+    #translationmodule div {margin: 3% 10% 0 10%;}
+    #translationmodule div div {margin: 3%;}
 
-    #translation form {
-        width: 40%;
-        height: 50%;
-        display: block;
-        margin: auto;
-        position: relative;
+#createtext {
+    width: 30%;
+    height: 70%;
+    display: block;
+    position: relative;
+    float:right;
+}
+    #createtext .result button{
+        margin: 0 20% 0 20%;
+        padding:2px;
     }
 
-            #translation form input {
-                width: 85%;
-                height: 20px;
-                float: none;
-                margin: 5px;
-            }
+#translatetext {
+    width: 30%;
+    height: 70%;
+    display: block;
+    position: relative;
+    float:left;
+}
+    .translationsfound div{
+        box-shadow: 0px 2px 5px 0px grey;
+        padding: 2%;
+    }
+        .translationsfound div button{
+            width: 100%;
+            display:block;
+            margin:1%;
+            padding: 2px;
+        }
+        .translationsfound button{
+            margin: 0 20% 0 20%;
+            padding:2px;
+        }
 
-#translation #editText {
-    width: 85%;
-    height: 80px;
+textarea{
+    width: 100%;
+    height: 100px;
     float: none;
     margin: 5px;
     word-break: break-word;
 }
 
-#translation div {
-    width: 70%;
-    height: 40px;
-    float: left;
-    margin-bottom: 30px;
+.savebutton {
+    float:right;
 }
 
 /*  Upload JE  */

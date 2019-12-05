@@ -40,60 +40,112 @@ class translation extends React.Component {
       }
       render() {
           return (
-            <div id="translation">
-              <div className="searchForm">
-                  <form>
-                    <label>Search for existing text</label>
-                    <input type="text" 
-                    id="search" 
-                    placeholder="Search for ID..." 
-                    ref={input => this.search = input} 
-                    onChange={this.handleInputChange}/>
-                  </form>
-                  <div>
-                      {
-                          this.state.data.map((i) =>
-                              <p>{i.name}</p>
-                          )
-                      }
-                  </div>
-              </div>
-              <div className="newTextForm">
-                  <form>
-                    <label>Create new Text</label>
-                    <input type="text" 
-                    id="newText" 
-                    placeholder="Enter ID.." 
-                    ref={input => this.search = input} 
-                    onChange={this.handleInputChange}/>
-                  </form>
-                  <div>
-                      {
-                          this.state.data.map((i) =>
-                              <p>{i.name}</p>
-                          )
-                      }
-                  </div>
-              </div>
-              <div className="editTextForm">
-                  <form>
-                    <label>Edit text here</label>
-                    <textarea type="text" 
-                    id="editText" 
-                    placeholder="text goes here.." 
-                    ref={input => this.search = input} 
-                    onChange={this.handleInputChange}/>
-                  </form>
-                  <div>
-                      {
-                          this.state.data.map((i) =>
-                              <p>{i.name}</p>
-                          )
-                      }
-                  </div>
-              </div>
+              <div id="translationmodule">
+                <div id="translatetext">
+                <label>Search</label>
+                    <div className="search">
+                            <input type="text" 
+                            id="search" 
+                            placeholder="Search for text..." 
+                            ref={input => this.search = input} 
+                            onChange={this.handleInputChange}/>
+                        <div>
+                            {
+                                this.state.data.map((i) =>
+                                    <p>{i.name}</p>
+                                )
+                            }
+                        </div>
+                    </div>
+                    <label>Translations found in listed languages</label>
+                    <div className="translationsfound">
+                            <div>
+                                <button>swedish</button>
+                                <button>swedish</button>
+                                <button>swedish</button>
 
-
+                            </div>
+                            <button>Edit</button>
+                            <button>Delete</button>
+                    </div>
+                    <label>Edit/Create</label>
+                    <div className="editCreate">
+                            <textarea type="text" 
+                            id="editText" 
+                            placeholder="text goes here.." 
+                            ref={input => this.search = input} 
+                            onChange={this.handleInputChange}/>
+                        <div>
+                            {
+                                this.state.data.map((i) =>
+                                    <p>{i.name}</p>
+                                )
+                            }
+                        </div>
+                        </div>
+                        <div className="selectLanguage">
+                                //dropdownlista
+                                <button class="savebutton">Save</button>
+                        <div>
+                            {
+                                this.state.data.map((i) =>
+                                    <p>{i.name}</p>
+                                )
+                            }
+                        </div>
+                        
+                    </div>
+                </div>
+                <div id="createtext">
+                    <label>Search</label>
+                    <div className="search">
+                            <input type="text" 
+                            id="search" 
+                            placeholder="Search for text..." 
+                            ref={input => this.search = input} 
+                            onChange={this.handleInputChange}/>
+                        <div>
+                            {
+                                this.state.data.map((i) =>
+                                    <p>{i.name}</p>
+                                )
+                            }
+                        </div>
+                    </div>
+                    <label>Result</label>
+                    <div className="result"> 
+                            <textarea type="text" 
+                            id="editText" 
+                            placeholder="text goes here.." 
+                            ref={input => this.search = input} 
+                            onChange={this.handleInputChange}/>
+                            <button>Edit</button>
+                            <button>Delete</button>
+                        <div>
+                            {
+                                this.state.data.map((i) =>
+                                    <p>{i.name}</p>
+                                )
+                            }
+                        </div>
+                    </div>
+                    <label>Create</label>
+                    <div className="create">
+                            <textarea type="text" 
+                            id="editText" 
+                            placeholder="text goes here.." 
+                            ref={input => this.search = input} 
+                            onChange={this.handleInputChange}/>
+                            <button class="savebutton">Save</button>
+                        <div>
+                            {
+                                this.state.data.map((i) =>
+                                    <p>{i.name}</p>
+                                )
+                            }
+                        </div>
+                        </div>
+                </div>
             </div>
           )
       }

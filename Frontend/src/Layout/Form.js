@@ -44,7 +44,7 @@ class form extends React.Component {
     };
 
     recaptchaLoaded() {
-        console.log("Capcha loaded successfully!");
+        console.log("Captcha loaded successfully!");
     }
 
     handleRegister(e) {
