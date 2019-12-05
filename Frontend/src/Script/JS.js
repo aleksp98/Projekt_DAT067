@@ -13,3 +13,4 @@ function myFunction(){
         $("header h1").removeClass("h1Mover");
     }
 }
+

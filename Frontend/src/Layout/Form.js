@@ -169,7 +169,7 @@ class form extends React.Component {
                                     snackbaropen: true, 
                                     snackbarmsg: "Login successful!" 
                                 });
-                                _this.redirect('/loginPage');
+                                //_this.redirect('/loginPage');
                             }
                             else {
                                 _this.setState({ 
@@ -222,7 +222,7 @@ class form extends React.Component {
             errors["password"] = "Must have at least one number";
         }
 
-        else if (!(fields["ConfirmPassword"] == fields["password"])) {
+        else if (!(fields["ConfirmPassword"] === fields["password"])) {
             formIsValid = false;
             errors["ConfirmPassword"] = "The passwords must match";
         }
@@ -276,7 +276,7 @@ class form extends React.Component {
                         {
                             React.Children.map(children, (child, i) => {
                             //Ignore the first child
-                            if (i == 1) return
+                            if (i === 1) return
                                 return child
                             })
                         }
@@ -348,7 +348,7 @@ class form extends React.Component {
                             {
                                 React.Children.map(children, (child, i) => {
                                 //Ignore the second child
-                                if (i == 1) return
+                                if (i === 1) return
                                     return child
                                 })
                             }
@@ -440,7 +440,7 @@ class form extends React.Component {
                             {
                                 React.Children.map(children, (child, i) => {
                                 //Ignore the first child
-                                if (i == 0) return
+                                if (i === 0) return
                                     return child
                                 })
                             }  
