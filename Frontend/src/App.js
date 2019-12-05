@@ -6,20 +6,24 @@ import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import { sendHTTP } from './EmailConfirmation'
 import { string } from 'prop-types';
 import ImageSlider from './Components/ImageSlider';
 
+import Arrow from './Image/arrow.png';
+
 import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
+import Settings from './Layout/Settings';
+import Account from './Layout/Account';
+
 import Cookies from 'js-cookie';
 
-export const getAccessToken = () => Cookies.get('access_token')
-export const getRefreshToken = () => Cookies.get('refresh_token')
-export const getSession = () => Cookies.get("session")
-export const isAuthenticated = () => !!getAccessToken()
-
+export const getAccessToken = () => Cookies.get('access_token');
+export const getRefreshToken = () => Cookies.get('refresh_token');
+export const getSession = () => Cookies.get("session");
+export const isAuthenticated = () => !!getAccessToken();
 
 
 class App extends Component {
@@ -30,9 +34,8 @@ class App extends Component {
         session: getSession()
     }
 
-    /* Fråga hur man passerar en onclick via en jsx component */
-
     render() {
+
         return (
             //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
             //beroende pa responsen fran fetch
@@ -65,11 +68,12 @@ class App extends Component {
                         }
                     } />
 
+                    <Route path="/Settings" exact strict component={Settings} />
+                    <Route path="/Account" exact strict component={Account} />
+                    
                     <Route path="/registeredPage" exact strict component={registeredPage} />
-
                     <Route path="/loginPage" exact strict component={loginPage} />
 
-                    <Route path="/#" exact strict Component={App} />
 
                     <section>
 
@@ -83,11 +87,22 @@ class App extends Component {
 
                         <header className="header">
                             <div className="headerController">
-                                {this.state.session ? <div> {JSON.parse(this.state.session).username} </div> : null}
-                                    <a href="#" value="Register" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Register" }); }}>Register</a>
                                 {!this.state.isAuthenticated ?
-                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> :
-                                    <a href="#" value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}>Logout</a>
+                                <div>
+                                    <a href="#" value="Register" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Register" }); }}>Register</a>
+                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> 
+                                </div> :                           
+                                    <div className="dropdown">
+                                        <p> 
+                                            {this.state.session ? <div> {JSON.parse(this.state.session).username} </div> : "Default Name"}
+                                            <img src={Arrow} className="arrow" alt="rotateArrow" />
+                                        </p>
+                                        <div className="dropdown-content">
+                                            <p value="Account"><Link to="/Account">Account</Link></p>
+                                            <p value="Settings"><Link to="/Settings">Settings</Link></p>
+                                            <p value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}>Logout</p>
+                                        </div>
+                                    </div>
                                 }
                             </div>
 
