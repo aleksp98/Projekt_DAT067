@@ -32,7 +32,7 @@ namespace API.Controllers
         public async Task<IActionResult> SaveUser([FromBody] UserItem model)
         {
             OkObjectResult ok = Ok(await _userService.SaveUser(model));   
-            Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
+            await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
             return ok ;
         }
 
