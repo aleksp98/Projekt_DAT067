@@ -16,8 +16,9 @@ class Mail
         var fromAddress2 = new MailAddress("Sigma@testmail.com", "From Name");
 
         var toAddress = new MailAddress(email, firstName + "" + lastName);
-        const string fromPassword = "Testarmail";
+        const string fromPassword = "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";
         const string subject = "testar mail";
+        const string username = "apikey";
 
         string activateLink = "http://localhost:3000/confirmation/" + token;
 
@@ -34,11 +35,11 @@ class Mail
         string body = html;
         var smtp = new SmtpClient
         {
-            Host = "smtp.gmail.com",
+            Host = "smtp.sendgrid.net",
             Port = 587,
             EnableSsl = true,
             DeliveryMethod = SmtpDeliveryMethod.Network,
-            Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            Credentials = new NetworkCredential(username, fromPassword)
         };
         using (var message = new MailMessage(fromAddress2, toAddress)
         {
