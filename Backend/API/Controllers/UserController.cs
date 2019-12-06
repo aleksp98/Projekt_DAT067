@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.Model;
 using API.Service;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,11 +14,23 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
+           Timer myTimer;
         private readonly IUserService _userService;
         public UserController(IUserService userService)
         {
             _userService = userService;
+                                    //varje 15 minut
+              myTimer = new Timer(myTimerCallback, null, 5 *1000, 15*60*1000);
         }
+
+
+
+             public async void myTimerCallback(Object obj)
+              {
+                  Console.WriteLine("Testing \n \n");
+                 await _userService.Resend_mail();
+                await _userService.ExpireDate();
+          }
 
         [HttpGet]
         [Route("Users")]
@@ -32,7 +45,7 @@ namespace API.Controllers
         public async Task<IActionResult> SaveUser([FromBody] UserItem model)
         {
             OkObjectResult ok = Ok(await _userService.SaveUser(model));   
-            Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
+            await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
             return ok ;
         }
 
@@ -75,7 +88,9 @@ namespace API.Controllers
         [Route("LoginUser")]
         public async Task<IActionResult> LoginUser([FromBody] UserItem model)
         {
-            return Ok(await _userService.LoginUser(model));
+            
+            ObjectResult ok = Ok(await _userService.LoginUser(model));
+            return ok;
         }
 
 
