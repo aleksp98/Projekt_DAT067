@@ -84,7 +84,14 @@ class translation extends React.Component {
                         </div>
                         </div>
                         <div className="selectLanguage">
-                                //dropdownlista
+                            <div class="select">
+                                <select name="selectedLanguage" id="selectedLanguage">
+                                    <option value="1" selected="selected">Swedish</option>
+                                    <option value="2">Swedish</option>
+                                    <option value="3">Swedish</option>
+                                    <option value="4">Swedish</option>
+                                </select>
+                            </div>
                                 <button class="savebutton">Save</button>
                         <div>
                             {
