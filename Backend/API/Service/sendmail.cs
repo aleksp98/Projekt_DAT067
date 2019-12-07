@@ -1,3 +1,4 @@
+
 // using SendGrid's C# Library
 // https://github.com/sendgrid/sendgrid-csharp
 using SendGrid;
@@ -6,7 +7,9 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
+
 //dotnet add package SendGrid
+
 
 //Tror ni maste skapa er egna API environment
 //howTo https://github.com/sendgrid/sendgrid-csharp#setup-environment-variables
