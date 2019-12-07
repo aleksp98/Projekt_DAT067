@@ -25,7 +25,8 @@ namespace API.Service
                                   First_name = a.First_name,
                                   Last_name = a.Last_name,
                                   Token = a.Token,
-                                  Verified = a.Verified
+                                  Verified = a.Verified,
+                                  Resended_mail = a.Resended_mail
                               }).ToListAsync();
             }
         }
@@ -39,6 +40,9 @@ namespace API.Service
                 return null != db.Users.Where(x => x.Email == Email && x.Verified == true).FirstOrDefault();
             }
         }
+
+
+
 
 
          //check if email exist and is active
@@ -73,7 +77,8 @@ namespace API.Service
                         Password = userItem.Password,
                         First_name = userItem.First_name,
                         Last_name = userItem.Last_name,
-                        Token = userItem.Token
+                        Token = userItem.Token,
+                        Created_at = DateTime.Now
                     };
                     db.Users.Add(user);
 
@@ -85,6 +90,7 @@ namespace API.Service
                     user.First_name = userItem.First_name;
                     user.Last_name = userItem.Last_name;
                     user.Token = userItem.Token;
+                    user.Created_at = DateTime.Now;
                 }
                 return await db.SaveChangesAsync() >= 1;
             }
@@ -98,6 +104,64 @@ namespace API.Service
                          (x => x.Email == userItem.Email && x.Password == userItem.Password).FirstOrDefault();
             }
         }
+
+
+
+        
+          //delete account if 14 days has gone
+          //after registration
+          //testar med en offset på 1 timma
+        public async Task<bool> ExpireDate()
+        {
+           using (ciamContext db = new ciamContext())
+         {      
+                 
+               DateTime cur = DateTime.Now;
+               List<Users> userList =
+                     db.Users.Where(x => x.Verified == false && x.Resended_mail == true && x.Created_at < cur.AddMinutes(-40.0)).ToList();
+                
+                foreach(Users user in userList){
+                if (user != null)
+                {  
+                    Console.WriteLine("ExpireDate delete /n /n");
+                    db.Users.Remove(user);
+                }
+                }
+
+
+                return await db.SaveChangesAsync() >= 1;
+            }
+        }
+
+
+
+        //resends activiation mail if it hasn't been done
+          //testar med en offset på 5 minuter
+        public async Task<bool> Resend_mail()
+        {
+           using (ciamContext db = new ciamContext())
+         {     
+
+               DateTime cur = DateTime.Now;
+               List<Users> userList =
+                     db.Users.Where(x => x.Verified == false && x.Resended_mail == false && x.Created_at < cur.AddMinutes(-20.0)).ToList();
+                
+                foreach(Users user in userList){
+                if (user != null)
+                {   
+                    
+                     Console.WriteLine("Resend_mail send mail\n \n");
+                    //check if mail got sended
+                    await Mail.sendMail(user.Email,user.First_name,user.Last_name,user.Token);
+                    //if mail sended do changes
+                    //if not do nothing
+                    user.Resended_mail = true;
+                }
+                }
+                return await db.SaveChangesAsync() >= 1;
+            }
+        }
+
 
         public async Task<bool> DeleteUser(int userId)
         {

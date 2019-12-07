@@ -7,7 +7,9 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
+
 //dotnet add package SendGrid
+
 
 //Tror ni maste skapa er egna API environment
 //howTo https://github.com/sendgrid/sendgrid-csharp#setup-environment-variables
@@ -38,5 +40,7 @@ public class Mail
             var htmlContent = html;
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
+
+            Console.WriteLine(""+ response.StatusCode);
         }
 }
