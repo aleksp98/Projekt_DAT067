@@ -27,9 +27,10 @@ namespace API.Controllers
 
              public async void myTimerCallback(Object obj)
               {
-                  Console.WriteLine("Testing \n \n");
+                  Console.WriteLine("Timer triggered \n \n");
+                    await _userService.ExpireDate();
                  await _userService.Resend_mail();
-                await _userService.ExpireDate();
+              
           }
 
         [HttpGet]
@@ -45,6 +46,7 @@ namespace API.Controllers
         public async Task<IActionResult> SaveUser([FromBody] UserItem model)
         {
             OkObjectResult ok = Ok(await _userService.SaveUser(model));   
+            //send the confirmation mail
             await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
             return ok ;
         }

@@ -13,7 +13,6 @@ namespace API.Service
         Task<bool> LoginUser(UserItem user);
         Task<bool> DeleteUser(int Id);
         Task<bool> ConfirmMail(string token);
-         
         Task<bool> ExpireDate();
         Task<bool> Resend_mail();
         Task<bool> CheckUser(string email);

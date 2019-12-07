@@ -109,7 +109,8 @@ class form extends React.Component {
             };
             const request = new Request(url, requestOptions);
 
-
+             //lägga in om man inte kunde registrera
+             //visa fel
             fetch(request).then(this.setState({ 
                 fields: fields, 
                 snackbaropen: true, 
