@@ -47,22 +47,23 @@ class form extends React.Component {
         console.log("Capcha loaded successfully!");
     }
 
-    handleRegister(e) {
+    
 
-        if (!this.state.isVerified) {
-            e.preventDefault(); //Hindrar att formuläret submitas   JE
-            this.setState({ 
-                snackbaropen: true, 
-                snackbarmsg: "Please verify that you are a human", 
-                visible: false
-            });
-        }
-    }
-
+   
     verifyCallback(response) {
         if (response) {
             this.setState({
                 isVerified: true
+            })
+        }
+    }
+    handleRegister(e) {
+
+        if (!this.state.isVerified) {
+            //Hindrar att formuläret submitas   JE
+            this.setState({
+                snackbaropen: true, 
+                snackbarmsg: "Please verify that you are a human"
             })
         }
     }
@@ -75,6 +76,7 @@ class form extends React.Component {
 
         let fields = this.state.fields;
         fields[e.target.name] = e.target.value;
+        this.validateForm();
         this.setState({
             fields
         });
@@ -202,6 +204,7 @@ class form extends React.Component {
             formIsValid = false;
             errors["password"] = "The password must be at least 8 characters";
         }
+        
 
         else if (!fields["password"].match(/(?=.*[a-z])/)) {
             formIsValid = false;
@@ -227,13 +230,23 @@ class form extends React.Component {
             formIsValid = false;
             errors["ConfirmPassword"] = "The passwords must match";
         }
+        else if(!this.state.isVerified){
+            formIsValid = false;
+        }
+       
+            
+        
+    
+        
+
 
 
         this.setState({
             errors: errors
         });
+        
         return formIsValid;
-
+        
 
     };
 
@@ -362,7 +375,7 @@ class form extends React.Component {
                                     name="firstname"
                                     placeholder="Firstname *" required
                                     value={this.state.fields.firstname}
-                                    onChange={this.handleChange}
+                                    
                                 />
 
                             </div>
@@ -372,7 +385,7 @@ class form extends React.Component {
                                     name="lastname"
                                     placeholder="Lastname *" required
                                     value={this.state.fields.lastname}
-                                    onChange={this.handleChange}
+                                    
 
                                 />
                             </div>
@@ -382,7 +395,7 @@ class form extends React.Component {
                                     className="inputDesignEmail"
                                     placeholder="E-mail address *" required
                                     value={this.state.fields.email}
-                                    onChange={this.handleChange}
+                                    
                                 />
                             </div>
 
@@ -393,6 +406,7 @@ class form extends React.Component {
                                     placeholder="Password *" required
                                     value={this.state.fields.password}
                                     onChange={this.handleChange}
+                                    onBlur={this.handleChange}
                                 />
                                 <p className="errorMsg">{this.state.errors.password}</p>
                             </div>
@@ -404,6 +418,7 @@ class form extends React.Component {
                                     placeholder="Confirm Password *" required
                                     value={this.state.fields.ConfirmPassword}
                                     onChange={this.handleChange}
+                                    onBlur={this.handleChange}
                                 />
                                 <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
 
