@@ -82,6 +82,8 @@ class form extends React.Component {
 
     submituserRegistrationForm(e) {
         e.preventDefault();
+
+        let _this = this;
         if (this.validateForm()) {
             let user = {};
             user["email"] = this.state.fields.email;
@@ -111,12 +113,28 @@ class form extends React.Component {
 
              //lägga in om man inte kunde registrera
              //visa fel
-            fetch(request).then(this.setState({ 
-                fields: fields, 
-                snackbaropen: true, 
-                snackbarmsg: "Registration successful!",
-                visible: false
-            }));
+             fetch(request).then(function (response) {
+                return response.text().then(function (text) {
+                    if (text === "true") {
+
+                        _this.setState({ 
+                            fields: fields, 
+                            snackbaropen: true, 
+                            snackbarmsg: "Registration successful!",
+                            visible: false
+                        })
+                      
+                    }
+                    else {
+                           _this.setState({ 
+                           // fields: fields, 
+                            snackbaropen: true, 
+                            snackbarmsg: "Unsuccessful registration. Mail is probably already taken",
+                            visible: true
+                        });
+                    }
+                });
+            });
 
             //this.redirect('/registeredPage');
         }

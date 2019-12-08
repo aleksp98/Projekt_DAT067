@@ -10,6 +10,11 @@ const requestOptions = {
 };
 const request = new Request(url, requestOptions);
 
-return fetch(request);
+
+  const response = await fetch(request);
+
+  const data = await response.json();
+
+  return data;
 
 }
