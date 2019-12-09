@@ -13,6 +13,7 @@ namespace API.Service
         Task<bool> SaveUser(UserItem user);
         Task<bool> LoginUser(UserItem user);
         Task<bool> DeleteUser(int Id);
+        Task<bool> UpdateUser(UserItem used);
         Task<bool> ConfirmMail(string token);
         Task<bool> ExpireDate();
         Task<bool> Resend_mail();

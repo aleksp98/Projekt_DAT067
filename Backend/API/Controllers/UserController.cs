@@ -99,8 +99,15 @@ namespace API.Controllers
         public async Task<IActionResult> LoginUser([FromBody] UserItem model)
         {
             
-            ObjectResult ok = Ok(await _userService.LoginUser(model));
-            return ok;
+            return Ok(await _userService.LoginUser(model));
+        }
+
+        [HttpPost]
+        [Route("UpdateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserItem model)
+        {
+            
+            return Ok(await _userService.UpdateUser(model));
         }
 
 

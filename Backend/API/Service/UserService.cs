@@ -192,5 +192,26 @@ namespace API.Service
                 return await db.SaveChangesAsync() >= 1;
             }
         }
+
+         public async Task<bool> UpdateUser(UserItem userItem)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                Users user = db.Users.Where(x => x.Id == userItem.Id).FirstOrDefault();
+                if(userItem.Email != null)
+                    user.Email = userItem.Email;
+                if(userItem.Password != null)
+                    user.Password = userItem.Password;
+                if(userItem.First_name != null)
+                    user.First_name = userItem.First_name;
+                if(userItem.Last_name != null)
+                    user.Last_name = userItem.Last_name;
+                if(userItem.Phone_number != null)
+                    user.Phone_number = userItem.Phone_number;
+                if(userItem.Language != null)
+                    user.Language = userItem.Language;
+                return await db.SaveChangesAsync() >= 1;
+            }
+        }
     }
 }
