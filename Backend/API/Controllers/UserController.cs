@@ -41,10 +41,10 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("User/{id}")]
-        public async Task<IActionResult> User(int id)
+        [Route("User/{email}")]
+        public async Task<IActionResult> User(string email)
         {
-            return Ok(await _userService.GetUser(id));
+            return Ok(await _userService.GetUser(email));
         }
 
 

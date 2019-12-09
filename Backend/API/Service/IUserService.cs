@@ -9,7 +9,7 @@ namespace API.Service
     public interface IUserService
     {
         Task<List<UserItem>> GetUsers();
-        Task<UserItem> GetUser(int id);
+        Task<UserItem> GetUser(string email);
         Task<bool> SaveUser(UserItem user);
         Task<bool> LoginUser(UserItem user);
         Task<bool> DeleteUser(int Id);

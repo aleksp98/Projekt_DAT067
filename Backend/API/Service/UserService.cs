@@ -32,18 +32,19 @@ namespace API.Service
             }
         }
 
-        public async Task<UserItem> GetUser(int id)
+        public async Task<UserItem> GetUser(string email)
         {
             using (ciamContext db = new ciamContext())
             {
                 return await (from a in db.Users.AsNoTracking()
-                              where a.Id == id
+                              where a.Email == email
                               select new UserItem 
                               {
-                                  Id = a.Id,
                                   Email = a.Email,
                                   First_name = a.First_name,
                                   Last_name = a.Last_name,
+                                  Phone_number = a.Phone_number,
+                                  Language = a.Language
                               }).FirstOrDefaultAsync();
 
             }
