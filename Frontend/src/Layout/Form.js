@@ -129,7 +129,7 @@ class form extends React.Component {
                     }
                     else {
                            _this.setState({ 
-                           // fields: fields, 
+                           fields: fields, 
                             snackbaropen: true, 
                             snackbarmsg: "Unsuccessful registration. Mail is probably already taken",
                             visible: true
@@ -218,37 +218,37 @@ class form extends React.Component {
         let errors = {};
         let formIsValid = true;
 
-        if (!fields["password"].match(/(?=.{8,})/)) {
-            formIsValid = false;
-            errors["password"] = "The password must be at least 8 characters";
-        }
-        
+        if (fields["password"] != null) {
+            if (!fields["password"].match(/(?=.{8,})/)) {
+                formIsValid = false;
+                errors["password"] = "The password must be at least 8 characters";
+            }
+            else if (!fields["password"].match(/(?=.*[a-z])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one lowercase";
+            }
+            else if (!fields["password"].match(/(?=.*[A-Z])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one uppercase";
+            }
+            else if (!fields["password"].match(/(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one special character";
+            }
+            else if (!fields["password"].match(/(?=.*[0-9])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one number";
+            }
 
-        else if (!fields["password"].match(/(?=.*[a-z])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one lowercase";
+            else if (!(fields["ConfirmPassword"] === fields["password"])) {
+                formIsValid = false;
+                errors["ConfirmPassword"] = "The passwords must match";
+            }
+            else if (!this.state.isVerified) {
+                formIsValid = false;
+            }
         }
-
-        else if (!fields["password"].match(/(?=.*[A-Z])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one uppercase";
-        }
-
-        else if (!fields["password"].match(/(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one special character";
-        }
-
-        else if (!fields["password"].match(/(?=.*[0-9])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one number";
-        }
-
-        else if (!(fields["ConfirmPassword"] === fields["password"])) {
-            formIsValid = false;
-            errors["ConfirmPassword"] = "The passwords must match";
-        }
-        else if(!this.state.isVerified){
+        else {
             formIsValid = false;
         }
        
@@ -393,7 +393,7 @@ class form extends React.Component {
                                     name="firstname"
                                     placeholder="Firstname *" required
                                     value={this.state.fields.firstname}
-                                    
+                                    onChange={this.handleChange}
                                 />
 
                             </div>
@@ -403,8 +403,7 @@ class form extends React.Component {
                                     name="lastname"
                                     placeholder="Lastname *" required
                                     value={this.state.fields.lastname}
-                                    
-
+                                    onChange={this.handleChange}
                                 />
                             </div>
                             <div>
@@ -413,7 +412,7 @@ class form extends React.Component {
                                     className="inputDesignEmail"
                                     placeholder="E-mail address *" required
                                     value={this.state.fields.email}
-                                    
+                                    onChange={this.handleChange}
                                 />
                             </div>
 
