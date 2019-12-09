@@ -113,7 +113,7 @@ footer {
 /*  Dropdown in Navbar  */
 
 .dropdown {
-    width: 10%;
+    width: 15%;
     position: relative;
     display: block;
     float: right;
@@ -145,7 +145,8 @@ footer {
     height: 135px;
     display: none;
     position: absolute;
-    width: 100%;
+    width: 70%;
+    right: 0;
     background-color: rgba(105,103,100, 0.8);
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,1);
     z-index: 40;
@@ -209,7 +210,7 @@ footer {
 
 /*  Start JE  */
 
-.sliderContainer {
+.imgSlider {
     width: 400%;
     height:  calc(100vh - 170px);
     position: relative;
@@ -218,10 +219,34 @@ footer {
     animation-iteration-count: infinite;
   }
   
-  .img02 {
+.imgSlide {
     width: 25%;
     height: 100%;
-  }
+}
+
+.slideContainer section {
+    position: absolute;
+    height: 10px !important;
+    width: 30%;
+    background-color: transparent !important;
+    margin: 0 !important;
+    z-index: 10;
+    bottom: 20px;
+    right: 35%;
+}
+
+.slideContainer section div {
+    height: 10px;
+    width: 20%;
+    background-color: lightgrey;
+    float: left;
+    margin-right: 5%;
+    cursor: pointer;
+}
+
+.slideContainer section div:hover {
+    background-color: grey;
+}
   
   @keyframes slider {
     0%   {
@@ -478,4 +503,156 @@ footer {
     text-align: center;
 }
 
+/*  Account Page    JE  */
 
+.accountPage section {
+    overflow: auto;
+}
+
+.accountPage section div {
+    height: 100%;
+    width: 100%;
+}
+
+.sideBar {
+    height: 100%;
+    width: 20%;
+    background-color: white;
+    float: left;
+    border-right: 1px solid #333;
+    box-shadow: 3px 0 5px -2px #888;
+    box-sizing: border-box;
+}
+
+.sideBar h3 {
+    cursor: pointer;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0px 1px 1px 0px black;
+}
+
+.accountManegment section h3 {
+    text-align: center;
+    margin-block-start: 20px;
+    font-size: 1.7em;
+}
+
+.accountManegment section {
+    width: 80% !important;
+    height: 100% !important;
+    background-color: transparent !important;
+    float: left;
+    margin: 0 !important;
+}
+
+.accountInfo table {
+    width: 65%;
+    height: 150px;
+    box-sizing: border-box;
+    float: left;
+    margin: 20px 0px 0px 5%;
+    background-color: rgba(0, 0, 0, .1);
+    padding-left: 10px;
+    font-size: 1.2em;
+}
+
+.accountInfo table tbody tr {
+    width: 100%;
+}
+
+.accountInfo table tbody tr:nth-child(n + 3) {
+    padding: 0;
+    font-size: 0.6em;
+}
+
+.accountInfo table tbody tr th,td {
+    width: 50%;
+    text-align: left;
+    padding: 0 !important;
+}
+
+.accountInfo table tbody tr td p {
+    cursor: pointer;
+    color: blue;
+}
+
+.accountInfo table tbody tr td p:hover {
+    text-decoration: underline;
+}
+
+.imageContainer {
+    float: right;
+    width: 15% !important;
+    margin: 20px 5% 0px 0px;
+    height: auto !important;
+}
+
+.imageContainer img {
+    width: 100%;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, .3);
+}
+
+.imageContainer p {
+    width: 50%;
+    float: left;
+    text-align: center;
+    margin-top: 10px;
+    cursor: pointer;
+    color: blue;
+}
+
+.imageContainer p:hover {
+    text-decoration: underline;
+}
+
+.personalInfo {
+    display: none;
+}
+
+.personalInfo table {
+    width: 35%;
+    height: 150px;
+    box-sizing: border-box;
+    float: left;
+    margin: 20px 0px 0px 5%;
+    background-color: transparent;
+    padding-left: 10px;
+    font-size: 1em;
+    text-align: left;
+}
+
+.personalInfo input {
+    background-color: transparent;
+    border: none;
+}
+
+::placeholder {
+    color: black;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type="text"]:disabled {
+    color: black;
+  }
+
+.personalInfo table tbody tr th,td {
+    padding: 10px;
+}
+
+.personalInfo p {
+    cursor: pointer;
+    color: blue;
+}
+
+.personalInfo p:hover {
+    text-decoration: underline;
+}
+
+.uploads {
+    display: none;
+}

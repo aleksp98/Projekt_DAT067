@@ -53,8 +53,7 @@ class form extends React.Component {
             e.preventDefault(); //Hindrar att formuläret submitas   JE
             this.setState({ 
                 snackbaropen: true, 
-                snackbarmsg: "Please verify that you are a human", 
-                visible: false
+                snackbarmsg: "Please verify that you are a human"
             });
         }
     }
@@ -129,7 +128,6 @@ class form extends React.Component {
 
     redirect(path) {
         this.props.history.push(path)
-
     }
 
     //Listener to login button(when pressed)
@@ -169,6 +167,7 @@ class form extends React.Component {
                                     snackbaropen: true, 
                                     snackbarmsg: "Login successful!" 
                                 });
+                                window.location.reload();
                                 //_this.redirect('/loginPage');
                             }
                             else {

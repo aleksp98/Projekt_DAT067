@@ -6,7 +6,11 @@ class section extends React.Component {
         return (
             <section className={this.props.id}>
 
-                <h3>Hello, welcome to {this.props.value}</h3>
+                {this.props.show === "true" ?
+                <h3>{this.props.value}</h3>
+                : null }
+
+                
                 {this.props.children}
 
             </section>
