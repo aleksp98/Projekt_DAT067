@@ -15,7 +15,6 @@ class section extends React.Component {
                 {this.props.children}
 
             </section>
-            </section>
 
 
         )
