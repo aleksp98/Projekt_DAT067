@@ -34,8 +34,36 @@ class App extends Component {
         isAuthenticated: isAuthenticated(),
         session: getSession()
     }
-
+        
     render() {
+        //Check if session is still valid
+        if (Cookies.get("session")) {
+            let user = JSON.parse(Cookies.get("session"));
+            const url = 'https://localhost:5001/api/User/LoginUser';
+            
+            const headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            const requestOptions = {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(user)
+            };
+            const request = new Request(url, requestOptions);
+            fetch(request).then(function (response) {
+                return response.text().then(function (text) {
+                    if (text === "true") {
+                        Cookies.remove("session");
+                        Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
+                        Cookies.set("access_token", "placeholder", { expires: 14 });
+                    }
+                    else {
+                        console.log("false");
+                        Cookies.remove("session");
+                        Cookies.remove("access_token");
+                    }
+                });
+            });
+        }
 
         return (
             //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
@@ -48,9 +76,7 @@ class App extends Component {
                     <Route path="/Account" exact strict component={Account} />
                     
                     <Route path="/registeredPage" exact strict component={registeredPage} />
-                    <Route path="/loginPage" exact strict component={loginPage} />
-
-
+                    <Route path="/loginPage" exact strict component={loginPage} />                
                     <section>
 
                         {!this.state.visibleForm ? 
@@ -69,9 +95,8 @@ class App extends Component {
                                     <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> 
                                 </div> :                           
                                     <div className="dropdown">
-                                        
-                                        <p>
-                                        {this.state.session ? JSON.parse(this.state.session).email : "default name" }
+                                        <p> 
+                                            {this.state.session ? <div> {JSON.parse(this.state.session).email} </div> : "Default Name"}
                                             <img src={Arrow} className="arrow" alt="rotateArrow" />
                                         </p>
                                         <div className="dropdown-content">

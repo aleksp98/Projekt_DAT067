@@ -12,6 +12,7 @@ namespace API.Service
 {
     public class UserService : IUserService
     {
+        // This is for debugging, we need to remove this later since its kinda dangerous
         public async Task<List<UserItem>> GetUsers()
         {
             using (ciamContext db = new ciamContext())
@@ -31,6 +32,24 @@ namespace API.Service
             }
         }
 
+        public async Task<UserItem> GetUser(string email)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                return await (from a in db.Users.AsNoTracking()
+                              where a.Email == email
+                              select new UserItem 
+                              {
+                                  Email = a.Email,
+                                  First_name = a.First_name,
+                                  Last_name = a.Last_name,
+                                  Phone_number = a.Phone_number,
+                                  Language = a.Language
+                              }).FirstOrDefaultAsync();
+
+            }
+        }
+
           //check if email exist and is active
           //returns bool
         public async Task<bool> CheckUser(string Email)
@@ -40,8 +59,6 @@ namespace API.Service
                 return null != db.Users.Where(x => x.Email == Email && x.Verified == true).FirstOrDefault();
             }
         }
-
-
 
 
 
@@ -173,6 +190,27 @@ namespace API.Service
                 {
                     db.Users.Remove(user);
                 }
+                return await db.SaveChangesAsync() >= 1;
+            }
+        }
+
+         public async Task<bool> UpdateUser(UserItem userItem)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                Users user = db.Users.Where(x => x.Id == userItem.Id).FirstOrDefault();
+                if(userItem.Email != null)
+                    user.Email = userItem.Email;
+                if(userItem.Password != null)
+                    user.Password = userItem.Password;
+                if(userItem.First_name != null)
+                    user.First_name = userItem.First_name;
+                if(userItem.Last_name != null)
+                    user.Last_name = userItem.Last_name;
+                if(userItem.Phone_number != null)
+                    user.Phone_number = userItem.Phone_number;
+                if(userItem.Language != null)
+                    user.Language = userItem.Language;
                 return await db.SaveChangesAsync() >= 1;
             }
         }

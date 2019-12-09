@@ -20,6 +20,8 @@ CREATE TABLE users (
 	password VARCHAR(255) NOT NULL,
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
+	phone_number VARCHAR(20),
+	language VARCHAR(50),
 	token VARCHAR(255),
 	created_at DATETIME2(0) NOT NULL
                 DEFAULT CURRENT_TIMESTAMP, 
