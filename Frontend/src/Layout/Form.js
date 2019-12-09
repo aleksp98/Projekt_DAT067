@@ -47,22 +47,23 @@ class form extends React.Component {
         console.log("Captcha loaded successfully!");
     }
 
-    handleRegister(e) {
+    
 
-        if (!this.state.isVerified) {
-            e.preventDefault(); //Hindrar att formuläret submitas   JE
-            this.setState({ 
-                snackbaropen: true, 
-                snackbarmsg: "Please verify that you are a human", 
-                visible: false
-            });
-        }
-    }
-
+   
     verifyCallback(response) {
         if (response) {
             this.setState({
                 isVerified: true
+            })
+        }
+    }
+    handleRegister(e) {
+
+        if (!this.state.isVerified) {
+            //Hindrar att formuläret submitas   JE
+            this.setState({
+                snackbaropen: true, 
+                snackbarmsg: "Please verify that you are a human"
             })
         }
     }
@@ -75,6 +76,7 @@ class form extends React.Component {
 
         let fields = this.state.fields;
         fields[e.target.name] = e.target.value;
+        this.validateForm();
         this.setState({
             fields
         });
@@ -82,6 +84,8 @@ class form extends React.Component {
 
     submituserRegistrationForm(e) {
         e.preventDefault();
+
+        let _this = this;
         if (this.validateForm()) {
             let user = {};
             user["email"] = this.state.fields.email;
@@ -109,13 +113,30 @@ class form extends React.Component {
             };
             const request = new Request(url, requestOptions);
 
+             //lägga in om man inte kunde registrera
+             //visa fel
+             fetch(request).then(function (response) {
+                return response.text().then(function (text) {
+                    if (text === "true") {
 
-            fetch(request).then(this.setState({ 
-                fields: fields, 
-                snackbaropen: true, 
-                snackbarmsg: "Registration successful!",
-                visible: false
-            }));
+                        _this.setState({ 
+                            fields: fields, 
+                            snackbaropen: true, 
+                            snackbarmsg: "Registration successful!",
+                            visible: false
+                        })
+                      
+                    }
+                    else {
+                           _this.setState({ 
+                           fields: fields, 
+                            snackbaropen: true, 
+                            snackbarmsg: "Unsuccessful registration. Mail is probably already taken",
+                            visible: true
+                        });
+                    }
+                });
+            });
 
             //this.redirect('/registeredPage');
         }
@@ -197,42 +218,53 @@ class form extends React.Component {
         let errors = {};
         let formIsValid = true;
 
-        if (!fields["password"].match(/(?=.{8,})/)) {
-            formIsValid = false;
-            errors["password"] = "The password must be at least 8 characters";
-        }
+        if (fields["password"] != null) {
+            if (!fields["password"].match(/(?=.{8,})/)) {
+                formIsValid = false;
+                errors["password"] = "The password must be at least 8 characters";
+            }
+            else if (!fields["password"].match(/(?=.*[a-z])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one lowercase";
+            }
+            else if (!fields["password"].match(/(?=.*[A-Z])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one uppercase";
+            }
+            else if (!fields["password"].match(/(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one special character";
+            }
+            else if (!fields["password"].match(/(?=.*[0-9])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one number";
+            }
 
-        else if (!fields["password"].match(/(?=.*[a-z])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one lowercase";
+            else if (!(fields["ConfirmPassword"] === fields["password"])) {
+                formIsValid = false;
+                errors["ConfirmPassword"] = "The passwords must match";
+            }
+            else if (!this.state.isVerified) {
+                formIsValid = false;
+            }
         }
+        else {
+            formIsValid = false;
+        }
+       
+            
+        
+    
+        
 
-        else if (!fields["password"].match(/(?=.*[A-Z])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one uppercase";
-        }
-
-        else if (!fields["password"].match(/(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one special character";
-        }
-
-        else if (!fields["password"].match(/(?=.*[0-9])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one number";
-        }
-
-        else if (!(fields["ConfirmPassword"] === fields["password"])) {
-            formIsValid = false;
-            errors["ConfirmPassword"] = "The passwords must match";
-        }
 
 
         this.setState({
             errors: errors
         });
+        
         return formIsValid;
-
+        
 
     };
 
@@ -372,7 +404,6 @@ class form extends React.Component {
                                     placeholder="Lastname *" required
                                     value={this.state.fields.lastname}
                                     onChange={this.handleChange}
-
                                 />
                             </div>
                             <div>
@@ -392,6 +423,7 @@ class form extends React.Component {
                                     placeholder="Password *" required
                                     value={this.state.fields.password}
                                     onChange={this.handleChange}
+                                    onBlur={this.handleChange}
                                 />
                                 <p className="errorMsg">{this.state.errors.password}</p>
                             </div>
@@ -403,6 +435,7 @@ class form extends React.Component {
                                     placeholder="Confirm Password *" required
                                     value={this.state.fields.ConfirmPassword}
                                     onChange={this.handleChange}
+                                    onBlur={this.handleChange}
                                 />
                                 <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
 

@@ -21,7 +21,10 @@ CREATE TABLE users (
 	first_name VARCHAR(255) NOT NULL,
 	last_name VARCHAR(255) NOT NULL,
 	token VARCHAR(255),
-	verified BIT DEFAULT 0
+	created_at DATETIME2(0) NOT NULL
+                DEFAULT CURRENT_TIMESTAMP, 
+	verified BIT DEFAULT 0,
+	resended_mail BIT DEFAULT 0
 );
 GO
 

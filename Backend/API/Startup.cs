@@ -12,14 +12,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+
 namespace API
 {
     public class Startup
     {
+     
+
         public Startup(IConfiguration configuration)
         {
+           
             Configuration = configuration;
+            
         }
+
 
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
