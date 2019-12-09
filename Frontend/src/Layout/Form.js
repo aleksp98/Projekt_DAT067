@@ -44,24 +44,35 @@ class form extends React.Component {
     };
 
     recaptchaLoaded() {
-        console.log("Capcha loaded successfully!");
+        console.log("Captcha loaded successfully!");
     }
 
     handleRegister(e) {
 
         if (!this.state.isVerified) {
             e.preventDefault(); //Hindrar att formuläret submitas   JE
-            this.setState({ 
-                snackbaropen: true, 
+            this.setState({
+                snackbaropen: true,
                 snackbarmsg: "Please verify that you are a human"
             });
         }
     }
 
+
     verifyCallback(response) {
         if (response) {
             this.setState({
                 isVerified: true
+            })
+        }
+    }
+    handleRegister(e) {
+
+        if (!this.state.isVerified) {
+            //Hindrar att formuläret submitas   JE
+            this.setState({
+                snackbaropen: true,
+                snackbarmsg: "Please verify that you are a human"
             })
         }
     }
@@ -74,6 +85,7 @@ class form extends React.Component {
 
         let fields = this.state.fields;
         fields[e.target.name] = e.target.value;
+        this.validateForm();
         this.setState({
             fields
         });
@@ -81,6 +93,8 @@ class form extends React.Component {
 
     submituserRegistrationForm(e) {
         e.preventDefault();
+
+        let _this = this;
         if (this.validateForm()) {
             let user = {};
             user["email"] = this.state.fields.email;
@@ -110,12 +124,28 @@ class form extends React.Component {
 
              //lägga in om man inte kunde registrera
              //visa fel
-            fetch(request).then(this.setState({ 
-                fields: fields, 
-                snackbaropen: true, 
-                snackbarmsg: "Registration successful!",
-                visible: false
-            }));
+             fetch(request).then(function (response) {
+                return response.text().then(function (text) {
+                    if (text === "true") {
+
+                        _this.setState({
+                            fields: fields,
+                            snackbaropen: true,
+                            snackbarmsg: "Registration successful!",
+                            visible: false
+                        })
+
+                    }
+                    else {
+                           _this.setState({
+                           fields: fields,
+                            snackbaropen: true,
+                            snackbarmsg: "Unsuccessful registration. Mail is probably already taken",
+                            visible: true
+                        });
+                    }
+                });
+            });
 
             //this.redirect('/registeredPage');
         }
@@ -164,26 +194,26 @@ class form extends React.Component {
                                 Cookies.remove("session");
                                 Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
                                 Cookies.set("access_token", "placeholder", { expires: 14 });
-                                _this.setState({ 
-                                    snackbaropen: true, 
-                                    snackbarmsg: "Login successful!" 
+                                _this.setState({
+                                    snackbaropen: true,
+                                    snackbarmsg: "Login successful!"
                                 });
                                 window.location.reload();
                                 //_this.redirect('/loginPage');
                             }
                             else {
-                                _this.setState({ 
-                                    snackbaropen: true, 
-                                    snackbarmsg: "Account not verified, please check you email" 
+                                _this.setState({
+                                    snackbaropen: true,
+                                    snackbarmsg: "Account not verified, please check you email"
                                 });
                             }
                         });
                     });
                 }
                 else {
-                    _this.setState({ 
-                        snackbaropen: true, 
-                        snackbarmsg: "Wrong email or password" 
+                    _this.setState({
+                        snackbaropen: true,
+                        snackbarmsg: "Wrong email or password"
                     });
                 }
             });
@@ -197,40 +227,44 @@ class form extends React.Component {
         let errors = {};
         let formIsValid = true;
 
-        if (!fields["password"].match(/(?=.{8,})/)) {
-            formIsValid = false;
-            errors["password"] = "The password must be at least 8 characters";
-        }
+        if (fields["password"] != null) {
+            if (!fields["password"].match(/(?=.{8,})/)) {
+                formIsValid = false;
+                errors["password"] = "The password must be at least 8 characters";
+            }
+            else if (!fields["password"].match(/(?=.*[a-z])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one lowercase";
+            }
+            else if (!fields["password"].match(/(?=.*[A-Z])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one uppercase";
+            }
+            else if (!fields["password"].match(/(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one special character";
+            }
+            else if (!fields["password"].match(/(?=.*[0-9])/)) {
+                formIsValid = false;
+                errors["password"] = "Must have at least one number";
+            }
 
-        else if (!fields["password"].match(/(?=.*[a-z])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one lowercase";
+            else if (!(fields["ConfirmPassword"] === fields["password"])) {
+                formIsValid = false;
+                errors["ConfirmPassword"] = "The passwords must match";
+            }
+            else if (!this.state.isVerified) {
+                formIsValid = false;
+            }
         }
-
-        else if (!fields["password"].match(/(?=.*[A-Z])/)) {
+        else {
             formIsValid = false;
-            errors["password"] = "Must have at least one uppercase";
         }
-
-        else if (!fields["password"].match(/(?=.*[ !"#$%&'()*+,-./:;<=>?@[\]^_`{|}~])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one special character";
-        }
-
-        else if (!fields["password"].match(/(?=.*[0-9])/)) {
-            formIsValid = false;
-            errors["password"] = "Must have at least one number";
-        }
-
-        else if (!(fields["ConfirmPassword"] === fields["password"])) {
-            formIsValid = false;
-            errors["ConfirmPassword"] = "The passwords must match";
-        }
-
 
         this.setState({
             errors: errors
         });
+
         return formIsValid;
 
 
@@ -242,8 +276,8 @@ class form extends React.Component {
 
     togglePasswordVisiblity = () => {
         const { isPasswordShown } = this.state;
-        this.setState({ 
-            isPasswordShown: !isPasswordShown 
+        this.setState({
+            isPasswordShown: !isPasswordShown
         });
     }
 
@@ -322,7 +356,7 @@ class form extends React.Component {
         }
         else if (this.props.form === "Register") {
             return (
-                
+
                 <div className="cover">
                     <Snackbar
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
@@ -344,7 +378,7 @@ class form extends React.Component {
 
                     {this.state.visible ?
                         <form method="post" className="userRegistrationForm" name="userRegistrationForm" onSubmit={this.submituserRegistrationForm}>
-                            
+
                             {
                                 React.Children.map(children, (child, i) => {
                                 //Ignore the second child
@@ -352,7 +386,7 @@ class form extends React.Component {
                                     return child
                                 })
                             }
-                            
+
                             <h3>{this.props.form}</h3>
 
                             <div>
@@ -372,7 +406,6 @@ class form extends React.Component {
                                     placeholder="Lastname *" required
                                     value={this.state.fields.lastname}
                                     onChange={this.handleChange}
-
                                 />
                             </div>
                             <div>
@@ -392,6 +425,7 @@ class form extends React.Component {
                                     placeholder="Password *" required
                                     value={this.state.fields.password}
                                     onChange={this.handleChange}
+                                    onBlur={this.handleChange}
                                 />
                                 <p className="errorMsg">{this.state.errors.password}</p>
                             </div>
@@ -403,6 +437,7 @@ class form extends React.Component {
                                     placeholder="Confirm Password *" required
                                     value={this.state.fields.ConfirmPassword}
                                     onChange={this.handleChange}
+                                    onBlur={this.handleChange}
                                 />
                                 <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
 
@@ -429,7 +464,7 @@ class form extends React.Component {
                                 <Link to="/#">
                             <img src={logo} alt="logo"       />
                                 </Link>
-                            </div> 
+                            </div>
 
                             <div className="divDesign">
                                 <h2 className="messageDesign">Thank you for registering!</h2>
@@ -443,7 +478,7 @@ class form extends React.Component {
                                 if (i === 0) return
                                     return child
                                 })
-                            }  
+                            }
                             </div>
                     </div>
                     }

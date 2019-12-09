@@ -10,13 +10,15 @@ class section extends React.Component {
                 {this.props.show === "true" ?
                 <h3>{this.props.value}</h3>
                 : null }
-                
-                {(() => {if(this.props.value == "Translation") 
+
+                {(() => {if(this.props.value == "Translation")
                 {return <Translation/>}})()}
-                
+
                 {this.props.children}
 
             </section>
+
+
         )
     }
 }

@@ -26,9 +26,10 @@ export default class Account extends React.Component {
     state = {
         visibleForm: true,
         isAuthenticated: isAuthenticated(),
-        session: getSession()
+        session: getSession(),
+        userItem : null
     }
-        
+
     switchPage(page) {
         //alert(`${page}`);
         $(".accountManegment section").hide();
@@ -37,7 +38,7 @@ export default class Account extends React.Component {
 
     editPersonalInfo(){
         var type = $(".personalInfo p").first().text();
-       
+
         if(type === "Edit"){
             $( ".personalInfo input" ).prop( "disabled", false );
             $( ".personalInfo p" ).replaceWith("<p>Save</p>");
@@ -54,27 +55,30 @@ export default class Account extends React.Component {
         const requestOptions = {
             method: 'GET'
         };
+alert(email);
         const request = new Request(url, requestOptions);
 
         fetch(request).then(function (response) {
             return response.text().then(function (text) {
                     console.log(text);
+                    //return JSON.parse(text);
             });
         });
     }
 
-    
+
     render() {
 
         return (
+
             <section className="accountPage">
 
-                {!this.state.visibleForm ? 
+                {!this.state.visibleForm ?
                     <Form form={this.state.type}>
-                        <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a> 
-                        
+                        <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a>
+
                         <p className="linkDesign" onClick={() => { this.setState({ type: "Login"}); }}>click here to login</p>
-                    </Form> 
+                    </Form>
                 : null}
 
                 <header className="header">
@@ -82,17 +86,17 @@ export default class Account extends React.Component {
                         {!this.state.isAuthenticated ?
                         <div>
                             <a href="#" value="Register" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Register" }); }}>Register</a>
-                            <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> 
-                        </div> :                           
+                            <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a>
+                        </div> :
                             <div className="dropdown">
                                 {this.state.session ?
-                                    <p> 
-                                        {JSON.parse(this.state.session).username} 
-                                        <img src={Arrow} className="arrow" alt="rotateArrow" />
-                                    </p> 
-                                    : 
                                     <p>
-                                    Default Name 
+                                        {JSON.parse(this.state.session).email}
+                                        <img src={Arrow} className="arrow" alt="rotateArrow" />
+                                    </p>
+                                    :
+                                    <p>
+                                    Default Name
                                     <img src={Arrow} className="arrow" alt="rotateArrow" />
                                     </p>
                                 }
@@ -105,7 +109,7 @@ export default class Account extends React.Component {
                         }
                     </div>
 
-                    
+
                     <h1>Customer Identity and Access Management</h1>
 
 
@@ -129,8 +133,8 @@ export default class Account extends React.Component {
                                         <th>Password: </th>
                                     </tr>
                                     <tr>
-                                        <td>{JSON.parse(this.state.session).username}</td>
-                                        <td>**********</td>
+                                        <td>{JSON.parse(this.state.session).email}</td>
+                                        <td>{JSON.parse(this.state.session).password}</td>
                                     </tr>
                                     <tr>
                                         <td><p>Delete ID</p></td>
@@ -153,8 +157,8 @@ export default class Account extends React.Component {
                             <table>
                                 <tbody>
                                     <tr>
-                                        <th onClick={this.getUserItem(JSON.parse(this.state.session).username)}>Firstname: </th>
-                                        <td><input type="text" name="firstname" placeholder="Ben" disabled></input></td>
+                                        <th onClick={() => this.getUserItem(JSON.parse(this.state.session).email)}>Firstname: </th>
+                                        <td><input type="text" name="firstname" placeholder="{this.state.userItem.firstname}" disabled></input></td>
                                     </tr>
                                     <tr>
                                         <th>Lastname: </th>
@@ -185,10 +189,10 @@ export default class Account extends React.Component {
                         </Section>
 
                     </div>
-                : 
+                :
                     <h1>In order too use this page you must login</h1>
                 }
-                
+
                 </Section>
 
                 <Footer />

@@ -7,7 +7,7 @@ import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
-import { sendHTTP } from './EmailConfirmation'
+import { sendHTTP } from './Layout/EmailConfirmation'
 import { string } from 'prop-types';
 import ImageSlider from './Components/ImageSlider';
 
@@ -19,6 +19,7 @@ import Settings from './Layout/Settings';
 import Account from './Layout/Account';
 
 import Cookies from 'js-cookie';
+import Confirmation from './Layout/Confirmation';
 
 export const getAccessToken = () => Cookies.get('access_token');
 export const getRefreshToken = () => Cookies.get('refresh_token');
@@ -69,39 +70,7 @@ class App extends Component {
             //beroende pa responsen fran fetch
             <Router>
                 <Switch>
-                    <Route path="/confirmation/:token" exact strict render={
-                        ({ match }) => {
-
-                            var temp = sendHTTP(match.params.token);
-
-                            var result;
-
-                            var hets = temp.then(function (response) {
-
-                                var that = this;
-
-                                return response.text().then(function (text) {
-                                    if (text == "true") {
-                                        alert('Registreringen funkar');
-
-                                    }
-                                    else {
-                                        alert('Du lyckades inte registreras');
-
-                                    }
-
-                                });
-                            });
-                            return (
-                            <section>
-                            <h1>Välkommen till klubben. Om du fick ett fel försök igen senare</h1>
-                            <Link to="/">
-                            <p>Go to startpage</p>
-                            </Link>
-                            </section>
-                            );
-                        }
-                    } />
+                    <Route path="/confirmation/:token" exact strict component={Confirmation}/>
 
                     <Route path="/Settings" exact strict component={Settings} />
                     <Route path="/Account" exact strict component={Account} />
@@ -144,6 +113,7 @@ class App extends Component {
                                         </div>
                                     </div>
                                 }
+
                             </div>
 
 
