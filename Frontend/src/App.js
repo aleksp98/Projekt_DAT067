@@ -35,6 +35,34 @@ class App extends Component {
     }
 
     render() {
+        //Check if session is still valid
+        if (Cookies.get("session")) {
+            let user = JSON.parse(Cookies.get("session"));
+            const url = 'https://localhost:5001/api/User/LoginUser';
+
+            const headers = new Headers();
+            headers.append('Content-Type', 'application/json');
+            const requestOptions = {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(user)
+            };
+            const request = new Request(url, requestOptions);
+            fetch(request).then(function (response) {
+                return response.text().then(function (text) {
+                    if (text === "true") {
+                        Cookies.remove("session");
+                        Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
+                        Cookies.set("access_token", "placeholder", { expires: 14 });
+                    }
+                    else {
+                        console.log("false");
+                        Cookies.remove("session");
+                        Cookies.remove("access_token");
+                    }
+                });
+            });
+        }
 
         return (
             //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
@@ -47,7 +75,7 @@ class App extends Component {
                             var temp = sendHTTP(match.params.token);
 
                             var result;
-                                                          
+
                             var hets = temp.then(function (response) {
 
                                 var that = this;
@@ -77,19 +105,17 @@ class App extends Component {
 
                     <Route path="/Settings" exact strict component={Settings} />
                     <Route path="/Account" exact strict component={Account} />
-                    
+
                     <Route path="/registeredPage" exact strict component={registeredPage} />
                     <Route path="/loginPage" exact strict component={loginPage} />
-
-
                     <section>
 
-                        {!this.state.visibleForm ? 
+                        {!this.state.visibleForm ?
                             <Form form={this.state.type}>
-                                <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a> 
-                                
+                                <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a>
+
                                 <p className="linkDesign" onClick={() => { this.setState({ type: "Login"}); }}>click here to login</p>
-                            </Form> 
+                            </Form>
                         : null}
 
                         <header className="header">
@@ -97,20 +123,20 @@ class App extends Component {
                                 {!this.state.isAuthenticated ?
                                 <div>
                                     <a href="#" value="Register" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Register" }); }}>Register</a>
-                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> 
-                                </div> :                           
+                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a>
+                                </div> :
                                     <div className="dropdown">
                                         {this.state.session ?
-                                        <p> 
-                                            {JSON.parse(this.state.session).username} 
-                                            <img src={Arrow} className="arrow" alt="rotateArrow" />
-                                        </p> 
-                                        : 
                                         <p>
-                                        Default Name 
+                                            {JSON.parse(this.state.session).username}
+                                            <img src={Arrow} className="arrow" alt="rotateArrow" />
+                                        </p>
+                                        :
+                                        <p>
+                                        Default Name
                                         <img src={Arrow} className="arrow" alt="rotateArrow" />
                                         </p>}
-                                        
+
                                         <div className="dropdown-content">
                                             <p value="Account"><Link to="/Account">Account</Link></p>
                                             <p value="Settings"><Link to="/Settings">Settings</Link></p>
@@ -120,7 +146,7 @@ class App extends Component {
                                 }
                             </div>
 
-                            
+
                             <h1>Customer Identity and Access Management</h1>
 
 

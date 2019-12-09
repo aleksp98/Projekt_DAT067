@@ -65,10 +65,19 @@ namespace API.EntityModels
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                     entity.Property(e => e.Verified)
 
+                     entity.Property(e => e.Created_at)
+                    .IsRequired()
+                    .HasColumnName("created_at")
+                    .HasColumnType("datetime2");
+
+                     entity.Property(e => e.Verified)
                     .IsRequired()
                     .HasColumnName("verified");
+
+                    entity.Property(e => e.Resended_mail)
+                    .IsRequired()
+                    .HasColumnName("resended_mail");
             });
 
             OnModelCreatingPartial(modelBuilder);

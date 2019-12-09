@@ -108,7 +108,8 @@ class form extends React.Component {
             };
             const request = new Request(url, requestOptions);
 
-
+             //lägga in om man inte kunde registrera
+             //visa fel
             fetch(request).then(this.setState({ 
                 fields: fields, 
                 snackbaropen: true, 
@@ -161,7 +162,7 @@ class form extends React.Component {
                         return response.text().then(function (text) {
                             if (text === "true") {
                                 Cookies.remove("session");
-                                Cookies.set("session", { "username": user.email, "password": user.password }, { expires: 14 });
+                                Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
                                 Cookies.set("access_token", "placeholder", { expires: 14 });
                                 _this.setState({ 
                                     snackbaropen: true, 
@@ -182,7 +183,7 @@ class form extends React.Component {
                 else {
                     _this.setState({ 
                         snackbaropen: true, 
-                        snackbarmsg: "Wrong username or password" 
+                        snackbarmsg: "Wrong email or password" 
                     });
                 }
             });
