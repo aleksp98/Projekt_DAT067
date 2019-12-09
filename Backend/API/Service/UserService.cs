@@ -12,6 +12,7 @@ namespace API.Service
 {
     public class UserService : IUserService
     {
+        // This is for debugging, we need to remove this later since its kinda dangerous
         public async Task<List<UserItem>> GetUsers()
         {
             using (ciamContext db = new ciamContext())
@@ -31,6 +32,23 @@ namespace API.Service
             }
         }
 
+        public async Task<UserItem> GetUser(int id)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                return await (from a in db.Users.AsNoTracking()
+                              where a.Id == id
+                              select new UserItem 
+                              {
+                                  Id = a.Id,
+                                  Email = a.Email,
+                                  First_name = a.First_name,
+                                  Last_name = a.Last_name,
+                              }).FirstOrDefaultAsync();
+
+            }
+        }
+
           //check if email exist and is active
           //returns bool
         public async Task<bool> CheckUser(string Email)
@@ -40,8 +58,6 @@ namespace API.Service
                 return null != db.Users.Where(x => x.Email == Email && x.Verified == true).FirstOrDefault();
             }
         }
-
-
 
 
 

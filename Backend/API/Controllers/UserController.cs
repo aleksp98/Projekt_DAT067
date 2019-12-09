@@ -40,6 +40,13 @@ namespace API.Controllers
             return Ok(await _userService.GetUsers());
         }
 
+        [HttpGet]
+        [Route("User/{id}")]
+        public async Task<IActionResult> User(int id)
+        {
+            return Ok(await _userService.GetUser(id));
+        }
+
 
         [HttpPost]
         [Route("SaveUser")]
@@ -49,7 +56,7 @@ namespace API.Controllers
 
             //send the confirmation mail
             await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
-            return ok ;
+            return ok;
         }
 
 
