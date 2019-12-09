@@ -128,7 +128,7 @@ class App extends Component {
                                     <div className="dropdown">
                                         {this.state.session ?
                                         <p>
-                                            {JSON.parse(this.state.session).username}
+                                            {JSON.parse(this.state.session).email}
                                             <img src={Arrow} className="arrow" alt="rotateArrow" />
                                         </p>
                                         :

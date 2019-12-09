@@ -1,4 +1,5 @@
 import React from 'react';
+import Translation from './Translation';
 
 
 class section extends React.Component {
@@ -9,7 +10,9 @@ class section extends React.Component {
                 {this.props.show === "true" ?
                 <h3>{this.props.value}</h3>
                 : null }
-
+                
+                {(() => {if(this.props.value == "Translation") 
+                {return <Translation/>}})()}
                 
                 {this.props.children}
 
