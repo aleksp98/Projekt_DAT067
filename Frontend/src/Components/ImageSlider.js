@@ -12,12 +12,20 @@ class imageSlider extends React.Component {
 
 
       return (
-        <div className="sliderContainer">
-          <img src={Picture1} className="img02" alt="Background" />
-          <img src={Picture2} className="img02" alt="Background" />
-          <img src={Picture3} className="img02" alt="Background" />
-          <img src={Picture4} className="img02" alt="Background" />
-        </div>
+        <div className="slideContainer">
+          <div className="imgSlider">
+            <img src={Picture1} className="imgSlide" alt="Background" />
+            <img src={Picture2} className="imgSlide" alt="Background" />
+            <img src={Picture3} className="imgSlide" alt="Background" />
+            <img src={Picture4} className="imgSlide" alt="Background" />
+          </div>
+          <section>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </section>
+          </div>
       )
     }
   }

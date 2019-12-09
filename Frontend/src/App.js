@@ -69,8 +69,9 @@ class App extends Component {
                                     <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> 
                                 </div> :                           
                                     <div className="dropdown">
-                                        <p> 
-                                            {this.state.session ? <div> {JSON.parse(this.state.session).username} </div> : "Default Name"}
+                                        
+                                        <p>
+                                        {this.state.session ? JSON.parse(this.state.session).email : "default name" }
                                             <img src={Arrow} className="arrow" alt="rotateArrow" />
                                         </p>
                                         <div className="dropdown-content">
@@ -80,6 +81,7 @@ class App extends Component {
                                         </div>
                                     </div>
                                 }
+                            
                             </div>
 
                             

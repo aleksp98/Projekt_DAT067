@@ -251,13 +251,6 @@ class form extends React.Component {
         else {
             formIsValid = false;
         }
-       
-            
-        
-    
-        
-
-
 
         this.setState({
             errors: errors

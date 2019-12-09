@@ -40,6 +40,13 @@ namespace API.Controllers
             return Ok(await _userService.GetUsers());
         }
 
+        [HttpGet]
+        [Route("User/{email}")]
+        public async Task<IActionResult> User(string email)
+        {
+            return Ok(await _userService.GetUser(email));
+        }
+
 
         [HttpPost]
         [Route("SaveUser")]
@@ -49,7 +56,7 @@ namespace API.Controllers
 
             //send the confirmation mail
             await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
-            return ok ;
+            return ok;
         }
 
 
@@ -92,8 +99,15 @@ namespace API.Controllers
         public async Task<IActionResult> LoginUser([FromBody] UserItem model)
         {
             
-            ObjectResult ok = Ok(await _userService.LoginUser(model));
-            return ok;
+            return Ok(await _userService.LoginUser(model));
+        }
+
+        [HttpPost]
+        [Route("UpdateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserItem model)
+        {
+            
+            return Ok(await _userService.UpdateUser(model));
         }
 
 
