@@ -27,10 +27,9 @@ namespace API.Controllers
 
              public async void myTimerCallback(Object obj)
               {
-                  Console.WriteLine("Timer triggered \n \n");
-                    await _userService.ExpireDate();
-                 await _userService.Resend_mail();
-              
+                Console.WriteLine("Timer triggered \n \n");
+                await _userService.ExpireDate();
+                await _userService.Resend_mail();
           }
 
         [HttpGet]
@@ -55,7 +54,7 @@ namespace API.Controllers
             OkObjectResult ok = Ok(await _userService.SaveUser(model));   
 
             //send the confirmation mail
-            await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
+            await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token,1);
             return ok;
         }
 
@@ -70,6 +69,19 @@ namespace API.Controllers
          return Ok(await _userService.CheckUser(email));
 
         }
+
+        
+        //if password is forgotten
+        [HttpGet]
+        [Route("resetPassword/{email}")]
+        public async Task<IActionResult> resetPassword(string email)
+        { 
+            Console.WriteLine("inside reset password");
+         return Ok(await _userService.ResetPassword(email));
+
+        }
+
+
 
           /*
         [HttpPost]
@@ -100,6 +112,15 @@ namespace API.Controllers
         {
             
             return Ok(await _userService.LoginUser(model));
+        }
+
+
+
+         [HttpPost]
+        [Route("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] UserItem model)
+        {
+            return Ok(await _userService.ChangePassword(model));
         }
 
         [HttpPost]

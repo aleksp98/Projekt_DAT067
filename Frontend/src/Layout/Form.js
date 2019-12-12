@@ -17,6 +17,12 @@ import { withRouter } from 'react-router-dom';
 import { bool } from 'prop-types';
 
 
+
+
+
+
+
+
 class form extends React.Component {
 
     constructor(props) {
@@ -142,6 +148,31 @@ class form extends React.Component {
         }
 
     }
+    
+    
+    //when pressing "forgot Password?"
+    //vet inte hur man fixar fält med mera men kan fixa backgrunds processen
+    //Man skriver in sitt mail
+    //får sen ett temporärt lösenord på mailen
+    //kan senare byta i settings på login
+    //Lr man får en länk i mailet som man där sedan byter
+    forgotPassword(){
+        var mail = prompt("Enter your email Address", "textbox's intial text");
+
+        if(mail != null){
+          
+            const url = 'https://localhost:5001/api/User/resetPassword/' + mail;
+            const requestOptions = {
+                method: 'GET'
+            };
+            const request = new Request(url, requestOptions);
+            fetch(request);
+        }
+
+    }
+
+
+
     //Listener to login button(when pressed)
     handleLogin() {
         const mail = this.state.fields.email;
@@ -252,20 +283,11 @@ class form extends React.Component {
             formIsValid = false;
         }
        
-            
-        
-    
-        
-
-
-
         this.setState({
             errors: errors
         });
         
         return formIsValid;
-        
-
     };
 
     state = {
@@ -345,7 +367,7 @@ class form extends React.Component {
                             verifyCallback={this.verifyCallback}
                         />
 
-                        <footer>
+                        <footer onClick = {this.forgotPassword}>
                             <ALink href="true" value="Forgot Password?" />
                         </footer>
                     </form>

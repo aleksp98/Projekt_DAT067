@@ -20,6 +20,7 @@ import Account from './Layout/Account';
 
 import Cookies from 'js-cookie';
 import Confirmation from './Layout/Confirmation';
+import ResetPassword from './Layout/ResetPassword';
 
 export const getAccessToken = () => Cookies.get('access_token');
 export const getRefreshToken = () => Cookies.get('refresh_token');
@@ -71,6 +72,7 @@ class App extends Component {
             <Router>
                 <Switch>
                     <Route path="/confirmation/:token" exact strict component={Confirmation}/>
+                    <Route path="/resetPassword/:mail" exact strict component={ResetPassword}/>
 
                     <Route path="/Settings" exact strict component={Settings} />
                     <Route path="/Account" exact strict component={Account} />
