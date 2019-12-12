@@ -49,24 +49,23 @@ class translation extends React.Component {
 
         searchForText(){
             let stringMsg = {};
+            
             stringMsg["search"] = this.state.stringMsg.message;
             var searchString = stringMsg["search"];
             var responseData = this.state.data;
-            const headers = new Headers();
+            console.log("fuck");
             const requestOptions = {
                 method: 'GET',
-                headers,
-                
-            };
-           const url = 'https://localhost:5001/api/Controllers/Search';
+                };
+           const url = 'https://localhost:5001/api/Controllers/Search2' + searchString;
            const request = new Request(url, requestOptions);
            
            if(searchString.length > 0){
             searchString = searchString.toLowerCase();
-            
+            alert(searchString);
             fetch(request).then(function (response) {
                 return response.text().then(function (text) {
-
+                    
                 
                 })
         
@@ -107,7 +106,7 @@ class translation extends React.Component {
                             id="search" 
                             placeholder="Search for text..." 
                             value={this.state.stringMsg.message}
-                            onChange={this.handleChange}/>
+                            onChange={this.handleInputChange}/>
                         <div>
                             {
                                 this.state.data.map((i) =>
@@ -169,7 +168,7 @@ class translation extends React.Component {
                             id="search" 
                             placeholder="Search for text..." 
                             ref={input => this.search = input} 
-                            onChange={this.handleInputChange}
+                            onChange={this.handleChange}
                             />
                         <div>
                             {

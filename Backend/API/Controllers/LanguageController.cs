@@ -21,7 +21,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("Search/{Id}")]
-        public async Task<IActionResult> Search(int Id)
+        public async Task<IActionResult> Search2(int Id)
         {
             return Ok(await _languageService.Search(Id));
         }
