@@ -23,9 +23,21 @@ namespace API.Controllers
         [Route("Search/{Id}")]
         public async Task<IActionResult> Search(int Id)
         {
+             Console.WriteLine("Inside ConfirmMail {0} \n \n");
             return Ok(await _languageService.Search(Id));
         }
 
+          
+            [HttpGet]
+        [Route("SearchText/{Id}")]
+        public async Task<IActionResult> SearchText(string text)
+        {
+             Console.WriteLine("Inside SearchText {0} \n \n");
+            return Ok(await _languageService.SearchText(text));
+        }
+
+
+         
         
         [HttpPost]
         [Route("Create")]

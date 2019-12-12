@@ -27,6 +27,24 @@ namespace API.Service
             }
         }
 
+
+          public async Task<LanguageItem> SearchText(string Text)
+        {
+            using (languageContext db = new languageContext())
+            {
+                return await (from a in db.Language.AsNoTracking()
+                             // where a.Id == languageId
+                              select new LanguageItem 
+                              {
+                                  Id = a.Id,
+                                  Text = a.Text,
+
+                              }).FirstOrDefaultAsync();
+            }
+        }
+
+
+        
         public async Task<bool> Update(LanguageItem languageItem)
         {
             using (languageContext db = new languageContext())

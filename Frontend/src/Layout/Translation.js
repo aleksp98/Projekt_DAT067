@@ -7,8 +7,7 @@ class translation extends React.Component {
         this.handleChange = this.handleChange.bind(this);
     }
     
-    
-            state = {
+        state = {
           query: '',
           data: [],
           stringMsg: {}
@@ -42,37 +41,38 @@ class translation extends React.Component {
         let stringMsg = this.state.stringMsg;
         stringMsg["message"] = e.target.value;
         
-        
+     
             
             this.searchForText();
         }
 
         searchForText(){
+
+            alert("inside");
+         
             let stringMsg = {};
             stringMsg["search"] = this.state.stringMsg.message;
             var searchString = stringMsg["search"];
             var responseData = this.state.data;
             const headers = new Headers();
+
             const requestOptions = {
                 method: 'GET',
-                headers,
-                
+                headers
+    
             };
-           const url = 'https://localhost:5001/api/Controllers/Search';
+
+           const url = 'https://localhost:5001/api/Controllers/SearchText' + searchString;
            const request = new Request(url, requestOptions);
            
-           if(searchString.length > 0){
-            searchString = searchString.toLowerCase();
+           
             
-            fetch(request).then(function (response) {
+                 fetch(request).then(function (response) {
                 return response.text().then(function (text) {
 
-                
-                })
+                   })
+               })
         
-        })
-        
-                }
 
             }
     
@@ -169,7 +169,7 @@ class translation extends React.Component {
                             id="search" 
                             placeholder="Search for text..." 
                             ref={input => this.search = input} 
-                            onChange={this.handleInputChange}
+                            onChange={this.handleChange}
                             />
                         <div>
                             {
