@@ -51,9 +51,11 @@ class translation extends React.Component {
             alert("inside");
          
             let stringMsg = {};
+            
             stringMsg["search"] = this.state.stringMsg.message;
             var searchString = stringMsg["search"];
             var responseData = this.state.data;
+
             const headers = new Headers();
 
             const requestOptions = {
@@ -72,7 +74,7 @@ class translation extends React.Component {
 
                    })
                })
-        
+
 
             }
     
@@ -107,7 +109,7 @@ class translation extends React.Component {
                             id="search" 
                             placeholder="Search for text..." 
                             value={this.state.stringMsg.message}
-                            onChange={this.handleChange}/>
+                            onChange={this.handleInputChange}/>
                         <div>
                             {
                                 this.state.data.map((i) =>
