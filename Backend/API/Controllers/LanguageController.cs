@@ -17,6 +17,7 @@ namespace API.Controllers
         public LanguageController(ILanguageService languageService)
         {
             _languageService = languageService;
+            Console.WriteLine("Inside constructor\n \n");
         }
 
         [HttpGet]
@@ -28,11 +29,11 @@ namespace API.Controllers
         }
 
           
-            [HttpGet]
-        [Route("SearchText/{Id}")]
+        [HttpGet]
+        [Route("SearchText/{text}")]
         public async Task<IActionResult> SearchText(string text)
         {
-             Console.WriteLine("Inside SearchText {0} \n \n");
+             Console.WriteLine("Inside SearchText API port {0} \n \n",text);
             return Ok(await _languageService.SearchText(text));
         }
 

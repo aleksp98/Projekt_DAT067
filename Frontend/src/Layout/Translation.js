@@ -23,7 +23,7 @@ class translation extends React.Component {
        
       }
       
-  
+   
       getData = () => {
           fetch(`http://localhost:4000/xxxx`) //query db example
           .then(response => response.json())
@@ -34,6 +34,7 @@ class translation extends React.Component {
               })
           })
       }
+      
       
       handleChange(e) {
           
@@ -59,12 +60,10 @@ class translation extends React.Component {
             const headers = new Headers();
 
             const requestOptions = {
-                method: 'GET',
-                headers
-    
+                method: 'GET'
             };
 
-           const url = 'https://localhost:5001/api/Controllers/SearchText' + searchString;
+           const url = 'https://localhost:5001/api/Language/SearchText/' + searchString;
            const request = new Request(url, requestOptions);
            
            
