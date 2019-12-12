@@ -1,17 +1,29 @@
 import React from 'react';
+import { string } from 'prop-types';
 
 class translation extends React.Component {
-      state = {
+    constructor(props) {
+    super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+    
+    
+            state = {
           query: '',
           data: [],
-      }
+          stringMsg: {}
+        }
+        
+     
   
       handleInputChange = () => {
           this.setState({
               query: this.search.value
           })
           this.filterArray();
+       
       }
+      
   
       getData = () => {
           fetch(`http://localhost:4000/xxxx`) //query db example
@@ -23,20 +35,67 @@ class translation extends React.Component {
               })
           })
       }
+      
+      handleChange(e) {
+          
+        // Variable to hold the original version of the list
+        let stringMsg = this.state.stringMsg;
+        stringMsg["message"] = e.target.value;
+        
+        
+            
+            this.searchForText();
+        }
+
+        searchForText(){
+            let stringMsg = {};
+            stringMsg["search"] = this.state.stringMsg.message;
+            var searchString = stringMsg["search"];
+            var responseData = this.state.data;
+            const headers = new Headers();
+            const requestOptions = {
+                method: 'GET',
+                headers,
+                
+            };
+           const url = 'https://localhost:5001/api/Controllers/Search';
+           const request = new Request(url, requestOptions);
+           
+           if(searchString.length > 0){
+            searchString = searchString.toLowerCase();
+            
+            fetch(request).then(function (response) {
+                return response.text().then(function (text) {
+
+                
+                })
+        
+        })
+        
+                }
+
+            }
+    
+  
+  
   
       filterArray = () => {
           var searchString = this.state.query;
-          var responseData = this.state.data
+          var responseData = this.state.data;
+          
           if(searchString.length > 0){
+              
               // console.log(responseData[i].name);
               responseData = responseData.filter(l => {
                   console.log( l.name.toLowerCase().match(searchString));
+                  
               })
           }
       }
   
       componentWillMount() {
           this.getData();
+          
       }
       render() {
           return (
@@ -47,8 +106,8 @@ class translation extends React.Component {
                             <input type="text" 
                             id="search" 
                             placeholder="Search for text..." 
-                            ref={input => this.search = input} 
-                            onChange={this.handleInputChange}/>
+                            value={this.state.stringMsg.message}
+                            onChange={this.handleChange}/>
                         <div>
                             {
                                 this.state.data.map((i) =>
@@ -110,7 +169,8 @@ class translation extends React.Component {
                             id="search" 
                             placeholder="Search for text..." 
                             ref={input => this.search = input} 
-                            onChange={this.handleInputChange}/>
+                            onChange={this.handleInputChange}
+                            />
                         <div>
                             {
                                 this.state.data.map((i) =>
