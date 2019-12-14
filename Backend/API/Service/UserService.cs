@@ -59,6 +59,26 @@ namespace API.Service
                 return null != db.Users.Where(x => x.Email == Email && x.Verified == true).FirstOrDefault();
             }
         }
+        
+
+
+              //check if email exist
+          //returns bool
+        public async Task<bool> ResetPassword(string Email)
+        {
+             using (ciamContext db = new ciamContext())
+            {
+                Users user = db.Users.Where(x => x.Email == Email).FirstOrDefault();
+
+                if(user != null){
+                        
+                         await Mail.sendMail(user.Email,user.First_name,user.Last_name,user.Token,3);
+                         return true;
+                }else{ //no email found
+                    return false;
+                }
+            }
+        }
 
 
 
@@ -121,7 +141,24 @@ namespace API.Service
                          (x => x.Email == userItem.Email && x.Password == userItem.Password).FirstOrDefault();
             }
         }
+          
 
+
+
+         public async Task<bool> ChangePassword(UserItem userItem)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                 Users user = db.Users.Where
+                         (x => x.Email == userItem.Email).FirstOrDefault();
+                      
+                    if(userItem.Password != null)
+                    user.Password = userItem.Password;
+                
+            
+                return await db.SaveChangesAsync() >= 1;
+            }
+        }  
 
 
         
@@ -169,7 +206,7 @@ namespace API.Service
                     
                      Console.WriteLine("Resend_mail send mail\n \n");
                     //check if mail got sended
-                    await Mail.sendMail(user.Email,user.First_name,user.Last_name,user.Token);
+                    await Mail.sendMail(user.Email,user.First_name,user.Last_name,user.Token,2);
                     //if mail sended do changes
                     //if not do nothing
                     user.Resended_mail = true;

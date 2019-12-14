@@ -17,15 +17,28 @@ namespace API.Controllers
         public LanguageController(ILanguageService languageService)
         {
             _languageService = languageService;
+            Console.WriteLine("Inside constructor\n \n");
         }
 
         [HttpGet]
         [Route("Search/{Id}")]
-        public async Task<IActionResult> Search(int Id)
+        public async Task<IActionResult> Search2(int Id)
         {
+             Console.WriteLine("Inside ConfirmMail {0} \n \n");
             return Ok(await _languageService.Search(Id));
         }
 
+          
+        [HttpGet]
+        [Route("SearchText/{text}")]
+        public async Task<IActionResult> SearchText(string text)
+        {
+             Console.WriteLine("Inside SearchText API port {0} \n \n",text);
+            return Ok(await _languageService.SearchText(text));
+        }
+
+
+         
         
         [HttpPost]
         [Route("Create")]
