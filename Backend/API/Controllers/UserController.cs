@@ -46,7 +46,7 @@ namespace API.Controllers
             return Ok(await _userService.GetUser(email));
         }
 
-
+        //saves the user in Database. Sends confirmation mail
         [HttpPost]
         [Route("SaveUser")]
         public async Task<IActionResult> SaveUser([FromBody] UserItem model)
@@ -60,7 +60,6 @@ namespace API.Controllers
 
 
         //Check if account is active
-
         //returns to frontend 200 and bool value
         [HttpGet]
         [Route("CheckUser/{email}")]
