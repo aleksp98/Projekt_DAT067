@@ -40,6 +40,7 @@ namespace API.Service
                               where a.Email == email
                               select new UserItem 
                               {
+                                  Id = a.Id,
                                   Email = a.Email,
                                   First_name = a.First_name,
                                   Last_name = a.Last_name,
