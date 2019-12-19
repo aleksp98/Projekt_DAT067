@@ -46,7 +46,7 @@ namespace API.Controllers
             return Ok(await _userService.GetUser(email));
         }
 
-
+        //saves the user in Database. Sends confirmation mail
         [HttpPost]
         [Route("SaveUser")]
         public async Task<IActionResult> SaveUser([FromBody] UserItem model)
@@ -60,7 +60,6 @@ namespace API.Controllers
 
 
         //Check if account is active
-
         //returns to frontend 200 and bool value
         [HttpGet]
         [Route("CheckUser/{email}")]
@@ -72,6 +71,8 @@ namespace API.Controllers
 
         
         //if password is forgotten
+        //check if Email exist
+        //sends link to email if exists
         [HttpGet]
         [Route("resetPassword/{email}")]
         public async Task<IActionResult> resetPassword(string email)
@@ -119,7 +120,8 @@ namespace API.Controllers
          [HttpPost]
         [Route("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] UserItem model)
-        {
+        {  
+            Console.WriteLine("Inside ChangePassword {0} {1} \n \n",model.Email, model.Password);
             return Ok(await _userService.ChangePassword(model));
         }
 

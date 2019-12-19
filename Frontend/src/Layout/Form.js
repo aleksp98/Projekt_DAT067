@@ -40,12 +40,14 @@ class form extends React.Component {
             isVerified: false,
             snackbaropen: false,
             snackbarmsg: '',
-            visible: true
+            visible: true,
+            forgotpass: false
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
         this.submituserLoginForm = this.submituserLoginForm.bind(this);
+        this.forgotPassword = this.forgotPassword.bind(this);
 
     };
 
@@ -149,25 +151,55 @@ class form extends React.Component {
 
     }
     
-    
-    //when pressing "forgot Password?"
-    //vet inte hur man fixar fält med mera men kan fixa backgrunds processen
-    //Man skriver in sitt mail
-    //får sen ett temporärt lösenord på mailen
-    //kan senare byta i settings på login
-    //Lr man får en länk i mailet som man där sedan byter
-    forgotPassword(){
-        var mail = prompt("Enter your email Address", "textbox's intial text");
+    //seems to be a small bug with recaptcha
+    //nothing very important
+    forgotPassword(e){
+        e.preventDefault();
+        let _this = this;
+           var mail = this.state.fields.email;
+            
+           let fields = {};
+           fields["firstname"] = "";
+           fields["lastname"] = "";
+           fields["email"] = "";
+           fields["password"] = "";
+           fields["ConfirmPassword"] = "";
 
         if(mail != null){
-          
             const url = 'https://localhost:5001/api/User/resetPassword/' + mail;
             const requestOptions = {
                 method: 'GET'
             };
             const request = new Request(url, requestOptions);
-            fetch(request);
+           fetch(request).then(function (response) {
+            return response.text().then(function (text) {
+                if (text === "true") {
+
+                    _this.setState({ 
+                        fields: fields, 
+                        snackbaropen: true, 
+                        snackbarmsg: "Check your email to change Password",
+                        visible: false,
+                        forgotpass: false
+                    })
+                  
+                }
+                else {
+                       _this.setState({ 
+                       fields: fields, 
+                        snackbaropen: true, 
+                        snackbarmsg: "Unsuccessful request for changing password. Mail doesn't probably exist",
+                        visible: true
+                    });
+                }
+            });
+        });
         }
+        /*
+    this.setState({
+        forgotpass : false
+    })
+    */
 
     }
 
@@ -305,6 +337,61 @@ class form extends React.Component {
 
         const { isPasswordShown } = this.state;
         const children = this.props.children;
+            
+        //if forgotPassword was pressed render this
+         if(this.state.forgotpass === true){
+          return(  <div className="cover">
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                open={this.state.snackbaropen}
+                autoHideDuration={3000}
+                onClose={this.snackbarClose}
+                message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        onClick={this.snackbarClose}
+                    >
+                        x
+                    </IconButton>
+                ]}
+            />
+            <form method="get" name="forgotPasswordForm" onSubmit={ this.forgotPassword}>
+                {
+                    React.Children.map(children, (child, i) => {
+                    //Ignore the first child
+                    if (i === 1) return
+                        return child
+                    })
+                }
+                <h3>Put in your email</h3>
+                <div>
+                    <img src={UserIcon} alt="UserIcon" />
+                    <input type="email"
+                        name="email"
+                        placeholder="E-mail" required
+                        value={this.state.fields.email}
+                        onChange={this.handleChange}
+                    />
+                </div>
+                <button onClick={this.handleRegister} >Change Password</button>
+
+                <Recaptcha
+                    className="reCapcha"
+                    sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                    render="explicit"
+                    onloadCallback={this.recaptchaLoaded}
+                    verifyCallback={this.verifyCallback}
+                />
+            </form>
+            
+
+
+
+        </div>
+          )}
 
         if (this.props.form === "Login") {
             return (
@@ -367,7 +454,7 @@ class form extends React.Component {
                             verifyCallback={this.verifyCallback}
                         />
 
-                        <footer onClick = {this.forgotPassword}>
+                        <footer onClick = {()=>  this.setState({forgotpass : true })}>
                             <ALink href="true" value="Forgot Password?" />
                         </footer>
                     </form>
