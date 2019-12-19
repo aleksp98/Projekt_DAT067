@@ -62,8 +62,10 @@ namespace API.Service
         
 
 
-              //check if email exist
-          //returns bool
+        //if password is forgotten
+        //check if Email exist
+        //sends link to email if exists
+        //if found and sended return bool true
         public async Task<bool> ResetPassword(string Email)
         {
              using (ciamContext db = new ciamContext())

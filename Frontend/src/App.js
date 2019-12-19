@@ -67,8 +67,7 @@ class App extends Component {
         }
 
         return (
-            //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
-            //beroende pa responsen fran fetch
+ 
             <Router>
                 <Switch>
                     <Route path="/confirmation/:token" exact strict component={Confirmation}/>
