@@ -30,18 +30,6 @@ CREATE TABLE users (
 );
 GO
 
--- Create language DB
-CREATE DATABASE language;
-GO
-USE language;
-GO
-
--- Create text table
-CREATE TABLE text (
-	id INT IDENTITY(1,1) PRIMARY KEY,
-	text VARCHAR(100) UNIQUE NOT NULL,
-);
-GO
 
 
 
@@ -147,9 +135,9 @@ GO
 CREATE TABLE [dbo].[Text](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Text] [nvarchar](500) NOT NULL,
-	[Comment] [nvarchar](500) NULL,
-	[CreateDate] [datetime] NULL,
-	[ModifyDate] [datetime] NULL,
+	[Comments] [nvarchar](500) NULL,
+	[CreateDate] [DATETIME2] NULL,
+	[ModifyDate] [DATETIME2] NULL,
  CONSTRAINT [PK_TranslateText] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -166,8 +154,8 @@ CREATE TABLE [dbo].[Collection](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](50) NULL,
 	[Description] [nvarchar](500) NULL,
-	[Createdate] [datetime] NULL,
-	[Modifydate] [datetime] NULL,
+	[Createdate] [DATETIME2] NULL,
+	[Modifydate] [DATETIME2] NULL,
  CONSTRAINT [PK_TranslationCollection] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -184,7 +172,7 @@ CREATE TABLE [dbo].[Collection_Text](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[TextID] [int] NULL,
 	[CollectionID] [int] NULL,
-	[Createdate] [datetime] NULL,
+	[Createdate] [DATETIME2] NULL,
  CONSTRAINT [PK_Collection_Text] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -216,8 +204,8 @@ CREATE TABLE [dbo].[Language](
 	[Language] [nvarchar](50) NULL,
 	[CountryShort] [nvarchar](2) NULL,
 	[Country] [nvarchar](100) NULL,
-	[Createdate] [datetime] NULL,
-	[Modifydate] [datetime] NULL,
+	[Createdate] [DATETIME2] NULL,
+	[Modifydate] [DATETIME2] NULL,
  CONSTRAINT [PK_Language] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -231,12 +219,12 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Language_Text](
-	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[LanguageID] [int] NULL,
 	[TextID] [int] NULL,
 	[LanguageText] [nvarchar](500) NULL,
-	[Createdate] [datetime] NULL,
-	[Modifydate] [datetime] NULL,
+	[Createdate] [DATETIME2] NULL,
+	[Modifydate] [DATETIME2] NULL,
  CONSTRAINT [PK_TranslationLangText] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -289,6 +277,10 @@ GO
 USE [master]
 GO
 ALTER DATABASE [TranslateDB] SET  READ_WRITE 
+GO
+USE ciam
+GO
+INSERT INTO [dbo].[Language] (LanguageShort, Language, CountryShort, Country) VALUES ('US', 'English', 'EN', 'United states')
 GO
 
 
