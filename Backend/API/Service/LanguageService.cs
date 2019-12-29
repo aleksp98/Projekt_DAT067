@@ -29,20 +29,46 @@ namespace API.Service
                               }).FirstOrDefaultAsync();
             }
         }
-         public async Task<LanguageTextItem> Search2(String searchString)
+         public async Task<List<LanguageTextItem>> SearchAll(string text)      
         {
+           
             using (languageContext db = new languageContext())
-            {
-                return await (from texts in db.LanguageText.AsNoTracking()
-                              where texts.languageText  == searchString
+            {        Console.WriteLine("Inside SerachAll xxx\n \n");
+
+                //List<LanguageText> temp = db.LanguageText.Where(x => x.languageText == text).ToList();
+                return await (from a in db.LanguageText.AsNoTracking()
+                              where a.languageText == text
                               select new LanguageTextItem 
                               {
-                                  languageText = texts.languageText,
-                                  textId = texts.textId,
-                                  languageId = texts.languageId
-                              }).FirstOrDefaultAsync();
+                                  languageText = a.languageText,
+                                  textId = a.textId,
+                                  languageId = a.languageId
+                              }).ToListAsync();
             }
         }
+         
+
+         public async Task<List<LanguageItem>> getLanguages()      
+        {
+           
+            using (languageContext db = new languageContext())
+            {        Console.WriteLine("Inside getLanguages xxx\n \n");
+
+                //List<LanguageText> temp = db.LanguageText.Where(x => x.languageText == text).ToList();
+                return await (from a in db.Language.AsNoTracking()
+                              // where a.languageText == text
+                              select new LanguageItem 
+                              {
+                                  id = a.Id,
+                                  languageShort = a.LanguageShort,
+                                  language = a.LanguageValue,
+                                  countryShort = a.CountryShort ,
+                                  country = a.Country
+                              }).ToListAsync();
+            }
+        }
+
+
 
 
           public async Task<LanguageTextItem> SearchText(string Text)
@@ -53,7 +79,7 @@ namespace API.Service
                               where a.languageText == Text
                               select new LanguageTextItem 
                               {
-                                  textId = a.id,
+                                  textId = a.textId,
                                   languageText = a.languageText,
                                   languageId = a.languageId
 
