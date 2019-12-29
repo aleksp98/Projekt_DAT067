@@ -359,7 +359,7 @@ class translation extends React.Component {
                         <div>
                             {this.LanguagesFound()}
                         </div>
-                        <button onClick={() => this.setState({ leftbox: this.state.query })} >Edit</button>
+                        <button >Edit</button>
                         <button onClick={this.deleteWord2}>Delete</button>
                     </div>
                     <label>Edit/Create</label>
