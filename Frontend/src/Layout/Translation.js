@@ -91,18 +91,6 @@ class translation extends React.Component {
     //edit a word that already exist rightbox
     editWord2() {
 
-        let _this = this;
-
-        const requestOptions = {
-            method: 'GET'
-        };
-
-        const url = 'https://localhost:5001/api/Language/Create/?languageText=' + this.state.resultBox + '&languageId=' + this.state.resultR.languageId + '&textId=' + this.state.resultR.textId;
-        const request = new Request(url, requestOptions);
-        fetch(request);
-
-        this.setState({ resultR: [] })
-        this.box.value = '';
 
     }
 
@@ -127,17 +115,6 @@ class translation extends React.Component {
 
     //Save a completely new word leftside
     saveWord2() {
-
-        let _this = this;
-        //alert("inside");
-
-        const requestOptions = {
-            method: 'GET'
-        };
-
-        const url = 'https://localhost:5001/api/Language/Create/?languageText=' + this.state.query + '&languageId=' + this.state.writeLanguage;
-        const request = new Request(url, requestOptions);
-        fetch(request);
 
 
     }
@@ -339,12 +316,13 @@ class translation extends React.Component {
         return (
             <div id="translationmodule">
                 <div id="translatetext">
-                    <label>Search</label>
+                    <label>Search use the search on right side</label>
                     <div className="search">
                         <input type="text"
                             id="search"
-                            placeholder="Search for text..."
+                            placeholder="Does not work..."
                             value={this.state.stringMsg.message}
+                             ref={input => this.search = input}
                             onChange={this.handleInputChange} />
                         <div>
                             {
