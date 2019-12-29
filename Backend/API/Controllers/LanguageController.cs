@@ -21,11 +21,11 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("Search/{Id}")]
-        public async Task<IActionResult> Search2(int Id)
+        [Route("SearchAll/{text}")]
+        public async Task<IActionResult> SearchAll(string text)
         {
-             Console.WriteLine("Inside ConfirmMail {0} \n \n");
-            return Ok(await _languageService.Search(Id));
+             Console.WriteLine("Inside SearchAll {0} \n \n",text);
+            return Ok(await _languageService.SearchAll(text));
         }
 
           
@@ -38,20 +38,48 @@ namespace API.Controllers
         }
 
 
-         
-        
-        [HttpPost]
+        // Jag använde mig av "[System.Web.Http.FromUri]" istället för [FromBody]
+        // eftersom att man snabbt och smidigt kunde köra
+        // med en länk istället för "POST", t.ex genom att ha följande format
+        // https://localhost:5001/api/Language/Create/?Parameter1=2&parameter2=hejehj&parameter3=false
+        // Där parameter1, 2 och 3 är en integer, string och bool från "LanguageTextItem" modellen
+        // Ett riktigt exempel på detta är
+        // https://localhost:5001/api/Language/Create/?languageText=eriksberg&languageId=1
+        [HttpGet]
         [Route("Create")]
-        public async Task<IActionResult> Update([FromBody] LanguageItem model)
+        public async Task<IActionResult> Update([System.Web.Http.FromUri /*FromBody*/] LanguageTextItem model)
         {
-            return Ok(await _languageService.Update(model));                
+            return Ok(await _languageService.Update(model));    
         }
         
-        [HttpDelete]
-        [Route("Delete/{Id}")]
-        public async Task<IActionResult> Delete(int Id)
+        [HttpGet]
+        [Route("Test")]
+        public ActionResult test()
         {
-            return Ok(await _languageService.Delete(Id));
+            return Content("Test");
+        }
+
+
+        
+        [HttpGet]
+        [Route("getLanguages")]
+        public async Task<IActionResult> getLanguages()
+        {
+             return Ok(await _languageService.getLanguages());
+        }
+
+        // Jag använde mig av "[System.Web.Http.FromUri]" istället för [FromBody]
+        // eftersom att man snabbt och smidigt kunde köra
+        // med en länk istället för "POST", t.ex genom att ha följande format
+        // https://localhost:5001/api/Language/Delete/?Parameter1=2&parameter2=hejehj&parameter3=false
+        // Där parameter1, 2 och 3 är en integer, string och bool från "LanguageTextItem" modellen
+        // Ett riktigt exempel på detta är
+        // https://localhost:5001/api/Language/Delete/?textId=5
+        [HttpGet]
+        [Route("Delete")]
+        public async Task<IActionResult> Delete([System.Web.Http.FromUri /*FromBody*/] LanguageTextItem model)
+        {
+            return Ok(await _languageService.Delete(model));
         }
     }
 }
