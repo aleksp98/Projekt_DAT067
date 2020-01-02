@@ -22,6 +22,8 @@ import Cookies from 'js-cookie';
 import Confirmation from './Layout/Confirmation';
 import ResetPassword from './Layout/ResetPassword';
 
+import FacebookLogin from 'react-facebook-login';
+
 export const getAccessToken = () => Cookies.get('access_token');
 export const getRefreshToken = () => Cookies.get('refresh_token');
 export const getSession = () => Cookies.get("session");

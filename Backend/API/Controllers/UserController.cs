@@ -14,11 +14,13 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-           Timer myTimer;
+        Timer myTimer;
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly ISocialUserService _socialUserService;
+        public UserController(IUserService userService, ISocialUserService socialUserService)
         {
             _userService = userService;
+            _socialUserService = socialUserService;
                                     //varje 15 minut
               myTimer = new Timer(myTimerCallback, null, 5 *1000, 15*60*1000);
         }
@@ -56,6 +58,13 @@ namespace API.Controllers
             //send the confirmation mail
             await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token,1);
             return ok;
+        }
+
+        [HttpPost]
+        [Route("SaveUserSocialLogin")]
+        public async Task<IActionResult> SaveUserSocialLogin([FromBody] SocialUserItem model)
+        {
+            return Ok(await _socialUserService.SaveUser(model));   
         }
 
 

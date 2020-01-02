@@ -16,12 +16,7 @@ import { withRouter } from 'react-router-dom';
 
 import { bool } from 'prop-types';
 
-
-
-
-
-
-
+import FacebookLogin from 'react-facebook-login';
 
 class form extends React.Component {
 
@@ -91,8 +86,6 @@ class form extends React.Component {
     }
 
     submituserRegistrationForm(e) {
-        e.preventDefault();
-
         let _this = this;
         if (this.validateForm()) {
             let user = {};
@@ -149,6 +142,56 @@ class form extends React.Component {
             //this.redirect('/registeredPage');
         }
 
+    }
+
+    loginWithFacebook() {
+        let _this = this;
+        let user = {};
+        user["email"] = this.state.fields.email;
+        user["first_name"] = this.state.fields.firstname;
+        user["last_name"] = this.state.fields.lastname;
+        user["social_platform"] = "facebook";
+        user["social_id"] = this.state.fields.password;
+        console.log(user);
+
+        let fields = {};
+        fields["firstname"] = "";
+        fields["lastname"] = "";
+        fields["email"] = "";
+        fields["password"] = "";
+        fields["ConfirmPassword"] = "";
+
+        const url = 'https://localhost:5001/api/SocialUser/SaveUser';
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        const requestOptions = {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(user)
+        };
+        const request = new Request(url, requestOptions);
+
+        fetch(request).then(function (response) {
+            return response.text().then(function (text) {
+                console.log(text);
+                if (user.email) {
+                    Cookies.remove("session");
+                    Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
+                    Cookies.set("access_token", "placeholder", { expires: 14 });
+                    _this.setState({
+                        snackbaropen: true,
+                        snackbarmsg: "Login successful!"
+                    });
+                    window.location.reload();
+                }
+                else {
+                    _this.setState({
+                        snackbaropen: true,
+                        snackbarmsg: "Login failed"
+                    });
+                }
+            });
+        });
     }
     
     //seems to be a small bug with recaptcha
@@ -224,8 +267,8 @@ class form extends React.Component {
         let user = {};
         user["email"] = this.state.fields.email;
         user["password"] = this.state.fields.password;
-        const url = 'https://localhost:5001/api/User/LoginUser';
 
+        const url = 'https://localhost:5001/api/User/LoginUser';
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         const requestOptions = {
@@ -337,6 +380,16 @@ class form extends React.Component {
 
         const { isPasswordShown } = this.state;
         const children = this.props.children;
+
+        const responseFacebook = (response) => {
+            console.log(response);
+            this.state.fields.email = response.email;
+            this.state.fields.password = response.id;
+            let facebook_name = response.name.split(" ");
+            this.state.fields.firstname = facebook_name[0];
+            this.state.fields.lastname = facebook_name[facebook_name.length - 1];
+            this.loginWithFacebook();
+        }
             
         //if forgotPassword was pressed render this
          if(this.state.forgotpass === true){
@@ -496,6 +549,12 @@ class form extends React.Component {
                             
                             <h3>{this.props.form}</h3>
 
+                            <FacebookLogin
+                                appId="681003465986574"
+                                fields="name,email,picture"
+                                callback={responseFacebook}
+                            />
+                        
                             <div>
                                 <input type="text"
                                     className="inputDesignFirstname"

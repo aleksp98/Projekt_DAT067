@@ -16,6 +16,7 @@ namespace API.EntityModels
         }
 
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<SocialUsers> SocialUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -58,26 +59,73 @@ namespace API.EntityModels
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-
-                    entity.Property(e => e.Token)
+                 entity.Property(e => e.Token)
                     .IsRequired()
                     .HasColumnName("Token")
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Language)
+                    .IsRequired()
+                    .HasColumnName("language")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
 
-                     entity.Property(e => e.Created_at)
+                 entity.Property(e => e.Created_at)
                     .IsRequired()
                     .HasColumnName("created_at")
                     .HasColumnType("datetime2");
 
-                     entity.Property(e => e.Verified)
+                  entity.Property(e => e.Verified)
                     .IsRequired()
                     .HasColumnName("verified");
 
-                    entity.Property(e => e.Resended_mail)
+                 entity.Property(e => e.Resended_mail)
                     .IsRequired()
                     .HasColumnName("resended_mail");
+            });
+
+            modelBuilder.Entity<SocialUsers>(entity =>
+            {
+                entity.ToTable("users");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasColumnName("email")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.First_name)
+                    .IsRequired()
+                    .HasColumnName("first_name")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Last_name)
+                    .IsRequired()
+                    .HasColumnName("last_name")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                 entity.Property(e => e.Language)
+                    .IsRequired()
+                    .HasColumnName("language")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+                
+                entity.Property(e => e.Social_platform)
+                    .IsRequired()
+                    .HasColumnName("social_platform")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Social_id)
+                    .IsRequired()
+                    .HasColumnName("social_id")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);
