@@ -129,7 +129,7 @@ namespace API.Controllers
         [Route("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UserItem model)
         {
-            
+            Console.WriteLine("Body: " + model);
             return Ok(await _userService.UpdateUser(model));
         }
 

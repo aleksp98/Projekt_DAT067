@@ -1,7 +1,101 @@
 
-* {    
+@font-face {
+    font-family: volvoFont;
+    src: url(/Fonts/Volvo Novum-Light.ttf);
+}
+
+* {
     margin: 0;
     padding: 0;
+    font-family: volvoFont;
+}
+
+body {
+    background-image: url("./Image/Screenshot_Background.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+}
+
+/*  Ny tillagd kod (sortera)  JE  */
+
+.loginIMG {
+    width: 2.5%;
+    float: right;
+    margin: 0.8% 3% 0px 0px;
+    cursor: pointer;
+    padding-bottom: 0.5%;
+}
+
+.loginIMG:hover {
+    border-bottom: 2px solid black;
+}
+
+.body-component {
+    background-color: white !important;
+    background-image: none;
+}
+
+.manageAccount {
+    width: 15% !important;
+    float: right;
+    text-align: right;
+    margin: 1% 2% 0px 0px;
+    cursor: pointer;
+    border-right: 1px solid black;
+    padding: 0.5% 2% 0.5% 0.5%;
+}
+
+.manageAccount a {
+    text-decoration: none;
+    color: black;
+}
+
+.manageAccount:hover {
+    text-decoration: underline;
+}
+
+.socialAuthentication {
+    width: 25%;
+    cursor: pointer;
+    margin: 0px 0% 2% 0%;
+    float: left;
+}
+
+.socialAuthentication:nth-last-of-type(even) {
+    margin: 0px 2% 0% 24%;
+}
+
+.pageSwitch {
+    width: 20%;
+    float: left;
+    text-align: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.pageSwitch:first-of-type {
+    margin-left: 30%;
+    border-right: 1px solid black;
+}
+
+.pageSwitchActive {
+    color: gray;
+}
+
+.pageSwitch:hover {
+    text-decoration: underline;
+}
+
+.orSocial {
+    width: 50%;
+    text-align: center;
+    float: left;
+    margin: 20px 0px 20px 25%;
+}
+
+.userRegistrationForm .orSocial {
+    margin-top: -20px;
 }
 
 /*  Layout  JE  */
@@ -31,12 +125,12 @@ section section {
         height: calc(100vh - 170px);
         background-color: white;
     }
-    
+
 .Start h3 {
     position: absolute;
     z-index: 10;
   }
-  
+
 
 footer {
     width: 100%;
@@ -113,7 +207,7 @@ footer {
 /*  Dropdown in Navbar  */
 
 .dropdown {
-    width: 10%;
+    width: 15%;
     position: relative;
     display: block;
     float: right;
@@ -140,12 +234,13 @@ footer {
 .dropdown:hover img {
     transform: rotate(0deg);
 }
-  
+
   .dropdown-content {
-    height: 135px;
+    height: auto;
     display: none;
     position: absolute;
-    width: 100%;
+    width: 70%;
+    right: 0;
     background-color: rgba(105,103,100, 0.8);
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,1);
     z-index: 40;
@@ -153,7 +248,6 @@ footer {
   }
 
   .dropdown-content p {
-      border-bottom: 1px solid black;
       height: 45px;
       line-height: 45px;
       margin: 0px;
@@ -164,6 +258,7 @@ footer {
 
 .dropdown-content p:hover {
     text-decoration: underline;
+    background-color: rgba( 0, 0, 0, 0.4);
 }
 
 .dropdown-content p:last-of-type {
@@ -192,7 +287,7 @@ footer {
 
 /* Track */
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px black; 
+    box-shadow: inset 0 0 5px black;
     border-radius: 5px;
 }
 
@@ -209,20 +304,48 @@ footer {
 
 /*  Start JE  */
 
-.sliderContainer {
+.imgSlider {
     width: 400%;
     height:  calc(100vh - 170px);
     position: relative;
+    transition: 1.5s;
+    /*
     animation-name: slider;
     animation-duration: 30s;
     animation-iteration-count: infinite;
+    */
   }
-  
-  .img02 {
+
+.imgSlide {
     width: 25%;
     height: 100%;
-  }
-  
+}
+
+.slideContainer section {
+    position: absolute;
+    height: 10px !important;
+    width: 30%;
+    background-color: transparent !important;
+    margin: 0 !important;
+    z-index: 10;
+    bottom: 20px;
+    right: 35%;
+}
+
+.slideContainer section div {
+    height: 10px;
+    width: 20%;
+    background-color: lightgrey;
+    float: left;
+    margin-right: 5%;
+    cursor: pointer;
+    transition: 1.5s;
+}
+
+.slideContainer section div:hover {
+    background-color: grey !important;
+}
+
   @keyframes slider {
     0%   {
       right: 0%;
@@ -252,7 +375,7 @@ footer {
       right: 0%;
     }
   }
-  
+
 
 /*  Translation JE  */
 
@@ -294,7 +417,7 @@ footer {
     box-shadow: 0px 2px 5px 0px grey;
 }
     .translationsfound div{
-        
+
         padding: 2%;
     }
         .translationsfound div button{
@@ -327,7 +450,7 @@ textarea{
     .selectLanguage select{
         width:100%;
     }
-
+    
 /*  Upload JE  */
 
 /*  About JE  */
@@ -360,6 +483,10 @@ textarea{
         box-shadow: 0px 2px 5px 0px black;
     }
 
+    .cover form article {
+        height: 90%;
+    }
+
         .cover form h3 {
             width: 100%;
             float: left;
@@ -378,6 +505,16 @@ textarea{
             overflow: hidden;
         }
 
+        .userRegistrationForm div:nth-last-of-type(6) {
+            width: 35% !important;
+        }
+
+        div:nth-last-of-type(5) {
+            width: 35% !important;
+            margin-left: 0% !important;
+        }
+
+
             .cover form div:focus-within {
                 box-shadow: 0 3px 2px -2px black;
             }
@@ -389,7 +526,7 @@ textarea{
             }
 
             .cover form div input {
-                width: 85%;
+                width: 100%;
                 height: 40px;
                 float: right;
                 border: none;
@@ -400,7 +537,7 @@ textarea{
                     outline: none;
                 }
 
-        .cover form button {      
+        .cover form button {
             width: 30%;
             height: 45px;
             background-color: transparent;
@@ -409,7 +546,11 @@ textarea{
             text-align: center;
             display: block;
             float: left;
-            margin: 10px 0px 0px 15%;
+            margin: 10px 50% 15px 15%;
+        }
+
+        .userRegistrationForm button {
+            margin: 10px 0% 15px 15% !important;
         }
 
         #g-recaptcha {
@@ -451,18 +592,20 @@ textarea{
 
         .cover form footer {
             width: 100%;
-            height: 50px;
+            height: 10%;
             background-color: gray;
             position: relative;
             bottom: 0;
             clear: both;
+            float: left;
+            padding: 10px 0px 10px 0px;
         }
 
             .cover form footer a {
                 width: 100%;
                 float: left;
                 text-align: center;
-                line-height: 40px;
+                line-height: auto;
             }
 
                 .cover form footer a:hover {
@@ -471,6 +614,13 @@ textarea{
 
     .userRegistrationForm div input {
         width: 100% !important;
+    }
+
+    .termsOffCondition {
+        width: 85%;
+        margin-left: 15%;
+        float: left;
+        padding: 10px 0px 10px 0px;
     }
 
 .eyeIcon {
@@ -527,7 +677,7 @@ textarea{
 .messageDesign {
     text-align: center;
     color: black;
-    
+
 }
 
 .divDesign {
@@ -542,12 +692,260 @@ textarea{
 }
 
 .linkDesign {
-    text-align: center;  
-    cursor: pointer;  
+    text-align: center;
+    cursor: pointer;
 }
 
 .logoDesign{
     text-align: center;
 }
 
+/*  Account Page    JE  */
 
+.infoSection {
+    margin-top: 50px !important;
+    min-height: calc(100vh - 50px) !important;
+    height: auto !important;
+}
+
+.accountPage section div {
+    height: 100%;
+    width: 100%;
+}
+
+.accountPage header {
+    height: 50px;
+}
+
+.accountPage header h1 {
+    font-size: 1.5em !important;
+    position: absolute;
+    top: 10px;
+    left: 15%;
+    width: 50%;
+    text-align: left;
+    transition: none !important;
+}
+
+.accountPage .dropdown {
+    height: 50px;
+}
+
+.accountPage .dropdown p {
+    line-height: 25px;
+}
+
+.uploadsLink {
+    border-bottom: 1px solid black !important;
+}
+
+.accountPage .dropdown div p {
+    line-height: 45px;
+}
+
+.accountManegment section h3 {
+    text-align: center;
+    margin-block-start: 20px;
+    font-size: 1.7em;
+}
+
+.accountManegment section {
+    min-height: calc(50vh - 25px) !important;
+    height: auto !important;
+    float: left;
+    margin: 0 !important;
+}
+
+.accountInfo {
+    background-color: rgb(245, 245, 245) !important;
+}
+
+.accountInfo table {
+    width: 65%;
+    height: 150px;
+    box-sizing: border-box;
+    float: left;
+    margin: 20px 0px 0px 5%;
+    padding-left: 10px;
+    font-size: 1.2em;
+}
+
+.accountInfo table tbody tr {
+    width: 100%;
+}
+
+.accountInfo table tbody tr:nth-child(n + 3) {
+    padding: 0;
+    font-size: 0.6em;
+}
+
+.accountInfo table tbody tr th,td {
+    width: 50%;
+    text-align: left;
+    padding: 0 !important;
+}
+
+.accountInfo table tbody tr td p {
+    cursor: pointer;
+    color: blue;
+}
+
+.accountInfo table tbody tr td p:hover {
+    text-decoration: underline;
+}
+
+.imageContainer {
+    float: right;
+    width: 10% !important;
+    margin: 20px 5% 0px 0px;
+    height: auto !important;
+}
+
+.imageContainer img {
+    width: 100%;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, .3);
+}
+
+.imageContainer p {
+    width: 50%;
+    float: left;
+    text-align: center;
+    margin-top: 10px;
+    cursor: pointer;
+    color: blue;
+}
+
+.imageContainer p:hover {
+    text-decoration: underline;
+}
+
+.personalInfo table {
+    width: 35%;
+    height: 150px;
+    box-sizing: border-box;
+    float: left;
+    margin: 20px 0px 0px 5%;
+    background-color: transparent;
+    padding-left: 10px;
+    font-size: 1em;
+    text-align: left;
+}
+
+.personalInfo input {
+    background-color: transparent;
+    border: none;
+    padding: 5px 5px 5px 0px;
+}
+
+::placeholder {
+    color: black;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="text"]:disabled {
+    color: black;
+}
+
+.activeInput {
+    border: 1px solid black !important;
+}
+
+.personalInfo table tbody tr th,td {
+    padding: 10px;
+}
+
+.personalInfo p {
+    cursor: pointer;
+    color: blue;
+}
+
+.personalInfo p:hover {
+    text-decoration: underline;
+}
+
+.saveUser {
+    display: none;
+}
+
+.uploads {
+    display: none;
+}
+
+@media screen and (max-width: 992px) {
+
+    body {
+        background-image: url("./Image/backMobile.png");
+    }
+
+    .loginIMG {
+        width: 5%;
+        margin: 2% 3% 0px 0px;
+        padding-bottom: 1.5%;
+    }
+
+    .manageAccount {
+        width: 15% !important;
+        float: right;
+        text-align: right;
+        margin: 1.7% 2% 0px 0px;
+        cursor: pointer;
+        border-right: 1px solid black;
+        padding: 2% 2% 2% 0.5%;
+    }
+    
+    .cover form {
+        width: 100%;
+        height: 100% !important;
+        max-height: 100% !important;
+        min-height: 100% !important;
+    }
+
+    .cover form footer {
+    }
+
+    .dropdown-content {     
+        height: 100%;
+        width: 250px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+        display: block;
+        margin: 0;
+    }
+
+    .dropdown-content a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+      }
+      
+      .dropdown-content a:hover {
+        color: #f1f1f1;
+      }
+      
+      .dropdown-content .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+      }
+
+
+
+
+
+}
