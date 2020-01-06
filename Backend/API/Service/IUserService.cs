@@ -18,5 +18,7 @@ namespace API.Service
         Task<bool> ExpireDate();
         Task<bool> Resend_mail();
         Task<bool> CheckUser(string email);
+        Task<bool> ChangePassword(UserItem user);
+        Task<bool> ResetPassword(string email);
     }
 }

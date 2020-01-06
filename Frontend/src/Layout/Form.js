@@ -17,6 +17,12 @@ import { withRouter } from 'react-router-dom';
 import { bool } from 'prop-types';
 
 
+
+
+
+
+
+
 class form extends React.Component {
 
     constructor(props) {
@@ -34,12 +40,14 @@ class form extends React.Component {
             isVerified: false,
             snackbaropen: false,
             snackbarmsg: '',
-            visible: true
+            visible: true,
+            forgotpass: false
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
         this.submituserLoginForm = this.submituserLoginForm.bind(this);
+        this.forgotPassword = this.forgotPassword.bind(this);
 
     };
 
@@ -47,9 +55,9 @@ class form extends React.Component {
         console.log("Captcha loaded successfully!");
     }
 
-    
 
-   
+
+
     verifyCallback(response) {
         if (response) {
             this.setState({
@@ -62,7 +70,7 @@ class form extends React.Component {
         if (!this.state.isVerified) {
             //Hindrar att formuläret submitas   JE
             this.setState({
-                snackbaropen: true, 
+                snackbaropen: true,
                 snackbarmsg: "Please verify that you are a human"
             })
         }
@@ -119,18 +127,18 @@ class form extends React.Component {
                 return response.text().then(function (text) {
                     if (text === "true") {
 
-                        _this.setState({ 
-                            fields: fields, 
-                            snackbaropen: true, 
+                        _this.setState({
+                            fields: fields,
+                            snackbaropen: true,
                             snackbarmsg: "Registration successful!",
                             visible: false
                         })
-                      
+
                     }
                     else {
-                           _this.setState({ 
-                           fields: fields, 
-                            snackbaropen: true, 
+                           _this.setState({
+                           fields: fields,
+                            snackbaropen: true,
                             snackbarmsg: "Unsuccessful registration. Mail is probably already taken",
                             visible: true
                         });
@@ -142,6 +150,61 @@ class form extends React.Component {
         }
 
     }
+
+    //seems to be a small bug with recaptcha
+    //nothing very important
+    forgotPassword(e){
+        e.preventDefault();
+        let _this = this;
+           var mail = this.state.fields.email;
+
+           let fields = {};
+           fields["firstname"] = "";
+           fields["lastname"] = "";
+           fields["email"] = "";
+           fields["password"] = "";
+           fields["ConfirmPassword"] = "";
+
+        if(mail != null){
+            const url = 'https://localhost:5001/api/User/resetPassword/' + mail;
+            const requestOptions = {
+                method: 'GET'
+            };
+            const request = new Request(url, requestOptions);
+           fetch(request).then(function (response) {
+            return response.text().then(function (text) {
+                if (text === "true") {
+
+                    _this.setState({
+                        fields: fields,
+                        snackbaropen: true,
+                        snackbarmsg: "Check your email to change Password",
+                        visible: false,
+                        forgotpass: false
+                    })
+
+                }
+                else {
+                       _this.setState({
+                       fields: fields,
+                        snackbaropen: true,
+                        snackbarmsg: "Unsuccessful request for changing password. Mail doesn't probably exist",
+                        visible: true
+                    });
+                }
+            });
+        });
+        }
+        /*
+    this.setState({
+        forgotpass : false
+    })
+    */
+
+    }
+
+
+
     //Listener to login button(when pressed)
     handleLogin() {
         const mail = this.state.fields.email;
@@ -186,25 +249,25 @@ class form extends React.Component {
                                 Cookies.remove("session");
                                 Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
                                 Cookies.set("access_token", "placeholder", { expires: 14 });
-                                _this.setState({ 
-                                    snackbaropen: true, 
-                                    snackbarmsg: "Login successful!" 
+                                _this.setState({
+                                    snackbaropen: true,
+                                    snackbarmsg: "Login successful!"
                                 });
                                 //_this.redirect('/loginPage');
                             }
                             else {
-                                _this.setState({ 
-                                    snackbaropen: true, 
-                                    snackbarmsg: "Account not verified, please check you email" 
+                                _this.setState({
+                                    snackbaropen: true,
+                                    snackbarmsg: "Account not verified, please check you email"
                                 });
                             }
                         });
                     });
                 }
                 else {
-                    _this.setState({ 
-                        snackbaropen: true, 
-                        snackbarmsg: "Wrong email or password" 
+                    _this.setState({
+                        snackbaropen: true,
+                        snackbarmsg: "Wrong email or password"
                     });
                 }
             });
@@ -255,10 +318,8 @@ class form extends React.Component {
         this.setState({
             errors: errors
         });
-        
-        return formIsValid;
-        
 
+        return formIsValid;
     };
 
     state = {
@@ -267,8 +328,8 @@ class form extends React.Component {
 
     togglePasswordVisiblity = () => {
         const { isPasswordShown } = this.state;
-        this.setState({ 
-            isPasswordShown: !isPasswordShown 
+        this.setState({
+            isPasswordShown: !isPasswordShown
         });
     }
 
@@ -276,6 +337,61 @@ class form extends React.Component {
 
         const { isPasswordShown } = this.state;
         const children = this.props.children;
+
+        //if forgotPassword was pressed render this
+         if(this.state.forgotpass === true){
+          return(  <div className="cover">
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                open={this.state.snackbaropen}
+                autoHideDuration={3000}
+                onClose={this.snackbarClose}
+                message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        onClick={this.snackbarClose}
+                    >
+                        x
+                    </IconButton>
+                ]}
+            />
+            <form method="get" name="forgotPasswordForm" onSubmit={ this.forgotPassword}>
+                {
+                    React.Children.map(children, (child, i) => {
+                    //Ignore the first child
+                    if (i === 1) return
+                        return child
+                    })
+                }
+                <h3>Put in your email</h3>
+                <div>
+                    <img src={UserIcon} alt="UserIcon" />
+                    <input type="email"
+                        name="email"
+                        placeholder="E-mail" required
+                        value={this.state.fields.email}
+                        onChange={this.handleChange}
+                    />
+                </div>
+                <button onClick={this.handleRegister} >Change Password</button>
+
+                <Recaptcha
+                    className="reCapcha"
+                    sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                    render="explicit"
+                    onloadCallback={this.recaptchaLoaded}
+                    verifyCallback={this.verifyCallback}
+                />
+            </form>
+
+
+
+
+        </div>
+          )}
 
         if (this.props.form === "Login") {
             return (
@@ -338,7 +454,7 @@ class form extends React.Component {
                             verifyCallback={this.verifyCallback}
                         />
 
-                        <footer>
+                        <footer onClick = {()=>  this.setState({forgotpass : true })}>
                             <ALink href="true" value="Forgot Password?" />
                         </footer>
                     </form>
@@ -347,7 +463,7 @@ class form extends React.Component {
         }
         else if (this.props.form === "Register") {
             return (
-                
+
                 <div className="cover">
                     <Snackbar
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
@@ -369,7 +485,7 @@ class form extends React.Component {
 
                     {this.state.visible ?
                         <form method="post" className="userRegistrationForm" name="userRegistrationForm" onSubmit={this.submituserRegistrationForm}>
-                            
+
                             {
                                 React.Children.map(children, (child, i) => {
                                 //Ignore the second child
@@ -377,7 +493,7 @@ class form extends React.Component {
                                     return child
                                 })
                             }
-                            
+
                             <h3>{this.props.form}</h3>
 
                             <div>
@@ -455,7 +571,7 @@ class form extends React.Component {
                                 <Link to="/#">
                             <img src={logo} alt="logo"       />
                                 </Link>
-                            </div> 
+                            </div>
 
                             <div className="divDesign">
                                 <h2 className="messageDesign">Thank you for registering!</h2>
@@ -469,7 +585,7 @@ class form extends React.Component {
                                 if (i === 0) return
                                     return child
                                 })
-                            }  
+                            }
                             </div>
                     </div>
                     }

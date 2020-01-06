@@ -8,8 +8,11 @@ namespace API.Service
 {
     public interface ILanguageService
     {
-        Task<LanguageItem> Search(int Id);
-        Task<bool> Update(LanguageItem user);
-        Task<bool> Delete(int Id);
+        Task<LanguageTextItem> Search(int Id);
+        Task<List<LanguageTextItem>> SearchAll(string text);      
+        Task<LanguageTextItem> SearchText(string text);
+        Task<List<LanguageItem>> getLanguages(); 
+        Task<bool> Update(LanguageTextItem user);
+        Task<bool> Delete(LanguageTextItem languageItem);
     }
 }
