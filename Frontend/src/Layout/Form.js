@@ -21,6 +21,12 @@ import { withRouter } from 'react-router-dom';
 import { bool } from 'prop-types';
 
 
+
+
+
+
+
+
 class form extends React.Component {
 
     constructor(props) {
@@ -41,30 +47,20 @@ class form extends React.Component {
             visible: true,
             loginForm: true,
             registerForm: false,
-            registerCompleted: false
+            registerCompleted: false,
+            forgotpass: false
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
         this.submituserLoginForm = this.submituserLoginForm.bind(this);
+        this.forgotPassword = this.forgotPassword.bind(this);
 
     };
 
     recaptchaLoaded() {
         console.log("Captcha loaded successfully!");
     }
-
-    handleRegister(e) {
-
-        if (!this.state.isVerified) {
-            e.preventDefault(); //Hindrar att formuläret submitas   JE
-            this.setState({
-                snackbaropen: true,
-                snackbarmsg: "Please verify that you are a human"
-            });
-        }
-    }
-
 
     verifyCallback(response) {
         if (response) {
@@ -158,6 +154,61 @@ class form extends React.Component {
         }
 
     }
+
+    //seems to be a small bug with recaptcha
+    //nothing very important
+    forgotPassword(e){
+        e.preventDefault();
+        let _this = this;
+           var mail = this.state.fields.email;
+
+           let fields = {};
+           fields["firstname"] = "";
+           fields["lastname"] = "";
+           fields["email"] = "";
+           fields["password"] = "";
+           fields["ConfirmPassword"] = "";
+
+        if(mail != null){
+            const url = 'https://localhost:5001/api/User/resetPassword/' + mail;
+            const requestOptions = {
+                method: 'GET'
+            };
+            const request = new Request(url, requestOptions);
+           fetch(request).then(function (response) {
+            return response.text().then(function (text) {
+                if (text === "true") {
+
+                    _this.setState({
+                        fields: fields,
+                        snackbaropen: true,
+                        snackbarmsg: "Check your email to change Password",
+                        visible: false,
+                        forgotpass: false
+                    })
+
+                }
+                else {
+                       _this.setState({
+                       fields: fields,
+                        snackbaropen: true,
+                        snackbarmsg: "Unsuccessful request for changing password. Mail doesn't probably exist",
+                        visible: true
+                    });
+                }
+            });
+        });
+        }
+        /*
+    this.setState({
+        forgotpass : false
+    })
+    */
+
+    }
+
+
+
     //Listener to login button(when pressed)
     handleLogin() {
         const mail = this.state.fields.email;
@@ -290,6 +341,61 @@ class form extends React.Component {
         const { isPasswordShown } = this.state;
         const children = this.props.children;
 
+        //if forgotPassword was pressed render this
+         if(this.state.forgotpass === true){
+          return(  <div className="cover">
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                open={this.state.snackbaropen}
+                autoHideDuration={3000}
+                onClose={this.snackbarClose}
+                message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                action={[
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        onClick={this.snackbarClose}
+                    >
+                        x
+                    </IconButton>
+                ]}
+            />
+            <form method="get" name="forgotPasswordForm" onSubmit={ this.forgotPassword}>
+                {
+                    React.Children.map(children, (child, i) => {
+                    //Ignore the first child
+                    if (i === 1) return
+                        return child
+                    })
+                }
+                <h3>Put in your email</h3>
+                <div>
+                    <img src={UserIcon} alt="UserIcon" />
+                    <input type="email"
+                        name="email"
+                        placeholder="E-mail" required
+                        value={this.state.fields.email}
+                        onChange={this.handleChange}
+                    />
+                </div>
+                <button onClick={this.handleRegister} >Change Password</button>
+
+                <Recaptcha
+                    className="reCapcha"
+                    sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                    render="explicit"
+                    onloadCallback={this.recaptchaLoaded}
+                    verifyCallback={this.verifyCallback}
+                />
+            </form>
+
+
+
+
+        </div>
+          )}
+
         if (this.props.form === "Login") {
             return (
                 <div className="cover">
@@ -351,7 +457,7 @@ class form extends React.Component {
                             verifyCallback={this.verifyCallback}
                         />
 
-                        <footer>
+                        <footer onClick = {()=>  this.setState({forgotpass : true })}>
                             <ALink href="true" value="Forgot Password?" />
                         </footer>
                     </form>
@@ -541,7 +647,7 @@ class form extends React.Component {
                                     })
                                 }
                                 <h3>Your CIAM ID</h3>
-                                
+
                                 <p className="pageSwitch pageSwitchActive" onClick={() => { this.setState({ loginForm: true, registerForm: false, registerCompleted: false}); }}>Login</p>
                                 <p className="pageSwitch" onClick={() => { this.setState({ loginForm: false, registerForm: true, registerCompleted: false}); }}>Register</p>
 
@@ -578,7 +684,7 @@ class form extends React.Component {
 */}
 
                                 <p className="orSocial">Or continue with</p>
-                                
+
                                 <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
                                 <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
                                 <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
@@ -589,11 +695,11 @@ class form extends React.Component {
                                 <ALink href="true" value="Forgot Password?" />
                             </footer>
                         </form>
-                    : 
-                        null 
+                    :
+                        null
                     }
-                    
-                    
+
+
                     {this.state.registerForm === true ?
 
                         <form method="post" className="userRegistrationForm" name="userRegistrationForm" onSubmit={this.submituserRegistrationForm}>
@@ -683,7 +789,7 @@ class form extends React.Component {
                             />
 
                             <p className="orSocial">Or continue with</p>
-                            
+
                             <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
                             <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
                             <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
@@ -695,7 +801,7 @@ class form extends React.Component {
                             </footer>
                         </form>
                     :
-                        null 
+                        null
                     }
                     {this.state.registerCompleted === true ?
                         <div className="registrationCompleted">
@@ -719,12 +825,12 @@ class form extends React.Component {
                                         return child
                                     })
                                     */
-                                   
+
                                 <p className="linkDesign" onClick={() => { this.setState({ loginForm: !this.state.loginForm, registerForm: false, registerCompleted: !this.state.registerCompleted}); }}>click here to login</p>
                                 }
                                 </div>
                         </div>
-                    : 
+                    :
                         null
                         }
                     }

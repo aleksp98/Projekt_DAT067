@@ -27,10 +27,9 @@ namespace API.Controllers
 
              public async void myTimerCallback(Object obj)
               {
-                  Console.WriteLine("Timer triggered \n \n");
-                    await _userService.ExpireDate();
-                 await _userService.Resend_mail();
-              
+                Console.WriteLine("Timer triggered \n \n");
+                await _userService.ExpireDate();
+                await _userService.Resend_mail();
           }
 
         [HttpGet]
@@ -47,7 +46,7 @@ namespace API.Controllers
             return Ok(await _userService.GetUser(email));
         }
 
-
+        //saves the user in Database. Sends confirmation mail
         [HttpPost]
         [Route("SaveUser")]
         public async Task<IActionResult> SaveUser([FromBody] UserItem model)
@@ -55,13 +54,12 @@ namespace API.Controllers
             OkObjectResult ok = Ok(await _userService.SaveUser(model));   
 
             //send the confirmation mail
-            await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token);
+            await Mail.sendMail(model.Email,model.First_name,model.Last_name, model.Token,1);
             return ok;
         }
 
 
         //Check if account is active
-
         //returns to frontend 200 and bool value
         [HttpGet]
         [Route("CheckUser/{email}")]
@@ -70,6 +68,21 @@ namespace API.Controllers
          return Ok(await _userService.CheckUser(email));
 
         }
+
+        
+        //if password is forgotten
+        //check if Email exist
+        //sends link to email if exists
+        [HttpGet]
+        [Route("resetPassword/{email}")]
+        public async Task<IActionResult> resetPassword(string email)
+        { 
+            Console.WriteLine("inside reset password");
+         return Ok(await _userService.ResetPassword(email));
+
+        }
+
+
 
           /*
         [HttpPost]
@@ -100,6 +113,16 @@ namespace API.Controllers
         {
             
             return Ok(await _userService.LoginUser(model));
+        }
+
+
+
+         [HttpPost]
+        [Route("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] UserItem model)
+        {  
+            Console.WriteLine("Inside ChangePassword {0} {1} \n \n",model.Email, model.Password);
+            return Ok(await _userService.ChangePassword(model));
         }
 
         [HttpPost]

@@ -23,6 +23,7 @@ import Account from './Layout/Account';
 
 import Cookies from 'js-cookie';
 import Confirmation from './Layout/Confirmation';
+import ResetPassword from './Layout/ResetPassword';
 
 export const getAccessToken = () => Cookies.get('access_token');
 export const getRefreshToken = () => Cookies.get('refresh_token');
@@ -69,11 +70,11 @@ class App extends Component {
         }
 
         return (
-            //Lyckas inte bryta mig ut from promise for att skriva pa skarmen
-            //beroende pa responsen fran fetch
+ 
             <Router>
                 <Switch>
                     <Route path="/confirmation/:token" exact strict component={Confirmation}/>
+                    <Route path="/resetPassword/:mail" exact strict component={ResetPassword}/>
 
                     <Route path="/TranslationModule" exact strict component={TranslationModule} className="TranslationModule" />
                     <Route path="/Account" exact strict component={Account} />
