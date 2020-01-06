@@ -8,7 +8,11 @@ import * as Cookies from "js-cookie";
 
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
-import logo from '../Image/CIAM-logo.png'
+import logo from '../Image/CIAM-logo.png';
+import TwitterIcon from '../Image/twitter.png';
+import FacebookIcon from '../Image/facebook.png';
+import GoogleIcon from '../Image/google.png';
+import LinkdinIcon from '../Image/linkdin.png';
 
 import { Link } from 'react-router-dom';
 import registeredPage from './registeredPage';
@@ -34,7 +38,10 @@ class form extends React.Component {
             isVerified: false,
             snackbaropen: false,
             snackbarmsg: '',
-            visible: true
+            visible: true,
+            loginForm: true,
+            registerForm: false,
+            registerCompleted: false
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -221,7 +228,6 @@ class form extends React.Component {
     }
 
 
-
     validateForm() {
         let fields = this.state.fields;
         let errors = {};
@@ -248,7 +254,6 @@ class form extends React.Component {
                 formIsValid = false;
                 errors["password"] = "Must have at least one number";
             }
-
             else if (!(fields["ConfirmPassword"] === fields["password"])) {
                 formIsValid = false;
                 errors["ConfirmPassword"] = "The passwords must match";
@@ -266,7 +271,6 @@ class form extends React.Component {
         });
 
         return formIsValid;
-
 
     };
 
@@ -481,6 +485,248 @@ class form extends React.Component {
                             }
                             </div>
                     </div>
+                    }
+                </div>
+            )
+        }
+
+        else if (this.props.form === "LogAndReg") {
+            return (
+
+                <div className="cover">
+                    <Snackbar
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                        open={this.state.snackbaropen}
+                        autoHideDuration={3000}
+                        onClose={this.snackbarClose}
+                        message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="Close"
+                                color="inherit"
+                                onClick={this.snackbarClose}
+                            >
+                                x
+                            </IconButton>
+                        ]}
+                    />
+
+                    <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                    open={this.state.snackbaropen}
+                    autoHideDuration={3000}
+                    onClose={this.snackbarClose}
+                    message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                    action={[
+                        <IconButton
+                            key="close"
+                            aria-label="Close"
+                            color="inherit"
+                            onClick={this.snackbarClose}
+                        >
+                            x
+                        </IconButton>
+                    ]}
+                    />
+
+                    {this.state.loginForm === true ?
+                        <form method="post" name="userLoginForm" onSubmit={this.submituserLoginForm}>
+                            <article>
+                                {
+                                    React.Children.map(children, (child, i) => {
+                                    //Ignore the first child
+                                    if (i === 1) return
+                                        return child
+                                    })
+                                }
+                                <h3>Your CIAM ID</h3>
+                                
+                                <p className="pageSwitch pageSwitchActive" onClick={() => { this.setState({ loginForm: true, registerForm: false, registerCompleted: false}); }}>Login</p>
+                                <p className="pageSwitch" onClick={() => { this.setState({ loginForm: false, registerForm: true, registerCompleted: false}); }}>Register</p>
+
+                                <div>
+                                    <input type="email"
+                                        name="email"
+                                        placeholder="E-mail" required
+                                        value={this.state.fields.email}
+                                        onChange={this.handleChange}
+                                        autoFocus
+                                    />
+                                </div>
+                                <div>
+                                    <input type={(isPasswordShown) ? "text" : "password"}
+                                        className="form-conntrol"
+                                        name="password"
+                                        placeholder="Password" required
+                                        value={this.state.fields.password}
+                                        onChange={this.handleChange}
+                                    />
+                                    <img className="eyeIcon"
+                                        onClick={this.togglePasswordVisiblity}
+                                        src={EyeIcon} alt="EyeIcon" />
+                                </div>
+                                <button>Login</button>
+{/*
+                                <Recaptcha
+                                    className="reCapcha"
+                                    sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                                    render="explicit"
+                                    onloadCallback={this.recaptchaLoaded}
+                                    verifyCallback={this.verifyCallback}
+                                />
+*/}
+
+                                <p className="orSocial">Or continue with</p>
+                                
+                                <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
+                                <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
+                                <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
+                                <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
+                            </article>
+
+                            <footer>
+                                <ALink href="true" value="Forgot Password?" />
+                            </footer>
+                        </form>
+                    : 
+                        null 
+                    }
+                    
+                    
+                    {this.state.registerForm === true ?
+
+                        <form method="post" className="userRegistrationForm" name="userRegistrationForm" onSubmit={this.submituserRegistrationForm}>
+
+                            {
+                                React.Children.map(children, (child, i) => {
+                                //Ignore the second child
+                                if (i === 1) return
+                                    return child
+                                })
+                            }
+
+                            <h3>Your CIAM ID</h3>
+
+                            <p className="pageSwitch" onClick={() => { this.setState({ loginForm: true, registerForm: false, registerCompleted: false}); }}>Login</p>
+                            <p className="pageSwitch pageSwitchActive" onClick={() => { this.setState({ loginForm: false, registerForm: true, registerCompleted: false}); }}>Register</p>
+
+
+                            <div>
+                                <input type="text"
+                                    className="inputDesignFirstname"
+                                    name="firstname"
+                                    placeholder="Firstname *" required
+                                    value={this.state.fields.firstname}
+                                    onChange={this.handleChange}
+                                    autoFocus
+                                />
+
+                            </div>
+                            <div>
+                                <input type="text"
+                                    className="inputDesignLastname"
+                                    name="lastname"
+                                    placeholder="Lastname *" required
+                                    value={this.state.fields.lastname}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
+                            <div>
+                                <input type="email"
+                                    name="email"
+                                    className="inputDesignEmail"
+                                    placeholder="E-mail address *" required
+                                    value={this.state.fields.email}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
+
+                            <div>
+                                <input type="password"
+                                    className="inputDesignPassword"
+                                    name="password"
+                                    placeholder="Password *" required
+                                    value={this.state.fields.password}
+                                    onChange={this.handleChange}
+                                    onBlur={this.handleChange}
+                                />
+                                <p className="errorMsg">{this.state.errors.password}</p>
+                            </div>
+
+                            <div>
+                                <input type="password"
+                                    className="inputDesignConfirmPassword"
+                                    name="ConfirmPassword"
+                                    placeholder="Confirm Password *" required
+                                    value={this.state.fields.ConfirmPassword}
+                                    onChange={this.handleChange}
+                                    onBlur={this.handleChange}
+                                />
+                                <p className="errorMsg">{this.state.errors.ConfirmPassword}</p>
+
+                            </div>
+
+                            <p className="termsOffCondition">
+                                <input type="checkbox" name="termsOffCondition" value="Terms off condition" />
+                                Terms Off Condition
+                            </p>
+
+                            <button onClick={this.handleRegister}>Create account</button>
+
+                            <Recaptcha
+                                className="reCapcha"
+                                sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                                render="explicit"
+                                onloadCallback={this.recaptchaLoaded}
+                                verifyCallback={this.verifyCallback}
+                            />
+
+                            <p className="orSocial">Or continue with</p>
+                            
+                            <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
+                            <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
+                            <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
+                            <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
+
+
+                            <footer>
+                                <ALink href="true" value="Already have an account? Sign in" />
+                            </footer>
+                        </form>
+                    :
+                        null 
+                    }
+                    {this.state.registerCompleted === true ?
+                        <div className="registrationCompleted">
+
+                                <div className="logoDesign">
+                                    <Link to="/#">
+                                <img src={logo} alt="logo"       />
+                                    </Link>
+                                </div>
+
+                                <div className="divDesign">
+                                    <h2 className="messageDesign">Thank you for registering!</h2>
+                                    <h2 className="messageDesign2">An email with a link to activate your account has been sent to you.</h2>
+                                </div>
+
+                                <div className="divDesign">
+                                {/*
+                                    React.Children.map(children, (child, i) => {
+                                    //Ignore the first child
+                                    if (i === 0) return
+                                        return child
+                                    })
+                                    */
+                                   
+                                <p className="linkDesign" onClick={() => { this.setState({ loginForm: !this.state.loginForm, registerForm: false, registerCompleted: !this.state.registerCompleted}); }}>click here to login</p>
+                                }
+                                </div>
+                        </div>
+                    : 
+                        null
+                        }
                     }
                 </div>
             )

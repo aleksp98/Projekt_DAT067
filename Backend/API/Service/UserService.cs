@@ -40,6 +40,7 @@ namespace API.Service
                               where a.Email == email
                               select new UserItem 
                               {
+                                  Id = a.Id,
                                   Email = a.Email,
                                   First_name = a.First_name,
                                   Last_name = a.Last_name,
@@ -194,10 +195,11 @@ namespace API.Service
             }
         }
 
-         public async Task<bool> UpdateUser(UserItem userItem)
+        public async Task<bool> UpdateUser(UserItem userItem)
         {
             using (ciamContext db = new ciamContext())
             {
+                Console.WriteLine(userItem);
                 Users user = db.Users.Where(x => x.Id == userItem.Id).FirstOrDefault();
                 if(userItem.Email != null)
                     user.Email = userItem.Email;

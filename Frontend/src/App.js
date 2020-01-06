@@ -7,15 +7,18 @@ import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
-import { sendHTTP } from './Layout/EmailConfirmation'
+import { sendHTTP } from './Layout/EmailConfirmation';
 import { string } from 'prop-types';
 import ImageSlider from './Components/ImageSlider';
 
 import Arrow from './Image/arrow.png';
+import Background from "./Image/Screenshot_Background.png";
+import LoginIcon from "./Image/login.png";
+import LogoutIcon from "./Image/logout.png";
 
 import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
-import Settings from './Layout/Settings';
+import TranslationModule from './Layout/TranslationModule';
 import Account from './Layout/Account';
 
 import Cookies from 'js-cookie';
@@ -72,7 +75,7 @@ class App extends Component {
                 <Switch>
                     <Route path="/confirmation/:token" exact strict component={Confirmation}/>
 
-                    <Route path="/Settings" exact strict component={Settings} />
+                    <Route path="/TranslationModule" exact strict component={TranslationModule} className="TranslationModule" />
                     <Route path="/Account" exact strict component={Account} />
 
                     <Route path="/registeredPage" exact strict component={registeredPage} />
@@ -82,11 +85,23 @@ class App extends Component {
                         {!this.state.visibleForm ?
                             <Form form={this.state.type}>
                                 <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a>
-
-                                <p className="linkDesign" onClick={() => { this.setState({ type: "Login"}); }}>click here to login</p>
+                                <p>ds</p>
                             </Form>
                         : null}
 
+                        
+                        {this.state.isAuthenticated ?
+                            <div>
+                                <img src={LogoutIcon} className="loginIMG" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }} />
+                                <p className="manageAccount"><Link to="/Account">Account</Link></p>
+                            </div>
+                        : 
+                            <img src={LoginIcon} className="loginIMG" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "LogAndReg" }); }} />
+                        }
+
+                        
+{/*
+                        <img src={Background} />
                         <header className="header">
                             <div className="headerController">
                                 {!this.state.isAuthenticated ?
@@ -135,7 +150,9 @@ class App extends Component {
                         <Section id="About" value="About" />
 
                         <Footer />
+*/}
                     </section>
+
                 </Switch>
             </Router>
         );
