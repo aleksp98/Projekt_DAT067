@@ -7,12 +7,14 @@ class translation extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeLeft = this.handleChangeLeft.bind(this);
         this.deleteWord = this.deleteWord.bind(this);
         this.deleteWord2 = this.deleteWord2.bind(this);
         this.editWord = this.editWord.bind(this);
         this.editWord2 = this.editWord2.bind(this);
         this.saveWord = this.saveWord.bind(this);
         this.saveWord2 = this.saveWord2.bind(this);
+        this.handleInputChange2 = this.handleInputChange2.bind(this);
 
 
         //get all Languages
@@ -21,15 +23,19 @@ class translation extends React.Component {
 
     state = {
         query: '',
+        query2: '',
         data: [],
         stringMsg: {},
+        stringMsgLeft: {},
         resultR: '',
         resultBox: '', //value from create or result in right box
         resultL: [],
-        textId: 1,//the textId you have selected to read from in left(the language)
+        objectL : '', //The choosen word xd
+        enable : false, //Om ett språk intryckt enable edit och delete.+Disable select list där nere då
         writeLanguage: 1, // the languageId you have selected to write to in left
         languages: [], //all available languages
-        leftbox: ''
+        leftbox: '',//Value from the create/edit box
+        edit: false //Bool if editmode is on or off in leftbox
     }
 
 
@@ -40,10 +46,17 @@ class translation extends React.Component {
             resultBox: this.box.value
         })
         this.filterArray();
-
     }
 
- //patetisk function
+    handleInputChange2(e){
+        this.setState({
+            leftbox: e.target.value
+        })
+      // this.filterArray();
+    }
+
+
+    //patetisk function
     getData = () => {
 
         fetch('xxx') //query db example
@@ -55,8 +68,7 @@ class translation extends React.Component {
                 })
             })
     }
-   //??
-    searchall
+
 
     handleChange(e) {
 
@@ -65,15 +77,22 @@ class translation extends React.Component {
         stringMsg["message"] = e.target.value;
 
         this.searchForText();
-        this.searchAllWord();
+    }
 
+    handleChangeLeft(e) {
+
+        // Variable to hold the original version of the list
+        let stringMsg = this.state.stringMsgLeft;
+        stringMsg["message"] = e.target.value;
+
+        this.searchAllWord();
     }
 
     //edit a word that already exist rightbox
     editWord() {
 
         let _this = this;
-
+       alert(this.state.resultBox)
         const requestOptions = {
             method: 'GET'
         };
@@ -87,11 +106,13 @@ class translation extends React.Component {
 
     }
 
-
-    //edit a word that already exist rightbox
+    //kallas när edit är intryckt
+    //lägger in det sökta ordet i boxen
+    //fixa en global variabel
+    //läsa value from språk knappen
     editWord2() {
-
-
+       
+        this.setState({ edit : !this.state.edit })
     }
 
     //Save a completely new word rightside //default English
@@ -99,6 +120,8 @@ class translation extends React.Component {
 
         let _this = this;
         //alert("inside");
+
+        alert(this.state.query);
 
         const requestOptions = {
             method: 'GET'
@@ -113,10 +136,31 @@ class translation extends React.Component {
     }
 
 
-    //Save a completely new word leftside
+    //Save the word to database
+    //depending if on edit mode or "new word" mode
     saveWord2() {
+        
+        const requestOptions = {
+            method: 'GET'
+        };
+        var url = '';
+         
+        //alert(this.state.leftbox)
+        //skapa en edit variabel i state
+        if(this.state.edit){
+                                     //ändra untz till ord från boxen
+            url = 'https://localhost:5001/api/Language/Create/?languageText=' + this.state.leftbox + '&languageId=' + this.state.objectL.languageId + '&textId=' + this.state.objectL.textId;
+        }
+        else{ //helt nytt ord
 
+            url = 'https://localhost:5001/api/Language/Create/?languageText=' + this.state.leftbox + '&languageId=' +this.state.writeLanguage;
+            //alert(this.state.writeLanguage)
+        }
+ 
+        const request = new Request(url, requestOptions);
+        fetch(request);
 
+        this.setState({ enable: false, edit :false, objectL : '' })
     }
 
     //reads all languages and stores in languages state
@@ -171,10 +215,9 @@ class translation extends React.Component {
             method: 'GET'
         };
 
-        const url = 'https://localhost:5001/api/Language/Delete/?textId=' + this.state.textId;
+        const url = 'https://localhost:5001/api/Language/Delete/?textId=' + this.state.objectL.textId;
         const request = new Request(url, requestOptions);
         fetch(request);
-
         //remove the button i pressed on
         //+make button pressed in
 
@@ -190,10 +233,6 @@ class translation extends React.Component {
 
         stringMsg["search"] = this.state.stringMsg.message;
         var searchString = stringMsg["search"];
-        var responseData = this.state.data;
-
-        const headers = new Headers();
-
         const requestOptions = {
             method: 'GET'
         };
@@ -219,7 +258,7 @@ class translation extends React.Component {
         //alert("inside");
         let stringMsg = {};
 
-        stringMsg["search"] = this.state.stringMsg.message;
+        stringMsg["search"] = this.state.stringMsgLeft.message;
         var searchString = stringMsg["search"];
 
 
@@ -270,7 +309,7 @@ class translation extends React.Component {
                 var textid = JSON.stringify(item.textId);
 
                 return (
-                    <button onClick={() => this.setState({ textId: textid })} ><option key={i} value={item.id}>{language}</option></button>
+                    <button onClick={() => this.setState({ objectL: item, enable: !this.state.enable })} ><option key={i} value={item.id}>{language}</option></button>
                 )
             }, this);
 
@@ -309,7 +348,7 @@ class translation extends React.Component {
                     <option key={i} value={item.id}>{item.language}</option>
                 )
             }, this);
-           ////
+           //
 
 
 
@@ -317,13 +356,13 @@ class translation extends React.Component {
             <div id="translationmodule">
                 <div id="translatetext">
                     <label>Search use the search on right side</label>
-                    <div className="search">
+                    <div className="search2">
                         <input type="text"
-                            id="search"
+                            id="search2"
                             placeholder="Does not work..."
-                            value={this.state.stringMsg.message}
+                            value={this.state.stringMsgLeft.message}
                              ref={input => this.search = input}
-                            onChange={this.handleInputChange} />
+                            onChange={this.handleChangeLeft} />
                         <div>
                             {
                                 this.state.data.map((i) =>
@@ -337,17 +376,17 @@ class translation extends React.Component {
                         <div>
                             {this.LanguagesFound()}
                         </div>
-                        <button >Edit</button>
-                        <button onClick={this.deleteWord2}>Delete</button>
+                        <button disabled={!this.state.enable} onClick={this.editWord2} >Edit</button>
+                        <button disabled={!this.state.enable} onClick={this.deleteWord2}>Delete</button>
                     </div>
                     <label>Edit/Create</label>
                     <div className="editCreate">
                         <textarea type="text"
                             id="editText"
-                            placeholder={this.state.leftbox}
-                            defaultValue={this.state.leftbox}
-                            ref={input => this.search = input}
-                            onChange={this.handleInputChange} />
+                            placeholder={this.state.objectL.languageText}
+                            defaultValue={this.state.objectL.languageText}
+                            ref={input => this.box = input}
+                            onChange={this.handleInputChange2} />
                         <div>
                             {
                                 this.state.data.map((i) =>
@@ -358,11 +397,11 @@ class translation extends React.Component {
                     </div>
                     <div className="selectLanguage">
                         <div class="select">
-                            <select>
+                            <select disabled={this.state.enable} onChange={(e) => { this.setState({ writeLanguage: e.target.value }) }}>
                                 {languagesList}
                             </select>
                         </div>
-                        <button class="savebutton">Save</button>
+                        <button onClick={this.saveWord2}>Save</button>
                         <div>
                             {
                                 this.state.data.map((i) =>
