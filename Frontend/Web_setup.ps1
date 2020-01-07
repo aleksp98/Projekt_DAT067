@@ -5,3 +5,7 @@ npm install material-ui
 npm install randomstring
 npm install js-cookie
 npm install react-facebook-login
+npm install react-google-login
+npm install react-twitter-login
+npm install linkedin-login-for-react
+npm install query-string

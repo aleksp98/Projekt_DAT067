@@ -7,6 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Collections;
+using System.Collections.Specialized;
 
 namespace API.Service
 {
@@ -93,7 +99,7 @@ namespace API.Service
             }
         }
 
-         public async Task<bool> UpdateUser(SocialUserItem userItem)
+        public async Task<bool> UpdateUser(SocialUserItem userItem)
         {
             using (ciamContext db = new ciamContext())
             {
@@ -104,6 +110,43 @@ namespace API.Service
                     user.Language = userItem.Language;
                 return await db.SaveChangesAsync() >= 1;
             }
+        }
+
+        public async Task<bool> getTwitterUserInfo(String token, String verifier)
+        {
+            Console.WriteLine("Token=" + token + ", Verifier=" + verifier);
+            WebRequest access_request = WebRequest.Create("https://api.twitter.com/oauth/access_token?oauth_token=" + token +
+                "&oauth_verifier=" + verifier);
+            access_request.Method = "GET";
+            WebResponse access_response = access_request.GetResponse();
+
+            Stream access_receiveStream = access_response.GetResponseStream();
+            StreamReader access_readStream = new StreamReader(access_receiveStream, Encoding.UTF8);
+            String acces_response_body = access_readStream.ReadToEnd();
+            Console.WriteLine(acces_response_body);
+            NameValueCollection parsed_response = HttpUtility.ParseQueryString(acces_response_body);
+            String user_token = parsed_response["oauth_token"];
+            String user_secret = parsed_response["oauth_token_secret"];
+            String consumer_key = "nJrY5ioXoNAP27qfW32E3V5Gs";
+            String consumer_secret = "T1CWdHZfeI2SwPyha0bKZGTzgu6ssElfKJ2OiYhiJoHt9xC0Pv";
+            Console.WriteLine(user_token);
+            Console.WriteLine(user_secret);
+
+            WebRequest account_info_request = WebRequest.Create("https://api.twitter.com/1.1/account/verify_credentials.json");
+            account_info_request.Method = "GET";
+            //https://gist.github.com/anova/9674023786ab31df43c07fd9bd53bc39#file-twitter-cs-L25
+            string strBearerRequest = HttpUtility.UrlEncode(consumer_key) + ":" + HttpUtility.UrlEncode(consumer_secret);
+            strBearerRequest = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(strBearerRequest));
+            account_info_request.Headers.Add("Authorization", "Basic " + strBearerRequest);
+            account_info_request.Headers.Add("oauth_token", user_token);
+            account_info_request.Headers.Add("oauth_token_secret", user_secret);
+            WebResponse account_info_response = account_info_request.GetResponse();
+
+            Stream account_info_receiveStream = account_info_response.GetResponseStream();
+            StreamReader account_info_readStream = new StreamReader(account_info_receiveStream, Encoding.UTF8);
+            String account_info_response_body = account_info_readStream.ReadToEnd();
+            Console.WriteLine(account_info_response_body);
+            return true;
         }
     }
 }

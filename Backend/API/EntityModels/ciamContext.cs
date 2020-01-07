@@ -87,7 +87,7 @@ namespace API.EntityModels
 
             modelBuilder.Entity<SocialUsers>(entity =>
             {
-                entity.ToTable("users");
+                entity.ToTable("social_users");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 

@@ -17,12 +17,11 @@ import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
 import Settings from './Layout/Settings';
 import Account from './Layout/Account';
+import TwitterAccount from './Layout/TwitterAccount';
 
 import Cookies from 'js-cookie';
 import Confirmation from './Layout/Confirmation';
 import ResetPassword from './Layout/ResetPassword';
-
-import FacebookLogin from 'react-facebook-login';
 
 export const getAccessToken = () => Cookies.get('access_token');
 export const getRefreshToken = () => Cookies.get('refresh_token');
@@ -79,7 +78,10 @@ class App extends Component {
                     <Route path="/Account" exact strict component={Account} />
                     
                     <Route path="/registeredPage" exact strict component={registeredPage} />
-                    <Route path="/loginPage" exact strict component={loginPage} />                
+                    <Route path="/loginPage" exact strict component={loginPage} />    
+
+                    <Route path="/TwitterAccount" exact strict component={TwitterAccount} />    
+                    
                     <section>
 
                         {!this.state.visibleForm ? 

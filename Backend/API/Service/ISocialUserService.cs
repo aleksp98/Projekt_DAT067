@@ -13,5 +13,6 @@ namespace API.Service
         Task<bool> SaveUser(SocialUserItem user);
         Task<bool> DeleteUser(int Id);
         Task<bool> UpdateUser(SocialUserItem used);
+        Task<bool> getTwitterUserInfo(String token, String verifier);
     }
 }

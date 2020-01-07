@@ -17,6 +17,9 @@ import { withRouter } from 'react-router-dom';
 import { bool } from 'prop-types';
 
 import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+import TwitterLogin from 'react-twitter-login';
+import LinkedIn from "linkedin-login-for-react";
 
 class form extends React.Component {
 
@@ -144,13 +147,13 @@ class form extends React.Component {
 
     }
 
-    loginWithFacebook() {
+    socialLogin(platform) {
         let _this = this;
         let user = {};
         user["email"] = this.state.fields.email;
         user["first_name"] = this.state.fields.firstname;
         user["last_name"] = this.state.fields.lastname;
-        user["social_platform"] = "facebook";
+        user["social_platform"] = platform;
         user["social_id"] = this.state.fields.password;
         console.log(user);
 
@@ -388,7 +391,36 @@ class form extends React.Component {
             let facebook_name = response.name.split(" ");
             this.state.fields.firstname = facebook_name[0];
             this.state.fields.lastname = facebook_name[facebook_name.length - 1];
-            this.loginWithFacebook();
+            this.socialLogin("facebook");
+        }
+
+        const responseGoogle = (response) => {
+            console.log(response);
+            this.state.fields.email = response.w3.U3;
+            this.state.fields.password = response.googleId;
+            this.state.fields.firstname = response.w3.ofa;
+            this.state.fields.lastname = response.w3.wea;
+            this.socialLogin("google");
+        }
+
+        const responseTwitter = (err, data) => {
+            console.log(err, data);
+        }
+
+        const callbackLinkedIn = (error, code, redirectUri) => {
+            if (error) {
+                // signin failed
+            } else {
+                // Obtain authorization token from linkedin api
+                // see https://developer.linkedin.com/docs/oauth2 for more info
+            }
+        };
+
+        const loginFailed= () => {
+            this.setState({
+                snackbaropen: true,
+                snackbarmsg: "Login failed"
+            });
         }
             
         //if forgotPassword was pressed render this
@@ -554,7 +586,28 @@ class form extends React.Component {
                                 fields="name,email,picture"
                                 callback={responseFacebook}
                             />
-                        
+
+                            <GoogleLogin
+                                clientId="159392247202-jakk3kn43aib2ur606fvu9jc1gtus913.apps.googleusercontent.com"
+                                buttonText="Login"
+                                onSuccess={responseGoogle}
+                                onFailure={loginFailed}
+                                cookiePolicy={'single_host_origin'}
+                            />
+
+                            <TwitterLogin
+                                authCallback={responseTwitter}
+                                consumerKey={"nJrY5ioXoNAP27qfW32E3V5Gs"}
+                                consumerSecret={"T1CWdHZfeI2SwPyha0bKZGTzgu6ssElfKJ2OiYhiJoHt9xC0Pv"}
+                                callbackUrl={"http://localhost:3000/TwitterAccount"}
+                            />
+
+                            <LinkedIn
+                                clientId="86wtuouhirmnef"
+                                callback={callbackLinkedIn}
+                                text="Login With LinkedIn"
+                            />
+                                                  
                             <div>
                                 <input type="text"
                                     className="inputDesignFirstname"

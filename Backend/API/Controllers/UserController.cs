@@ -149,5 +149,12 @@ namespace API.Controllers
         {
             return Ok(await _userService.DeleteUser(Id));
         }
+
+        [HttpGet]
+        [Route("SaveTwitterUser/oauth_token={Token}&oauth_verifier={Verifier}")]
+        public async Task<IActionResult> SaveTwitterUser(String Token, String Verifier)
+        {
+            return Ok(await _socialUserService.getTwitterUserInfo(Token, Verifier));
+        }
     }
 }
