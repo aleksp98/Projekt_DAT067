@@ -21,12 +21,6 @@ import { withRouter } from 'react-router-dom';
 import { bool } from 'prop-types';
 
 
-
-
-
-
-
-
 class form extends React.Component {
 
     constructor(props) {
@@ -45,9 +39,9 @@ class form extends React.Component {
             snackbaropen: false,
             snackbarmsg: '',
             visible: true,
-            loginForm: true,
+            loginForm: false,
             registerForm: false,
-            registerCompleted: false,
+            registerCompleted: true,
             forgotpass: false
         }
 
@@ -129,22 +123,25 @@ class form extends React.Component {
              //visa fel
              fetch(request).then(function (response) {
                 return response.text().then(function (text) {
-                    if (text === "true") {
+                    if (text === true) {
 
                         _this.setState({
                             fields: fields,
                             snackbaropen: true,
                             snackbarmsg: "Registration successful!",
-                            visible: false
+                            visible: false,
+                            loginForm: false, 
+                            registerForm: false, 
+                            registerCompleted: true
                         })
 
-                    }
+                    }//den går in i else när användaren är reggad ändå, antagligen för att den inte skickar mail från just denna datorn
                     else {
                            _this.setState({
                            fields: fields,
                             snackbaropen: true,
                             snackbarmsg: "Unsuccessful registration. Mail is probably already taken",
-                            visible: true
+                            visible: true,
                         });
                     }
                 });
@@ -204,9 +201,7 @@ class form extends React.Component {
         forgotpass : false
     })
     */
-
     }
-
 
 
     //Listener to login button(when pressed)
@@ -807,14 +802,14 @@ class form extends React.Component {
                         <div className="registrationCompleted">
 
                                 <div className="logoDesign">
-                                    <Link to="/#">
+                                    <Link to="/">
                                 <img src={logo} alt="logo"       />
                                     </Link>
                                 </div>
 
                                 <div className="divDesign">
                                     <h2 className="messageDesign">Thank you for registering!</h2>
-                                    <h2 className="messageDesign2">An email with a link to activate your account has been sent to you.</h2>
+                                    <p className="messageDesign2">An email with a link to activate your account has been sent to you.</p>
                                 </div>
 
                                 <div className="divDesign">
@@ -826,9 +821,11 @@ class form extends React.Component {
                                     })
                                     */
 
-                                <p className="linkDesign" onClick={() => { this.setState({ loginForm: !this.state.loginForm, registerForm: false, registerCompleted: !this.state.registerCompleted}); }}>click here to login</p>
+                                <p className="linkDesign" onClick={() => { this.setState({ loginForm: !this.state.loginForm, registerForm: false, registerCompleted: !this.state.registerCompleted}); }}>Click here to login</p>
                                 }
                                 </div>
+                                
+                            <p className="bottomText">CIAM</p>
                         </div>
                     :
                         null
