@@ -152,6 +152,11 @@ class translation extends React.Component {
         fetch(request);
 
         this.setState({ enable: false, edit :false, objectL : [], resultL: [], leftbox:"", query2: ''})
+
+        this.search2.value = '';
+        document.getElementById("search2").value = "";
+        this.box2.value = '';
+
     }
 
     //reads all languages and stores in languages state
