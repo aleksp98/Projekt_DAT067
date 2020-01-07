@@ -25,6 +25,7 @@ class translation extends React.Component {
         query: '',
         query2: '',
         data: [],
+        data2: [],
         stringMsg: {},
         stringMsgLeft: {},
         resultR: '',
@@ -38,7 +39,9 @@ class translation extends React.Component {
         edit: false //Bool if editmode is on or off in leftbox
     }
 
-
+  async componentDidMount(){
+    document.body.className="body-component";
+  }
 
     handleInputChange = () => {
         this.setState({
@@ -48,15 +51,17 @@ class translation extends React.Component {
         this.filterArray();
     }
 
-    handleInputChange2(e){
+    handleInputChange2 = () => {
         this.setState({
-            leftbox: e.target.value
+            query2: this.search2.value,
+            leftbox: this.box2.value
         })
-      // this.filterArray();
+      this.filterArray2();
     }
 
 
     //patetisk function
+    /*
     getData = () => {
 
         fetch('xxx') //query db example
@@ -68,7 +73,7 @@ class translation extends React.Component {
                 })
             })
     }
-
+     */
 
     handleChange(e) {
 
@@ -92,7 +97,6 @@ class translation extends React.Component {
     editWord() {
 
         let _this = this;
-       alert(this.state.resultBox)
         const requestOptions = {
             method: 'GET'
         };
@@ -121,7 +125,6 @@ class translation extends React.Component {
         let _this = this;
         //alert("inside");
 
-        alert(this.state.query);
 
         const requestOptions = {
             method: 'GET'
@@ -209,7 +212,6 @@ class translation extends React.Component {
     //delete word from leftbox
     deleteWord2() {
         let _this = this;
-        alert(this.state.textId);
 
         const requestOptions = {
             method: 'GET'
@@ -258,8 +260,8 @@ class translation extends React.Component {
         //alert("inside");
         let stringMsg = {};
 
-        stringMsg["search"] = this.state.stringMsgLeft.message;
-        var searchString = stringMsg["search"];
+        stringMsg["search2"] = this.state.stringMsgLeft.message;
+        var searchString = stringMsg["search2"];
 
 
         const requestOptions = {
@@ -274,10 +276,7 @@ class translation extends React.Component {
             })
             .then(data => {
 
-                var json = data;
                 _this.setState({ resultL: data })
-
-
             })
             .catch(err => {
 
@@ -333,10 +332,27 @@ class translation extends React.Component {
         }
     }
 
+
+    filterArray2 = () => {
+        var searchString = this.state.query2;
+        var responseData = this.state.data2;
+
+        if (searchString.length > 0) {
+
+            // console.log(responseData[i].name);
+            responseData = responseData.filter(l => {
+                console.log(l.name.toLowerCase().match(searchString));
+
+            })
+        }
+    }
+
+    /*
     componentWillMount() {
         this.getData();
-
     }
+    */
+
     render() {
 
         ////skapar select listan
@@ -359,13 +375,12 @@ class translation extends React.Component {
                     <div className="search2">
                         <input type="text"
                             id="search2"
-                            placeholder="Does not work..."
-                            value={this.state.stringMsgLeft.message}
-                             ref={input => this.search = input}
+                            placeholder="Search for text..."
+                             ref={input => this.search2 = input}
                             onChange={this.handleChangeLeft} />
                         <div>
                             {
-                                this.state.data.map((i) =>
+                                this.state.data2.map((i) =>
                                     <p>{i.name}</p>
                                 )
                             }
@@ -385,11 +400,11 @@ class translation extends React.Component {
                             id="editText"
                             placeholder={this.state.objectL.languageText}
                             defaultValue={this.state.objectL.languageText}
-                            ref={input => this.box = input}
+                            ref={input => this.box2 = input}
                             onChange={this.handleInputChange2} />
                         <div>
                             {
-                                this.state.data.map((i) =>
+                                this.state.data2.map((i) =>
                                     <p>{i.name}</p>
                                 )
                             }
@@ -404,7 +419,7 @@ class translation extends React.Component {
                         <button onClick={this.saveWord2}>Save</button>
                         <div>
                             {
-                                this.state.data.map((i) =>
+                                this.state.data2.map((i) =>
                                     <p>{i.name}</p>
                                 )
                             }

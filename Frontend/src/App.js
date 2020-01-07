@@ -18,7 +18,7 @@ import LogoutIcon from "./Image/logout.png";
 
 import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
-import TranslationModule from './Layout/TranslationModule';
+import Translation from './Layout/Translation';
 import Account from './Layout/Account';
 
 import Cookies from 'js-cookie';
@@ -76,7 +76,7 @@ class App extends Component {
                     <Route path="/confirmation/:token" exact strict component={Confirmation}/>
                     <Route path="/resetPassword/:mail" exact strict component={ResetPassword}/>
 
-                    <Route path="/TranslationModule" exact strict component={TranslationModule} className="TranslationModule" />
+                    <Route path="/Translation" exact strict component={Translation} className="Translation" />
                     <Route path="/Account" exact strict component={Account} />
 
                     <Route path="/registeredPage" exact strict component={registeredPage} />
