@@ -238,7 +238,6 @@ namespace API.Service
         {
             using (ciamContext db = new ciamContext())
             {
-                Console.WriteLine(userItem);
                 Users user = db.Users.Where(x => x.Id == userItem.Id).FirstOrDefault();
                 if(userItem.Email != null)
                     user.Email = userItem.Email;

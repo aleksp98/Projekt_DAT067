@@ -96,13 +96,17 @@ export default class Account extends React.Component {
         $("h1").css("color", "yellow");
     }
 
-    changeInput(value){
-        this.setState({
-             person: value
-        });
+    changeInput(value, key) {
+        this.state.person[key] = value;
+        console.log(this.state);
+        console.log(this.state.person);
+        console.log(this.state.person[key]);
     }
 
-    updateUser() {
+    updateUser(person) {
+        console.log(person);
+        if (!person)
+            return;
         //$( ".personalInfo p" ).replaceWith("<p onclick={updateUser()}>Edit</p>");
         
         $(".personalInfo input").prop( "disabled", true );
@@ -117,13 +121,14 @@ export default class Account extends React.Component {
         let _this = this;
 
         let user = {};
-        user["Id"] = "1";
-        user["Email"] = "jonathan.97@live.se";
-        user["Password"] = "spdokpsokd";
-        user["First_name"] = "spdokpsokd";
-        user["Last_name"] = "spdokpsokd";
-        user["Phone_number"] = "spdokpsokd";
-        user["Language"] = "spdokpsokd";
+        user["id"] = person.id;
+        user["email"] = person.email;
+        user["password"] = person.password;
+        user["first_name"] = person.first_name;
+        user["last_name"] = person.lastname;
+        user["phone_number"] = person.phone_number;
+        user["language"] = person.language;
+        user["market"] = person.market;
         const url = 'https://localhost:5001/api/User/UpdateUser';
         console.log(JSON.stringify(user));
 
@@ -139,6 +144,24 @@ export default class Account extends React.Component {
         fetch(request).then(function (response) {
             return response.text().then(function (text) {
                 alert("user updated");
+            });
+        });
+    }
+
+    deleteUser(id) {
+        const url = 'https://localhost:5001/api/User/DeleteUser/' + id;
+
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        const requestOptions = {
+            method: 'DELETE',
+            headers
+        };
+
+        const request = new Request(url, requestOptions);
+        fetch(request).then(function (response) {
+            return response.text().then(function (text) {
+                alert("user deleted");
             });
         });
     }
@@ -216,20 +239,23 @@ export default class Account extends React.Component {
                                 <tbody>
                                     <tr>
                                         <th>User ID: </th>
-                                        <th>Password: </th>
+                                            {/*<th>Password: </th>*/}
                                     </tr>
                                     <tr>
                                         <td>{JSON.parse(this.state.session).email}</td>
-                                        <td>{this.state.password}</td>
+                                            {/*<td>{this.state.password}</td>*/}
                                     </tr>
-                                    <tr>
-                                        <td><p>Delete ID</p></td>
-                                        <td><p>Change Password</p></td>
+                                        <tr>
+                                            <td>
+                                                <p onClick={() => { this.deleteUser(this.state.person.id) }} className="deleteUser">Delete User</p>
+                                            </td>
+                                        </tr>
+                                        {/*<td><p>Change Password</p></td>
                                     </tr>
                                     <tr>
                                         <td><p>Change ID</p></td>
                                         <td></td>
-                                    </tr>
+                                    </tr>*/}
                                 </tbody>
                             </table>
                             {/*
@@ -247,40 +273,54 @@ export default class Account extends React.Component {
                                 <p>loading...</p> 
                             : 
                                 <table>
-                                    <tbody>
+                                        <tbody>
+                                            <tr>
+                                                <th>Email: </th>
+                                                <td><input type="text" name="email" defaultValue={this.state.person.email} onChange={e => this.changeInput(e.target.value, "email")} disabled></input></td>
+                                            </tr>  
+                                            <tr>
+                                                <th>Password: </th>
+                                                <td><input type="password" name="password" placeholder="New password" onChange={e => this.changeInput(e.target.value, "password")} disabled></input></td>
+                                            </tr>  
                                         <tr>
                                             {/*onClick={() => getUserItem(JSON.parse(this.state.session).email)*/}
                                             {/*     Om den har value istället för placeholder måste det finnas en onChange som känner av om den ändrar JE */}
                                             <th>Firstname: </th>
-                                            <td><input type="text" name="firstname" onChange={e => this.changeInput(e.target.value)} value={this.state.person.first_name} disabled></input></td>
+                                                <td><input type="text" name="firstname" defaultValue={this.state.person.first_name} onChange={e => this.changeInput(e.target.value, "first_name")} disabled></input></td>
                                         </tr>                                   
                                         <tr>
                                             <th>Lastname: </th>
-                                            <td><input type="text" name="lastname" onChange={e => this.changeInput(e.target.value)} value={this.state.person.last_name} disabled></input></td>
+                                                <td><input type="text" name="lastname" id="lastname" defaultValue={this.state.person.last_name} onChange={e => this.changeInput(e.target.value, "last_name")}  disabled></input></td>
                                         </tr>
                                         <tr>
                                             <th>Telephone number: </th>
                                             <td>
                                                 {this.state.person.phone_number === null ?
-                                                    <input type="number" name="phoneNumber" placeholder="Number missing" disabled/>
+                                                        <input type="number" name="phoneNumber" onChange={e => this.changeInput(e.target.value, "phone_number")} placeholder="Number missing" disabled/>
                                                 :
-                                                    <input type="number" name="phoneNumber" onChange={e => this.changeInput(e.target.value)} value={this.state.person.phone_number} disabled /> 
+                                                        <input type="number" name="phoneNumber" onChange={e => this.changeInput(e.target.value, "phone_number")} defaultValue={this.state.person.phone_number} disabled /> 
                                                 }
                                            </td>
                                         </tr>
                                         <tr>
-                                            <th>Market: </th>
-                                            <td><input type="text" name="market" value="SE (finns inte i db)" disabled></input></td>
+                                                <th>Language: </th>
+                                                <td>
+                                                    {this.state.person.language === null ?
+                                                        <input type="text" name="language" onChange={e => this.changeInput(e.target.value, "language")} placeholder="Language missing" disabled />
+                                                        :
+                                                        <input type="text" name="language" onChange={e => this.changeInput(e.target.value, "language")} defaultValue={this.state.person.language} disabled />
+                                                    }
+                                                </td>
                                         </tr>
                                         <tr>
-                                            <th>Language: </th>
-                                            <td><input type="text" name="language" value="SV (finns inte i db)" disabled></input></td>
+                                            <th>Market: </th>
+                                            <td><input type="text" name="market" value="SV (finns inte i db)" disabled></input></td>
                                         </tr>
                                         <tr>
                                             <th></th>
                                             <td>
                                                 <p onClick={this.editPersonalInfo} className="editUser">Edit</p>
-                                                <p onClick={this.updateUser} className="saveUser">Save</p>
+                                                <p onClick={() => { this.updateUser(this.state.person) }} className="saveUser">Save</p>
                                             </td>
                                         </tr>            
                                     </tbody>
