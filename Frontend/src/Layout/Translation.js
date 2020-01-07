@@ -15,6 +15,8 @@ class translation extends React.Component {
         this.saveWord = this.saveWord.bind(this);
         this.saveWord2 = this.saveWord2.bind(this);
         this.handleInputChange2 = this.handleInputChange2.bind(this);
+        this.emptyBox = this.emptyBox.bind(this);
+
 
 
         //get all Languages
@@ -60,21 +62,6 @@ class translation extends React.Component {
     }
 
 
-    //patetisk function
-    /*
-    getData = () => {
-
-        fetch('xxx') //query db example
-            .then(response => response.json())
-            .then(responseData => {
-                console.log(responseData)
-                this.setState({
-                    data: responseData
-                })
-            })
-    }
-     */
-
     handleChange(e) {
 
         // Variable to hold the original version of the list
@@ -107,7 +94,7 @@ class translation extends React.Component {
 
         this.setState({ resultR: [] })
         this.box.value = '';
-
+        document.getElementById("search").value = "";
     }
 
     //kallas när edit är intryckt
@@ -116,7 +103,7 @@ class translation extends React.Component {
     //läsa value from språk knappen
     editWord2() {
        
-        this.setState({ edit : !this.state.edit })
+        this.setState({ edit : !this.state.edit, leftbox: this.state.objectL.languageText  })
     }
 
     //Save a completely new word rightside //default English
@@ -147,6 +134,8 @@ class translation extends React.Component {
             method: 'GET'
         };
         var url = '';
+
+        alert(this.state.leftbox);
          
         //alert(this.state.leftbox)
         //skapa en edit variabel i state
@@ -163,7 +152,12 @@ class translation extends React.Component {
         const request = new Request(url, requestOptions);
         fetch(request);
 
-        this.setState({ enable: false, edit :false, objectL : '' })
+        this.setState({ enable: false, edit :false, objectL : [], resultL: [], leftbox:"", query2: ''})
+
+        this.search2.value = '';
+        document.getElementById("search2").value = "";
+        this.box2.value = '';
+
     }
 
     //reads all languages and stores in languages state
@@ -205,24 +199,27 @@ class translation extends React.Component {
         const request = new Request(url, requestOptions);
         fetch(request);
 
-        this.setState({ resultR: [] })
+        this.setState({ resultR: [], query:''})
+        this.box.value = '';
+        this.search.value= '';
+        document.getElementById("search").value = "";
     }
 
 
     //delete word from leftbox
     deleteWord2() {
         let _this = this;
-
         const requestOptions = {
             method: 'GET'
         };
-
+       alert(this.state.objectL.textId);
         const url = 'https://localhost:5001/api/Language/Delete/?textId=' + this.state.objectL.textId;
         const request = new Request(url, requestOptions);
         fetch(request);
-        //remove the button i pressed on
-        //+make button pressed in
-
+       
+        this.setState({ leftbox: "", enable:false, query2: '', objectL: [],resultL:[]})
+        this.search2.value = '';
+        document.getElementById("search2").value = "";
     }
 
 
@@ -295,6 +292,7 @@ class translation extends React.Component {
         return ' '
     }
 
+
     //skapar knappar med alla språk som har ordet i sig
     //fixa så att man ser att knappen är intryckt
     LanguagesFound() {
@@ -306,17 +304,27 @@ class translation extends React.Component {
 
                 var language = this.findLanguage(JSON.stringify(item.languageId));
                 var textid = JSON.stringify(item.textId);
-
+              
+                    
                 return (
-                    <button onClick={() => this.setState({ objectL: item, enable: !this.state.enable })} ><option key={i} value={item.id}>{language}</option></button>
-                )
+                 // <button  onClick={ () => { this.buttonFunction(this);   this.setState({ objectL: item, enable: !this.state.enable }); }}><option key={i} value={item.id}>{language}</option></button>
+                  //<button  onClick={ () => { this.setState({ objectL: item, enable: !this.state.enable }); }}><option key={i} value={item.id}>{language}</option></button>
+                  <option key={i} value={i}>{language}</option>
+              
+                   )
             }, this);
 
         return languagesList
     }
+   
 
+     emptyBox(){
+       
+        
+       this.setState({leftbox: "", enable: false, edit: false }); 
 
-
+        
+     }
 
     filterArray = () => {
         var searchString = this.state.query;
@@ -347,11 +355,7 @@ class translation extends React.Component {
         }
     }
 
-    /*
-    componentWillMount() {
-        this.getData();
-    }
-    */
+
 
     render() {
 
@@ -371,7 +375,7 @@ class translation extends React.Component {
         return (
             <div id="translationmodule">
                 <div id="translatetext">
-                    <label>Search use the search on right side</label>
+                    <label>Search</label>
                     <div className="search2">
                         <input type="text"
                             id="search2"
@@ -388,18 +392,24 @@ class translation extends React.Component {
                     </div>
                     <label>Translations found in listed languages</label>
                     <div className="translationsfound">
-                        <div>
+                
+
+                    <select onChange={(e) => {  
+                        if(e.target.value == "empty"){   this.setState({leftbox: "", enable: false, edit: false });                }
+                        else{this.setState({ objectL: this.state.resultL[e.target.value] ,enable:true }) }}}>
+                          <option value = "empty"></option>
                             {this.LanguagesFound()}
-                        </div>
-                        <button disabled={!this.state.enable} onClick={this.editWord2} >Edit</button>
-                        <button disabled={!this.state.enable} onClick={this.deleteWord2}>Delete</button>
+                        </select>                        
                     </div>
+
+                    <div> <button disabled={!this.state.enable} onClick={this.editWord2}>Edit</button>
+                        <button disabled={!this.state.enable} onClick={this.deleteWord2}>Delete</button></div>
                     <label>Edit/Create</label>
                     <div className="editCreate">
                         <textarea type="text"
                             id="editText"
-                            placeholder={this.state.objectL.languageText}
-                            defaultValue={this.state.objectL.languageText}
+                            placeholder= {this.state.leftbox}     //{this.state.objectL.languageText}
+                            defaultValue={this.state.leftbox}   //{this.state.objectL.languageText}
                             ref={input => this.box2 = input}
                             onChange={this.handleInputChange2} />
                         <div>
@@ -413,7 +423,9 @@ class translation extends React.Component {
                     <div className="selectLanguage">
                         <div class="select">
                             <select disabled={this.state.enable} onChange={(e) => { this.setState({ writeLanguage: e.target.value }) }}>
+
                                 {languagesList}
+
                             </select>
                         </div>
                         <button onClick={this.saveWord2}>Save</button>
@@ -428,7 +440,7 @@ class translation extends React.Component {
                     </div>
                 </div>
                 <div id="createtext">
-                    <label>Search</label>
+                    <label>Search (only English)</label>
                     <div className="search">
                         <input type="text"
                             id="search"
@@ -469,7 +481,7 @@ class translation extends React.Component {
                             placeholder="text goes here.."
                             ref={input => this.search = input}
                             onChange={this.handleInputChange} />
-                        <button onClick={this.saveWord}>Save</button>
+                        <button onClick={this.saveWord}>Create</button>
                         <div>
                             {
                                 this.state.data.map((i) =>
