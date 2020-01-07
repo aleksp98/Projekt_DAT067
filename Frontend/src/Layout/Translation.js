@@ -15,6 +15,7 @@ class translation extends React.Component {
         this.saveWord = this.saveWord.bind(this);
         this.saveWord2 = this.saveWord2.bind(this);
         this.handleInputChange2 = this.handleInputChange2.bind(this);
+        this.emptyBox = this.emptyBox.bind(this);
 
 
 
@@ -316,6 +317,15 @@ class translation extends React.Component {
         return languagesList
     }
    
+
+     emptyBox(){
+       
+        
+       this.setState({leftbox: "", enable: false, edit: false }); 
+
+        
+     }
+
     filterArray = () => {
         var searchString = this.state.query;
         var responseData = this.state.data
@@ -344,6 +354,8 @@ class translation extends React.Component {
             })
         }
     }
+
+
 
     render() {
 
@@ -382,13 +394,15 @@ class translation extends React.Component {
                     <div className="translationsfound">
                 
 
-                    <select onChange={(e) => { this.setState({ objectL: this.state.resultL[e.target.value] ,enable:true }) }}>
-                          <option onClick={ () => { this.setState({leftbox: "", enable: false }); }}></option>
+                    <select onChange={(e) => {  
+                        if(e.target.value == "empty"){   this.setState({leftbox: "", enable: false, edit: false });                }
+                        else{this.setState({ objectL: this.state.resultL[e.target.value] ,enable:true }) }}}>
+                          <option value = "empty"></option>
                             {this.LanguagesFound()}
                         </select>                        
                     </div>
 
-                    <div> <button disabled={!this.state.enable} onClick={this.editWord2} >Edit</button>
+                    <div> <button disabled={!this.state.enable} onClick={this.editWord2}>Edit</button>
                         <button disabled={!this.state.enable} onClick={this.deleteWord2}>Delete</button></div>
                     <label>Edit/Create</label>
                     <div className="editCreate">
