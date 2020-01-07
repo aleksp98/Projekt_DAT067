@@ -39,9 +39,9 @@ class form extends React.Component {
             snackbaropen: false,
             snackbarmsg: '',
             visible: true,
-            loginForm: false,
+            loginForm: true,
             registerForm: false,
-            registerCompleted: true,
+            registerCompleted: false,
             forgotpass: false
         }
 
