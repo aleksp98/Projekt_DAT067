@@ -13,6 +13,7 @@ import ImageSlider from '../Components/ImageSlider';
 
 import Arrow from '../Image/arrow.png';
 import ProfilePicture from '../Image/user-512.png';
+import MenyIcon from '../Image/menyIcon.png';
 
 import Cookies from 'js-cookie';
 
@@ -72,6 +73,10 @@ export default class Account extends React.Component {
     }
     
     async componentDidMount() {
+
+        $("body").addClass("body-component");
+
+
         const url = 'https://localhost:5001/api/User/User/' + JSON.parse(this.state.session).email;
         const requestOptions = {
             method: 'GET'
@@ -138,6 +143,15 @@ export default class Account extends React.Component {
         });
     }
 
+    handleSideMeny(option) {
+        if(option === "open"){
+            $(".dropdown-content").addClass("expandSideMeny");
+        }
+        else if(option === "close"){
+            $(".dropdown-content").removeClass("expandSideMeny");
+        }
+    }
+
     render() {
         
         return (
@@ -166,6 +180,7 @@ export default class Account extends React.Component {
                                     <p>
                                         {JSON.parse(this.state.session).email}
                                         <img src={Arrow} className="arrow" alt="rotateArrow" />
+                                        <img src={MenyIcon} className="menyIcon" onClick={() => this.handleSideMeny('open')} alt="menyIcon" />
                                     </p> 
                                     :
                                     <p>
@@ -173,13 +188,14 @@ export default class Account extends React.Component {
                                     <img src={Arrow} className="arrow" alt="rotateArrow" />
                                     </p>
                                 }
-                                <div className="dropdown-content">        
+                                <div className="dropdown-content">   
+                                    <p className="closeSideMeny" onClick={() => this.handleSideMeny('close')} >X</p>     
                                     <p onClick={() => this.switchPage('closeThisPage')}>Account</p>
                                     <p className="uploadsLink" onClick={() => this.switchPage('uploads')}>Uploads</p>
 
                                     <p value="Account"><Link to="/">Home</Link></p>
                                     <p value="Settings"><Link to="/Settings">Settings</Link></p>
-                                    <p value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}>Logout</p>
+                                    <p value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}><Link to="/">Logout</Link></p>
                                 </div>
                             </div>
                         }
@@ -216,11 +232,13 @@ export default class Account extends React.Component {
                                     </tr>
                                 </tbody>
                             </table>
+                            {/*
                             <div className="imageContainer">
                                 <img src={ProfilePicture} alt="Profile picture"></img>
                                 <p>Delete</p>
                                 <p>Change</p>
                             </div>
+                            */}
                         </Section>
 
                         <Section id="personalInfo closeThisPage" show="true" value="Personal Information">
