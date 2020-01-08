@@ -230,7 +230,7 @@ export default class Account extends React.Component {
                                     <p onClick={() => this.switchPage('closeThisPage')}>Account</p>
                                     <p className="uploadsLink" onClick={() => this.switchPage('uploads')}>Uploads</p>
 
-                                    <p value="Account"><Link to="/">Home</Link></p>
+                                    <p value="Home"><Link to="/" onClick={() => $("body").removeClass("body-component")}>Home</Link></p>
                                     <p value="Settings"><Link to="/Settings">Settings</Link></p>
                                     <p value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}><Link to="/">Logout</Link></p>
                                 </div>
