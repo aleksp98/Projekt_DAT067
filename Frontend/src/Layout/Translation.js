@@ -1,6 +1,6 @@
 import React from 'react';
 import { string } from 'prop-types';
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 class translation extends React.Component {
@@ -15,7 +15,7 @@ class translation extends React.Component {
         this.saveWord = this.saveWord.bind(this);
         this.saveWord2 = this.saveWord2.bind(this);
         this.handleInputChange2 = this.handleInputChange2.bind(this);
-        this.emptyBox = this.emptyBox.bind(this);
+        this.saveLanguage = this.saveLanguage.bind(this);
 
 
 
@@ -318,12 +318,12 @@ class translation extends React.Component {
     }
    
 
-     emptyBox(){
+     saveLanguage(){
        
         
        this.setState({leftbox: "", enable: false, edit: false }); 
 
-        
+
      }
 
     filterArray = () => {
@@ -491,6 +491,28 @@ class translation extends React.Component {
                         </div>
                     </div>
                 </div>
+
+
+
+
+                 <Box>
+                    <div className="SaveLanguage">
+                    <label>SaveLanguage</label>
+                        <textarea type="text"
+                            id="saveLanguage"
+                            placeholder="text goes here.."
+                            ref={input => this.search = input}
+                            onChange={this.handleInputChange} />
+                        <button onClick={this.saveLanguage}>SaveLanguage</button>
+                        <div>
+                            {
+                                this.state.data.map((i) =>
+                                    <p>{i.name}</p>
+                                )
+                            }
+                        </div>
+                    </div>
+                    </Box>
             </div>
         )
     }
