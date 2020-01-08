@@ -673,11 +673,6 @@ class form extends React.Component {
                                 onloadCallback={this.recaptchaLoaded}
                                 verifyCallback={this.verifyCallback}
                             />
-
-
-                            <footer>
-                                <ALink href="true" value="Already have an account? Sign in" />
-                            </footer>
                         </form>
                     :
                     <div className="registrationCompleted">
@@ -820,7 +815,7 @@ class form extends React.Component {
                                 <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
                             </article>
 
-                            <footer>
+                            <footer onClick={() => this.setState({ forgotpass: true })}>
                                 <ALink href="true" value="Forgot Password?" />
                             </footer>
                         </form>
@@ -919,19 +914,82 @@ class form extends React.Component {
 
                             <p className="orSocial">Or continue with</p>
 
-                            <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
-                            <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
+                            <GoogleLogin
+                                ref={input => { this.myInput = input; }}
+                                clientId="159392247202-jakk3kn43aib2ur606fvu9jc1gtus913.apps.googleusercontent.com"
+                                render={renderProps => (
+                                    <img src={GoogleIcon} onClick={renderProps.onClick} disabled={renderProps.disabled} className="socialAuthentication" alt="Google social authentication" />
+                                )}
+                                buttonText="Login"
+                                onSuccess={responseGoogle}
+                                onFailure={loginFailed}
+                                cookiePolicy={'single_host_origin'}
+                            />
+                            <FacebookLogin
+                                appId="681003465986574"
+                                fields="name,email,picture"
+                                callback={responseFacebook}
+                                render={renderPropss => (
+                                    <img src={FacebookIcon} onClick={renderPropss.onClick} disabled={renderPropss.disabled} className="socialAuthentication" alt="Facebook social authentication" />
+                                )}
+                            />
                             <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
                             <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
-
-
-                            <footer>
-                                <ALink href="true" value="Already have an account? Sign in" />
-                            </footer>
                         </form>
                     :
                         null
                     }
+                    {this.state.forgotpass === true ?
+                        <div className="cover">
+                            <Snackbar
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                                open={this.state.snackbaropen}
+                                autoHideDuration={3000}
+                                onClose={this.snackbarClose}
+                                message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                                action={[
+                                    <IconButton
+                                        key="close"
+                                        aria-label="Close"
+                                        color="inherit"
+                                        onClick={this.snackbarClose}
+                                    >
+                                        x
+                    </IconButton>
+                                ]}
+                            />
+                            <form method="get" name="forgotPasswordForm" onSubmit={this.forgotPassword}>
+                                {
+                                    React.Children.map(children, (child, i) => {
+                                        //Ignore the first child
+                                        if (i === 1) return
+                                        return child
+                                    })
+                                }
+                                <h3>Put in your email</h3>
+                                <div>
+                                    <img src={UserIcon} alt="UserIcon" />
+                                    <input type="email"
+                                        name="email"
+                                        placeholder="E-mail" required
+                                        value={this.state.fields.email}
+                                        onChange={this.handleChange}
+                                    />
+                                </div>
+                                <button onClick={this.handleRegister} >Change Password</button>
+
+                                <Recaptcha
+                                    className="reCapcha"
+                                    sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                                    render="explicit"
+                                    onloadCallback={this.recaptchaLoaded}
+                                    verifyCallback={this.verifyCallback}
+                                />
+                            </form>
+                        </div>
+                        :
+                        null
+                        }
                     {this.state.registerCompleted === true ?
                         <div className="registrationCompleted">
 
