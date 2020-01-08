@@ -20,7 +20,7 @@ import { withRouter } from 'react-router-dom';
 
 import { bool } from 'prop-types';
 
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';     //'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 import TwitterLogin from 'react-twitter-login';
 import LinkedIn from "linkedin-login-for-react";
@@ -588,6 +588,7 @@ class form extends React.Component {
                                 fields="name,email,picture"
                                 callback={responseFacebook}
                             />
+                            
 
                             <GoogleLogin
                                 clientId="159392247202-jakk3kn43aib2ur606fvu9jc1gtus913.apps.googleusercontent.com"
@@ -797,7 +798,11 @@ class form extends React.Component {
                                 <p className="orSocial">Or continue with</p>
 
                                 <GoogleLogin
+                                    ref={input => { this.myInput = input; }}
                                     clientId="159392247202-jakk3kn43aib2ur606fvu9jc1gtus913.apps.googleusercontent.com"
+                                    render={renderProps => (
+                                        <img src={GoogleIcon} onClick={renderProps.onClick} disabled={renderProps.disabled} className="socialAuthentication" alt="Google social authentication" />
+                                    )}
                                     buttonText="Login"
                                     onSuccess={responseGoogle}
                                     onFailure={loginFailed}
@@ -807,9 +812,10 @@ class form extends React.Component {
                                     appId="681003465986574"
                                     fields="name,email,picture"
                                     callback={responseFacebook}
+                                    render={renderPropss => (
+                                        <img src={FacebookIcon} onClick={renderPropss.onClick} disabled={renderPropss.disabled} className="socialAuthentication" alt="Facebook social authentication" />
+                                    )}
                                 />
-                                <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
-                                <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
                                 <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
                                 <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
                             </article>

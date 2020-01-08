@@ -202,7 +202,9 @@ export default class Account extends React.Component {
 
         Cookies.remove("session");
         Cookies.remove("access_token");
+        $("body").removeClass("body-component")
         this.props.history.push('/');
+        window.location.reload();
     }
 
     handleSideMeny(option) {
