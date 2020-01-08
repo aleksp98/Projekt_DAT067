@@ -7,15 +7,18 @@ import Section from './Layout/Section';
 import Footer from './Layout/Footer';
 import Form from './Layout/Form';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
-import { sendHTTP } from './Layout/EmailConfirmation'
+import { sendHTTP } from './Layout/EmailConfirmation';
 import { string } from 'prop-types';
 import ImageSlider from './Components/ImageSlider';
 
 import Arrow from './Image/arrow.png';
+import Background from "./Image/Screenshot_Background.png";
+import LoginIcon from "./Image/login.png";
+import LogoutIcon from "./Image/logout.png";
 
 import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
-import Settings from './Layout/Settings';
+import Translation from './Layout/Translation';
 import Account from './Layout/Account';
 import TwitterAccount from './Layout/TwitterAccount';
 
@@ -36,13 +39,13 @@ class App extends Component {
         isAuthenticated: isAuthenticated(),
         session: getSession()
     }
-        
+
     render() {
         //Check if session is still valid
         if (Cookies.get("session")) {
             let user = JSON.parse(Cookies.get("session"));
             const url = 'https://localhost:5001/api/User/LoginUser';
-            
+
             const headers = new Headers();
             headers.append('Content-Type', 'application/json');
             const requestOptions = {
@@ -74,9 +77,9 @@ class App extends Component {
                     <Route path="/confirmation/:token" exact strict component={Confirmation}/>
                     <Route path="/resetPassword/:mail" exact strict component={ResetPassword}/>
 
-                    <Route path="/Settings" exact strict component={Settings} />
+                    <Route path="/Translation" exact strict component={Translation} className="Translation" />
                     <Route path="/Account" exact strict component={Account} />
-                    
+
                     <Route path="/registeredPage" exact strict component={registeredPage} />
                     <Route path="/loginPage" exact strict component={loginPage} />    
 
@@ -84,26 +87,45 @@ class App extends Component {
                     
                     <section>
 
-                        {!this.state.visibleForm ? 
+                        {!this.state.visibleForm ?
                             <Form form={this.state.type}>
-                                <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a> 
-                                
-                                <p className="linkDesign" onClick={() => { this.setState({ type: "Login"}); }}>click here to login</p>
-                            </Form> 
+                                <a href="#" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm}); }}>X</a>
+                                <p>ds</p>
+                            </Form>
                         : null}
 
+                        
+                        {this.state.isAuthenticated ?
+                            <div>
+                                <img src={LogoutIcon} className="loginIMG" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }} />
+                                <p className="manageAccount"><Link to="/Account">Account</Link></p>
+                            </div>
+                        : 
+                            <img src={LoginIcon} className="loginIMG" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "LogAndReg" }); }} />
+                        }
+
+                        
+{/*
+                        <img src={Background} />
                         <header className="header">
                             <div className="headerController">
                                 {!this.state.isAuthenticated ?
                                 <div>
                                     <a href="#" value="Register" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Register" }); }}>Register</a>
-                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a> 
-                                </div> :                           
+                                    <a href="#" value="Login" onClick={() => { this.setState({ visibleForm: !this.state.visibleForm, type: "Login" }); }}>Login</a>
+                                </div> :
                                     <div className="dropdown">
-                                        <p> 
-                                            {this.state.session ? <div> {JSON.parse(this.state.session).email} </div> : "Default Name"}
+                                        {this.state.session ?
+                                        <p>
+                                            {JSON.parse(this.state.session).email}
                                             <img src={Arrow} className="arrow" alt="rotateArrow" />
                                         </p>
+                                        :
+                                        <p>
+                                        Default Name
+                                        <img src={Arrow} className="arrow" alt="rotateArrow" />
+                                        </p>}
+
                                         <div className="dropdown-content">
                                             <p value="Account"><Link to="/Account">Account</Link></p>
                                             <p value="Settings"><Link to="/Settings">Settings</Link></p>
@@ -111,9 +133,10 @@ class App extends Component {
                                         </div>
                                     </div>
                                 }
+
                             </div>
 
-                            
+
                             <h1>Customer Identity and Access Management</h1>
 
 
@@ -132,7 +155,9 @@ class App extends Component {
                         <Section id="About" value="About" />
 
                         <Footer />
+*/}
                     </section>
+
                 </Switch>
             </Router>
         );

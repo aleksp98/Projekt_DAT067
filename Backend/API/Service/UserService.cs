@@ -234,7 +234,7 @@ namespace API.Service
             }
         }
 
-         public async Task<bool> UpdateUser(UserItem userItem)
+        public async Task<bool> UpdateUser(UserItem userItem)
         {
             using (ciamContext db = new ciamContext())
             {

@@ -1,6 +1,8 @@
 import $ from "jquery";
 
-window.onscroll = function(){myFunction()};
+window.onscroll = function(){
+    myFunction()
+};
 
 function myFunction(){
     if(document.body.scrollTop > 150 || document.documentElement.scrollTop > 150){
@@ -13,4 +15,3 @@ function myFunction(){
         $("header h1").removeClass("h1Mover");
     }
 }
-
