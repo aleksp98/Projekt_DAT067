@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import './Script/JS';
+import $ from "jquery";
+
 import ALink from './Layout/ALink';
 import Navigation from './Layout/Navigation';
 import Section from './Layout/Section';
@@ -37,6 +39,11 @@ class App extends Component {
         visibleForm: true,
         isAuthenticated: isAuthenticated(),
         session: getSession()
+    }
+
+    async componentDidMount() {
+
+        $("body").removeClass("body-component");
     }
 
     render() {

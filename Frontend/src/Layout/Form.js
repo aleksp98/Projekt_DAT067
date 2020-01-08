@@ -39,9 +39,9 @@ class form extends React.Component {
             snackbaropen: false,
             snackbarmsg: '',
             visible: true,
-            loginForm: false,
+            loginForm: true,
             registerForm: false,
-            registerCompleted: true,
+            registerCompleted: false,
             forgotpass: false
         }
 
@@ -135,7 +135,7 @@ class form extends React.Component {
                             registerCompleted: true
                         })
 
-                    }//den går in i else när användaren är reggad ändå, antagligen för att den inte skickar mail från just denna datorn
+                    }//den går in i else när användaren blir reggad ändå, antagligen för att den inte skickar mail från just denna datorn
                     else {
                            _this.setState({
                            fields: fields,
@@ -356,7 +356,7 @@ class form extends React.Component {
                     </IconButton>
                 ]}
             />
-            <form method="get" name="forgotPasswordForm" onSubmit={ this.forgotPassword}>
+            <form method="get" name="forgotPasswordForm" onSubmit={this.forgotPassword}>
                 {
                     React.Children.map(children, (child, i) => {
                     //Ignore the first child
@@ -366,7 +366,6 @@ class form extends React.Component {
                 }
                 <h3>Put in your email</h3>
                 <div>
-                    <img src={UserIcon} alt="UserIcon" />
                     <input type="email"
                         name="email"
                         placeholder="E-mail" required
@@ -375,7 +374,7 @@ class form extends React.Component {
                     />
                 </div>
                 <button onClick={this.handleRegister} >Change Password</button>
-
+{/*
                 <Recaptcha
                     className="reCapcha"
                     sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
@@ -383,6 +382,7 @@ class form extends React.Component {
                     onloadCallback={this.recaptchaLoaded}
                     verifyCallback={this.verifyCallback}
                 />
+*/}
             </form>
 
 
@@ -686,7 +686,7 @@ class form extends React.Component {
                                 <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
                             </article>
 
-                            <footer>
+                            <footer onClick = {()=>  this.setState({forgotpass : true })}>
                                 <ALink href="true" value="Forgot Password?" />
                             </footer>
                         </form>
