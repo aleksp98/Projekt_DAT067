@@ -118,14 +118,12 @@ export default class Account extends React.Component {
         var bla = $(".personalInfo input:first-of-type").val();
         alert(bla);
 
-        let _this = this;
-
         let user = {};
         user["id"] = person.id;
         user["email"] = person.email;
         user["password"] = person.password;
         user["first_name"] = person.first_name;
-        user["last_name"] = person.lastname;
+        user["last_name"] = person.last_name;
         user["phone_number"] = person.phone_number;
         user["language"] = person.language;
         user["market"] = person.market;
@@ -146,6 +144,18 @@ export default class Account extends React.Component {
                 alert("user updated");
             });
         });
+        if (user.email) {
+            if (!user.password) {
+                let session = JSON.parse(Cookies.get("session"));
+                user["password"] = session.password;
+            }
+            Cookies.remove("session");
+            Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
+
+        }
+        if (user.password)
+            Cookies.remove("session");
+            Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
     }
 
     deleteUser(id) {
@@ -164,6 +174,10 @@ export default class Account extends React.Component {
                 alert("user deleted");
             });
         });
+
+        Cookies.remove("session");
+        Cookies.remove("access_token");
+        this.props.history.push('/');
     }
 
     handleSideMeny(option) {
@@ -216,7 +230,7 @@ export default class Account extends React.Component {
                                     <p onClick={() => this.switchPage('closeThisPage')}>Account</p>
                                     <p className="uploadsLink" onClick={() => this.switchPage('uploads')}>Uploads</p>
 
-                                    <p value="Account"><Link to="/">Home</Link></p>
+                                    <p value="Home"><Link to="/" onClick={() => $("body").removeClass("body-component")}>Home</Link></p>
                                     <p value="Settings"><Link to="/Settings">Settings</Link></p>
                                     <p value="Logout" onClick={() => { Cookies.remove("session"); Cookies.remove("access_token"); window.location.reload(); }}><Link to="/">Logout</Link></p>
                                 </div>
@@ -290,7 +304,7 @@ export default class Account extends React.Component {
                                         </tr>                                   
                                         <tr>
                                             <th>Lastname: </th>
-                                                <td><input type="text" name="lastname" id="lastname" defaultValue={this.state.person.last_name} onChange={e => this.changeInput(e.target.value, "last_name")}  disabled></input></td>
+                                                <td><input type="text" name="lastname" defaultValue={this.state.person.last_name} onChange={e => this.changeInput(e.target.value, "last_name")}  disabled></input></td>
                                         </tr>
                                         <tr>
                                             <th>Telephone number: </th>
