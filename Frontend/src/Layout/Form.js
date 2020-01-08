@@ -20,6 +20,10 @@ import { withRouter } from 'react-router-dom';
 
 import { bool } from 'prop-types';
 
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';     //'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+import TwitterLogin from 'react-twitter-login';
+import LinkedIn from "linkedin-login-for-react";
 
 class form extends React.Component {
 
@@ -89,8 +93,6 @@ class form extends React.Component {
     }
 
     submituserRegistrationForm(e) {
-        e.preventDefault();
-
         let _this = this;
         if (this.validateForm()) {
             let user = {};
@@ -152,6 +154,54 @@ class form extends React.Component {
 
     }
 
+    socialLogin(platform) {
+        let _this = this;
+        let user = {};
+        user["email"] = this.state.fields.email;
+        user["first_name"] = this.state.fields.firstname;
+        user["last_name"] = this.state.fields.lastname;
+        user["social_platform"] = platform;
+        user["social_id"] = this.state.fields.password;
+
+        let fields = {};
+        fields["firstname"] = "";
+        fields["lastname"] = "";
+        fields["email"] = "";
+        fields["password"] = "";
+        fields["ConfirmPassword"] = "";
+
+        const url = 'https://localhost:5001/api/User/SaveSocialUser';
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        const requestOptions = {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(user)
+        };
+        const request = new Request(url, requestOptions);
+
+        fetch(request).then(function (response) {
+            return response.text().then(function (text) {
+                if (user.email) {
+                    Cookies.remove("session");
+                    Cookies.set("session", { "email": user.email, "password": user.social_id, "social_login": platform }, { expires: 14 });
+                    Cookies.set("access_token", "placeholder", { expires: 14 });
+                    _this.setState({
+                        snackbaropen: true,
+                        snackbarmsg: "Login successful!"
+                    });
+                    window.location.reload();
+                }
+                else {
+                    _this.setState({
+                        snackbaropen: true,
+                        snackbarmsg: "Login failed"
+                    });
+                }
+            });
+        });
+    }
+    
     //seems to be a small bug with recaptcha
     //nothing very important
     forgotPassword(e){
@@ -222,8 +272,8 @@ class form extends React.Component {
         let user = {};
         user["email"] = this.state.fields.email;
         user["password"] = this.state.fields.password;
-        const url = 'https://localhost:5001/api/User/LoginUser';
 
+        const url = 'https://localhost:5001/api/User/LoginUser';
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         const requestOptions = {
@@ -336,6 +386,45 @@ class form extends React.Component {
         const { isPasswordShown } = this.state;
         const children = this.props.children;
 
+        const responseFacebook = (response) => {
+            console.log(response);
+            this.state.fields.email = response.email;
+            this.state.fields.password = response.id;
+            let facebook_name = response.name.split(" ");
+            this.state.fields.firstname = facebook_name[0];
+            this.state.fields.lastname = facebook_name[facebook_name.length - 1];
+            this.socialLogin("facebook");
+        }
+
+        const responseGoogle = (response) => {
+            console.log(response);
+            this.state.fields.email = response.w3.U3;
+            this.state.fields.password = response.googleId;
+            this.state.fields.firstname = response.w3.ofa;
+            this.state.fields.lastname = response.w3.wea;
+            this.socialLogin("google");
+        }
+
+        const responseTwitter = (err, data) => {
+            console.log(err, data);
+        }
+
+        const callbackLinkedIn = (error, code, redirectUri) => {
+            if (error) {
+                // signin failed
+            } else {
+                // Obtain authorization token from linkedin api
+                // see https://developer.linkedin.com/docs/oauth2 for more info
+            }
+        };
+
+        const loginFailed= () => {
+            this.setState({
+                snackbaropen: true,
+                snackbarmsg: "Login failed"
+            });
+        }
+            
         //if forgotPassword was pressed render this
          if(this.state.forgotpass === true){
           return(  <div className="cover">
@@ -494,6 +583,34 @@ class form extends React.Component {
 
                             <h3>{this.props.form}</h3>
 
+                            <FacebookLogin
+                                appId="681003465986574"
+                                fields="name,email,picture"
+                                callback={responseFacebook}
+                            />
+                            
+
+                            <GoogleLogin
+                                clientId="159392247202-jakk3kn43aib2ur606fvu9jc1gtus913.apps.googleusercontent.com"
+                                buttonText="Login"
+                                onSuccess={responseGoogle}
+                                onFailure={loginFailed}
+                                cookiePolicy={'single_host_origin'}
+                            />
+
+                            <TwitterLogin
+                                authCallback={responseTwitter}
+                                consumerKey={"nJrY5ioXoNAP27qfW32E3V5Gs"}
+                                consumerSecret={"T1CWdHZfeI2SwPyha0bKZGTzgu6ssElfKJ2OiYhiJoHt9xC0Pv"}
+                                callbackUrl={"http://localhost:3000/TwitterAccount"}
+                            />
+
+                            <LinkedIn
+                                clientId="86wtuouhirmnef"
+                                callback={callbackLinkedIn}
+                                text="Login With LinkedIn"
+                            />
+                                                  
                             <div>
                                 <input type="text"
                                     className="inputDesignFirstname"
@@ -556,11 +673,6 @@ class form extends React.Component {
                                 onloadCallback={this.recaptchaLoaded}
                                 verifyCallback={this.verifyCallback}
                             />
-
-
-                            <footer>
-                                <ALink href="true" value="Already have an account? Sign in" />
-                            </footer>
                         </form>
                     :
                     <div className="registrationCompleted">
@@ -680,13 +792,30 @@ class form extends React.Component {
 
                                 <p className="orSocial">Or continue with</p>
 
-                                <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
-                                <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
+                                <GoogleLogin
+                                    ref={input => { this.myInput = input; }}
+                                    clientId="159392247202-jakk3kn43aib2ur606fvu9jc1gtus913.apps.googleusercontent.com"
+                                    render={renderProps => (
+                                        <img src={GoogleIcon} onClick={renderProps.onClick} disabled={renderProps.disabled} className="socialAuthentication" alt="Google social authentication" />
+                                    )}
+                                    buttonText="Login"
+                                    onSuccess={responseGoogle}
+                                    onFailure={loginFailed}
+                                    cookiePolicy={'single_host_origin'}
+                                />
+                                <FacebookLogin
+                                    appId="681003465986574"
+                                    fields="name,email,picture"
+                                    callback={responseFacebook}
+                                    render={renderPropss => (
+                                        <img src={FacebookIcon} onClick={renderPropss.onClick} disabled={renderPropss.disabled} className="socialAuthentication" alt="Facebook social authentication" />
+                                    )}
+                                />
                                 <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
                                 <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
                             </article>
 
-                            <footer>
+                            <footer onClick={() => this.setState({ forgotpass: true })}>
                                 <ALink href="true" value="Forgot Password?" />
                             </footer>
                         </form>
@@ -785,19 +914,82 @@ class form extends React.Component {
 
                             <p className="orSocial">Or continue with</p>
 
-                            <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
-                            <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
+                            <GoogleLogin
+                                ref={input => { this.myInput = input; }}
+                                clientId="159392247202-jakk3kn43aib2ur606fvu9jc1gtus913.apps.googleusercontent.com"
+                                render={renderProps => (
+                                    <img src={GoogleIcon} onClick={renderProps.onClick} disabled={renderProps.disabled} className="socialAuthentication" alt="Google social authentication" />
+                                )}
+                                buttonText="Login"
+                                onSuccess={responseGoogle}
+                                onFailure={loginFailed}
+                                cookiePolicy={'single_host_origin'}
+                            />
+                            <FacebookLogin
+                                appId="681003465986574"
+                                fields="name,email,picture"
+                                callback={responseFacebook}
+                                render={renderPropss => (
+                                    <img src={FacebookIcon} onClick={renderPropss.onClick} disabled={renderPropss.disabled} className="socialAuthentication" alt="Facebook social authentication" />
+                                )}
+                            />
                             <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
                             <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
-
-
-                            <footer>
-                                <ALink href="true" value="Already have an account? Sign in" />
-                            </footer>
                         </form>
                     :
                         null
                     }
+                    {this.state.forgotpass === true ?
+                        <div className="cover">
+                            <Snackbar
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                                open={this.state.snackbaropen}
+                                autoHideDuration={3000}
+                                onClose={this.snackbarClose}
+                                message={<span id="message-id">{this.state.snackbarmsg}</span>}
+                                action={[
+                                    <IconButton
+                                        key="close"
+                                        aria-label="Close"
+                                        color="inherit"
+                                        onClick={this.snackbarClose}
+                                    >
+                                        x
+                    </IconButton>
+                                ]}
+                            />
+                            <form method="get" name="forgotPasswordForm" onSubmit={this.forgotPassword}>
+                                {
+                                    React.Children.map(children, (child, i) => {
+                                        //Ignore the first child
+                                        if (i === 1) return
+                                        return child
+                                    })
+                                }
+                                <h3>Put in your email</h3>
+                                <div>
+                                    <img src={UserIcon} alt="UserIcon" />
+                                    <input type="email"
+                                        name="email"
+                                        placeholder="E-mail" required
+                                        value={this.state.fields.email}
+                                        onChange={this.handleChange}
+                                    />
+                                </div>
+                                <button onClick={this.handleRegister} >Change Password</button>
+
+                                <Recaptcha
+                                    className="reCapcha"
+                                    sitekey="6LfWBMQUAAAAAFoGa1-TI5r-Mj0dH5rOQXgXyl5L"
+                                    render="explicit"
+                                    onloadCallback={this.recaptchaLoaded}
+                                    verifyCallback={this.verifyCallback}
+                                />
+                            </form>
+                        </div>
+                        :
+                        null
+                        }
                     {this.state.registerCompleted === true ?
                         <div className="registrationCompleted">
 

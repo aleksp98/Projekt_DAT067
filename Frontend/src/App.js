@@ -20,6 +20,7 @@ import registeredPage from './Layout/registeredPage';
 import loginPage from './Layout/loginPage';
 import Translation from './Layout/Translation';
 import Account from './Layout/Account';
+import TwitterAccount from './Layout/TwitterAccount';
 
 import Cookies from 'js-cookie';
 import Confirmation from './Layout/Confirmation';
@@ -43,30 +44,58 @@ class App extends Component {
         //Check if session is still valid
         if (Cookies.get("session")) {
             let user = JSON.parse(Cookies.get("session"));
-            const url = 'https://localhost:5001/api/User/LoginUser';
-
-            const headers = new Headers();
-            headers.append('Content-Type', 'application/json');
-            const requestOptions = {
-                method: 'POST',
-                headers,
-                body: JSON.stringify(user)
-            };
-            const request = new Request(url, requestOptions);
-            fetch(request).then(function (response) {
-                return response.text().then(function (text) {
-                    if (text === "true") {
-                        Cookies.remove("session");
-                        Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
-                        Cookies.set("access_token", "placeholder", { expires: 14 });
-                    }
-                    else {
-                        console.log("false");
-                        Cookies.remove("session");
-                        Cookies.remove("access_token");
-                    }
+            if (!user.social_login) {
+                const url = 'https://localhost:5001/api/User/LoginUser';
+                const headers = new Headers();
+                headers.append('Content-Type', 'application/json');
+                const requestOptions = {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(user)
+                };
+                const request = new Request(url, requestOptions);
+                fetch(request).then(function (response) {
+                    return response.text().then(function (text) {
+                        if (text === "true") {
+                            Cookies.remove("session");
+                            Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
+                            Cookies.set("access_token", "placeholder", { expires: 14 });
+                        }
+                        else {
+                            console.log("false");
+                            Cookies.remove("session");
+                            Cookies.remove("access_token");
+                        }
+                    });
                 });
-            });
+            }
+            else {
+                const url = 'https://localhost:5001/api/User/CheckSocialUser';
+                const headers = new Headers();
+                headers.append('Content-Type', 'application/json');
+                user["social_platform"] = user.social_login;
+                user["social_id"] = user.password;
+                const requestOptions = {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(user)
+                };
+                const request = new Request(url, requestOptions);
+                fetch(request).then(function (response) {
+                    return response.text().then(function (text) {
+                        if (text === "true") {
+                            Cookies.remove("session");
+                            Cookies.set("session", { "email": user.email, "password": user.password, "social_login": user.social_login }, { expires: 14 });
+                            Cookies.set("access_token", "placeholder", { expires: 14 });
+                        }
+                        else {
+                            console.log("Social false");
+                            Cookies.remove("session");
+                            Cookies.remove("access_token");
+                        }
+                    });
+                });
+            }
         }
 
         return (
@@ -80,7 +109,10 @@ class App extends Component {
                     <Route path="/Account" exact strict component={Account} />
 
                     <Route path="/registeredPage" exact strict component={registeredPage} />
-                    <Route path="/loginPage" exact strict component={loginPage} />
+                    <Route path="/loginPage" exact strict component={loginPage} />    
+
+                    <Route path="/TwitterAccount" exact strict component={TwitterAccount} />    
+                    
                     <section>
 
                         {!this.state.visibleForm ?

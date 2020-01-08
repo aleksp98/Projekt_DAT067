@@ -47,6 +47,7 @@ namespace API
             });
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ISocialUserService, SocialUserService>();
             services.AddTransient<ILanguageService, LanguageService>();
             services.AddControllers();
         }
