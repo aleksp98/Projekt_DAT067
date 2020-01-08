@@ -66,7 +66,6 @@ namespace API.EntityModels
                     .IsUnicode(false);
 
                 entity.Property(e => e.Language)
-                    .IsRequired()
                     .HasColumnName("language")
                     .HasMaxLength(255)
                     .IsUnicode(false);
@@ -110,10 +109,14 @@ namespace API.EntityModels
                     .IsUnicode(false);
 
                  entity.Property(e => e.Language)
-                    .IsRequired()
                     .HasColumnName("language")
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.Property(e => e.Created_at)
+                    .IsRequired()
+                    .HasColumnName("created_at")
+                    .HasColumnType("datetime2");
                 
                 entity.Property(e => e.Social_platform)
                     .IsRequired()

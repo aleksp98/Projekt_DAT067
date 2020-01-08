@@ -75,20 +75,34 @@ export default class Account extends React.Component {
     async componentDidMount() {
 
         $("body").addClass("body-component");
+        let user = JSON.parse(this.state.session);
+        if (!user.social_login) {
+            const url = 'https://localhost:5001/api/User/User/' + user.email;
+            const requestOptions = {
+                method: 'GET'
+            };
+            const request = new Request(url, requestOptions);
 
+            const response = await fetch(request);
+            const data = await response.json();
+            this.setState({
+                person: data,
+                loading: false
+            });
+        } else {
+            const url = 'https://localhost:5001/api/User/SocialUser/social_id=' + user.password + '&social_platform=' + user.social_login;
+            const requestOptions = {
+                method: 'GET'
+            };
+            const request = new Request(url, requestOptions);
 
-        const url = 'https://localhost:5001/api/User/User/' + JSON.parse(this.state.session).email;
-        const requestOptions = {
-            method: 'GET'
-        };
-        const request = new Request(url, requestOptions);
-        
-        const response = await fetch(request);
-        const data = await response.json();
-        this.setState({ 
-            person: data, 
-            loading: false 
-        });
+            const response = await fetch(request);
+            const data = await response.json();
+            this.setState({
+                person: data,
+                loading: false
+            });
+        }
         console.log(this.state.person.first_name);
     }
 
@@ -98,9 +112,6 @@ export default class Account extends React.Component {
 
     changeInput(value, key) {
         this.state.person[key] = value;
-        console.log(this.state);
-        console.log(this.state.person);
-        console.log(this.state.person[key]);
     }
 
     updateUser(person) {
@@ -116,7 +127,7 @@ export default class Account extends React.Component {
 
         
         var bla = $(".personalInfo input:first-of-type").val();
-        alert(bla);
+        console.log(bla);
 
         let user = {};
         user["id"] = person.id;
@@ -127,7 +138,13 @@ export default class Account extends React.Component {
         user["phone_number"] = person.phone_number;
         user["language"] = person.language;
         user["market"] = person.market;
-        const url = 'https://localhost:5001/api/User/UpdateUser';
+        let url = "";
+        if (!JSON.parse(this.state.session).social_login) {
+            url = 'https://localhost:5001/api/User/UpdateUser/';
+        }
+        else {
+            url = 'https://localhost:5001/api/User/UpdateSocialUser/';
+        }
         console.log(JSON.stringify(user));
 
         const headers = new Headers();
@@ -141,25 +158,33 @@ export default class Account extends React.Component {
         const request = new Request(url, requestOptions);
         fetch(request).then(function (response) {
             return response.text().then(function (text) {
-                alert("user updated");
+                console.log("user updated");
             });
         });
-        if (user.email) {
-            if (!user.password) {
-                let session = JSON.parse(Cookies.get("session"));
-                user["password"] = session.password;
-            }
-            Cookies.remove("session");
-            Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
+        if (!JSON.parse(this.state.session).social_login) {
+            if (user.email) {
+                if (!user.password) {
+                    let session = JSON.parse(Cookies.get("session"));
+                    user["password"] = session.password;
+                }
+                Cookies.remove("session");
+                Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
 
-        }
-        if (user.password)
-            Cookies.remove("session");
+            }
+            if (user.password)
+                Cookies.remove("session");
             Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
+        }
     }
 
     deleteUser(id) {
-        const url = 'https://localhost:5001/api/User/DeleteUser/' + id;
+        let url = "";
+        if (!JSON.parse(this.state.session).social_login) {
+            url = 'https://localhost:5001/api/User/DeleteUser/' + id;
+        }
+        else {
+            url = 'https://localhost:5001/api/User/DeleteSocialUser/' + id;
+        }
 
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
@@ -281,30 +306,49 @@ export default class Account extends React.Component {
                             */}
                         </Section>
 
-                        <Section id="personalInfo closeThisPage" show="true" value="Personal Information">
-                            
-                            {this.state.loading || !this.state.person ? 
-                                <p>loading...</p> 
-                            : 
-                                <table>
+                            <Section id="personalInfo closeThisPage" show="true" value="Personal Information">
+                                                           
+                                {this.state.loading || !this.state.person ?
+                                    <p>loading...</p>
+                                    :
+                                    
+                                    <table>
                                         <tbody>
                                             <tr>
                                                 <th>Email: </th>
-                                                <td><input type="text" name="email" defaultValue={this.state.person.email} onChange={e => this.changeInput(e.target.value, "email")} disabled></input></td>
-                                            </tr>  
-                                            <tr>
-                                                <th>Password: </th>
-                                                <td><input type="password" name="password" placeholder="New password" onChange={e => this.changeInput(e.target.value, "password")} disabled></input></td>
-                                            </tr>  
+                                                {this.state.person.social_login === null ?
+                                                    <td><input type="text" name="email" defaultValue={this.state.person.email} onChange={e => this.changeInput(e.target.value, "email")} disabled></input></td>
+                                                    :
+                                                    <td>{this.state.person.email}</td>
+                                                }
+                                            </tr>
+                                            {this.state.person.social_login === null ?
+                                                <tr>
+                                                    <th>Password: </th>
+                                                    <td><input type="password" name="password" placeholder="New password" onChange={e => this.changeInput(e.target.value, "password")} disabled></input></td>
+                                                </tr>
+                                                :
+                                                <div></div>
+                                                }
                                         <tr>
                                             {/*onClick={() => getUserItem(JSON.parse(this.state.session).email)*/}
                                             {/*     Om den har value istället för placeholder måste det finnas en onChange som känner av om den ändrar JE */}
-                                            <th>Firstname: </th>
-                                                <td><input type="text" name="firstname" defaultValue={this.state.person.first_name} onChange={e => this.changeInput(e.target.value, "first_name")} disabled></input></td>
+                                                <th>Firstname: </th>
+                                                {this.state.person.social_login === null ?
+                                                    <td><input type="text" name="firstname" defaultValue={this.state.person.first_name} onChange={e => this.changeInput(e.target.value, "first_name")} disabled></input></td>
+                                                    :
+                                                    <td>{this.state.person.first_name}</td>
+                                                }
+                                                
                                         </tr>                                   
                                         <tr>
-                                            <th>Lastname: </th>
-                                                <td><input type="text" name="lastname" defaultValue={this.state.person.last_name} onChange={e => this.changeInput(e.target.value, "last_name")}  disabled></input></td>
+                                                <th>Lastname: </th>
+                                                {this.state.person.social_login === null ?
+                                                    <td><input type="text" name="lastname" defaultValue={this.state.person.last_name} onChange={e => this.changeInput(e.target.value, "last_name")} disabled></input></td>
+                                                    :
+                                                    <td>{this.state.person.last_name}</td>
+                                                }
+                                                
                                         </tr>
                                         <tr>
                                             <th>Telephone number: </th>
@@ -337,8 +381,9 @@ export default class Account extends React.Component {
                                                 <p onClick={() => { this.updateUser(this.state.person) }} className="saveUser">Save</p>
                                             </td>
                                         </tr>            
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                        {this.state.person.social_login === null ? <div></div> : <div>Cant change information provided by social media accounts</div>}
+                                    </table>
                             }
                         </Section>
 

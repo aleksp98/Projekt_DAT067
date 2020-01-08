@@ -162,7 +162,6 @@ class form extends React.Component {
         user["last_name"] = this.state.fields.lastname;
         user["social_platform"] = platform;
         user["social_id"] = this.state.fields.password;
-        console.log(user);
 
         let fields = {};
         fields["firstname"] = "";
@@ -171,7 +170,7 @@ class form extends React.Component {
         fields["password"] = "";
         fields["ConfirmPassword"] = "";
 
-        const url = 'https://localhost:5001/api/SocialUser/SaveUser';
+        const url = 'https://localhost:5001/api/User/SaveSocialUser';
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
         const requestOptions = {
@@ -183,10 +182,9 @@ class form extends React.Component {
 
         fetch(request).then(function (response) {
             return response.text().then(function (text) {
-                console.log(text);
                 if (user.email) {
                     Cookies.remove("session");
-                    Cookies.set("session", { "email": user.email, "password": user.password }, { expires: 14 });
+                    Cookies.set("session", { "email": user.email, "password": user.social_id, "social_login": platform }, { expires: 14 });
                     Cookies.set("access_token", "placeholder", { expires: 14 });
                     _this.setState({
                         snackbaropen: true,
@@ -798,6 +796,18 @@ class form extends React.Component {
 
                                 <p className="orSocial">Or continue with</p>
 
+                                <GoogleLogin
+                                    clientId="159392247202-jakk3kn43aib2ur606fvu9jc1gtus913.apps.googleusercontent.com"
+                                    buttonText="Login"
+                                    onSuccess={responseGoogle}
+                                    onFailure={loginFailed}
+                                    cookiePolicy={'single_host_origin'}
+                                />
+                                <FacebookLogin
+                                    appId="681003465986574"
+                                    fields="name,email,picture"
+                                    callback={responseFacebook}
+                                />
                                 <img src={GoogleIcon} className="socialAuthentication" alt="Google social authentication" />
                                 <img src={FacebookIcon} className="socialAuthentication" alt="Facebook social authentication" />
                                 <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />

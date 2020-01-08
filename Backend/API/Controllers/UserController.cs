@@ -60,14 +60,6 @@ namespace API.Controllers
             return ok;
         }
 
-        [HttpPost]
-        [Route("SaveUserSocialLogin")]
-        public async Task<IActionResult> SaveUserSocialLogin([FromBody] SocialUserItem model)
-        {
-            return Ok(await _socialUserService.SaveUser(model));   
-        }
-
-
         //Check if account is active
         //returns to frontend 200 and bool value
         [HttpGet]
@@ -114,8 +106,6 @@ namespace API.Controllers
 
         }
 
-
-
         [HttpPost]
         [Route("LoginUser")]
         public async Task<IActionResult> LoginUser([FromBody] UserItem model)
@@ -123,8 +113,6 @@ namespace API.Controllers
             
             return Ok(await _userService.LoginUser(model));
         }
-
-
 
          [HttpPost]
         [Route("ChangePassword")]
@@ -138,7 +126,6 @@ namespace API.Controllers
         [Route("UpdateUser")]
         public async Task<IActionResult> UpdateUser([FromBody] UserItem model)
         {
-            Console.WriteLine("Body: " + model);
             return Ok(await _userService.UpdateUser(model));
         }
 
@@ -155,6 +142,41 @@ namespace API.Controllers
         public async Task<IActionResult> SaveTwitterUser(String Token, String Verifier)
         {
             return Ok(await _socialUserService.getTwitterUserInfo(Token, Verifier));
+        }
+
+        [HttpGet]
+        [Route("SocialUser/social_id={Social_id}&social_platform={Social_platform}")]
+        public async Task<IActionResult> User(String Social_id, String Social_platform)
+        {
+            return Ok(await _socialUserService.GetUser(Social_id, Social_platform));
+        }
+
+        [HttpPost]
+        [Route("SaveSocialUser")]
+        public async Task<IActionResult> SaveUserSocialLogin([FromBody] SocialUserItem model)
+        {
+            return Ok(await _socialUserService.SaveUser(model));   
+        }
+
+        [HttpPost]
+        [Route("CheckSocialUser")]
+        public async Task<IActionResult> CheckSocialUser([FromBody] SocialUserItem model)
+        {
+            return Ok(await _socialUserService.CheckUser(model));
+        }
+
+        [HttpDelete]
+        [Route("DeleteSocialUser/{Id}")]
+        public async Task<IActionResult> DeleteSocialUser(int Id)
+        {
+            return Ok(await _socialUserService.DeleteUser(Id));
+        }
+
+        [HttpPost]
+        [Route("UpdateSocialUser")]
+        public async Task<IActionResult> UpdateSocialUser([FromBody] SocialUserItem model)
+        {
+            return Ok(await _socialUserService.UpdateUser(model));
         }
     }
 }

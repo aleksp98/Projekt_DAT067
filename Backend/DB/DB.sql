@@ -38,10 +38,10 @@ CREATE TABLE social_users (
 	last_name VARCHAR(255) NOT NULL,
 	phone_number VARCHAR(20),
 	language VARCHAR(50),
-	created_at DATETIME2(0) NOT NULL
+	created_at DATETIME2(0)
                 DEFAULT CURRENT_TIMESTAMP, 
-	social_platform VARCHAR(255),
-	social_id VARCHAR(255),
+	social_platform VARCHAR(255) NOT NULL,
+	social_id VARCHAR(255) NOT NULL,
 	CONSTRAINT social UNIQUE (social_platform, social_id)
 );
 GO

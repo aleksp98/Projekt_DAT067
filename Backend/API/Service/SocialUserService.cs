@@ -31,23 +31,27 @@ namespace API.Service
                                   First_name = a.First_name,
                                   Last_name = a.Last_name,
                                   Social_platform = a.Social_platform,
-                                  Social_id = a.Social_id
+                                  Social_id = a.Social_id,
+                                  Phone_number = a.Phone_number,
+                                  Language = a.Language
                               }).ToListAsync();
             }
         }
 
-        public async Task<SocialUserItem> GetUser(string email)
+        public async Task<SocialUserItem> GetUser(string Social_id, string Social_platform)
         {
             using (ciamContext db = new ciamContext())
             {
                 return await (from a in db.SocialUsers.AsNoTracking()
-                              where a.Email == email
+                              where a.Social_id == Social_id && a.Social_platform == Social_platform
                               select new SocialUserItem 
                               {
                                   Id = a.Id,
                                   Email = a.Email,
                                   First_name = a.First_name,
                                   Last_name = a.Last_name,
+                                  Social_platform = a.Social_platform,
+                                  Social_id = a.Social_id,
                                   Phone_number = a.Phone_number,
                                   Language = a.Language
                               }).FirstOrDefaultAsync();
@@ -67,9 +71,9 @@ namespace API.Service
                         Email = userItem.Email,
                         First_name = userItem.First_name,
                         Last_name = userItem.Last_name,
-                        Created_at = DateTime.Now,
                         Social_platform = userItem.Social_platform,
-                        Social_id = userItem.Social_id
+                        Social_id = userItem.Social_id,
+                        Created_at = DateTime.Now
                     };
                     db.SocialUsers.Add(user);
 
@@ -79,7 +83,8 @@ namespace API.Service
                     user.Email = userItem.Email;
                     user.First_name = userItem.First_name;
                     user.Last_name = userItem.Last_name;
-                    user.Created_at = DateTime.Now;
+                    user.Social_platform = userItem.Social_platform;
+                    user.Social_id = userItem.Social_id;
                 }
                 return await db.SaveChangesAsync() >= 1;
             }
@@ -147,6 +152,16 @@ namespace API.Service
             String account_info_response_body = account_info_readStream.ReadToEnd();
             Console.WriteLine(account_info_response_body);
             return true;
+        }
+
+        public async Task<bool> CheckUser(SocialUserItem userItem)
+        {
+            using (ciamContext db = new ciamContext())
+            {
+                Console.WriteLine("Platform" + userItem.Social_platform + ", ID: " + userItem.Social_id);
+                return null != db.SocialUsers.Where
+                         (x => x.Social_platform == userItem.Social_platform && x.Social_id == userItem.Social_id).FirstOrDefault();
+            }
         }
     }
 }
