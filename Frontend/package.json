@@ -8,15 +8,21 @@
     "@material-ui/lab": "^4.0.0-alpha.39",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.1",
+    "linkedin-login-for-react": "^1.2.3",
     "material-ui": "^0.20.2",
+    "query-string": "^6.9.0",
     "randomstring": "^1.1.5",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-facebook-login": "^4.1.1",
+    "react-google-login": "^5.0.7",
     "react-popup": "^0.10.0",
     "react-recaptcha": "^2.3.10",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
-    "react-scroll": "^1.7.15"
+    "react-scroll": "^1.7.15",
+    "react-twitter-auth": "0.0.13",
+    "react-twitter-login": "^1.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

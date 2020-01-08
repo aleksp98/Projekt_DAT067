@@ -26,7 +26,23 @@ CREATE TABLE users (
 	created_at DATETIME2(0) NOT NULL
                 DEFAULT CURRENT_TIMESTAMP, 
 	verified BIT DEFAULT 0,
-	resended_mail BIT DEFAULT 0
+	resended_mail BIT DEFAULT 0,
+);
+GO
+
+-- Create social user table
+CREATE TABLE social_users (
+	id INT IDENTITY(1,1) PRIMARY KEY,
+	email VARCHAR(255) NOT NULL,
+	first_name VARCHAR(255) NOT NULL,
+	last_name VARCHAR(255) NOT NULL,
+	phone_number VARCHAR(20),
+	language VARCHAR(50),
+	created_at DATETIME2(0)
+                DEFAULT CURRENT_TIMESTAMP, 
+	social_platform VARCHAR(255) NOT NULL,
+	social_id VARCHAR(255) NOT NULL,
+	CONSTRAINT social UNIQUE (social_platform, social_id)
 );
 GO
 
