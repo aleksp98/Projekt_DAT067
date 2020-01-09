@@ -51,6 +51,17 @@ namespace API.Controllers
         {
             return Ok(await _languageService.Update(model));    
         }
+
+        // https://localhost:5001/api/Language/addLanguage/?languageShort=SR&language=Srpski&countryShort=RS&country=Srbija
+        [HttpPost]
+        [Route("addLanguage")]
+        public async Task<IActionResult> addLanguage([FromBody] LanguageItem model)
+        {
+              Console.WriteLine("Inside addLanguage {0},{1},{2},{3}\n \n",model.languageShort,model.language,model.countryShort,model.country);
+            return Ok(await _languageService.addLanguage(model));    
+        }
+
+
         
         [HttpGet]
         [Route("Test")]

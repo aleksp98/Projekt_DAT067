@@ -14,5 +14,6 @@ namespace API.Service
         Task<List<LanguageItem>> getLanguages(); 
         Task<bool> Update(LanguageTextItem user);
         Task<bool> Delete(LanguageTextItem languageItem);
+        Task<bool> addLanguage(LanguageItem languageItem);
     }
 }

@@ -88,6 +88,43 @@ namespace API.Service
         }
 
 
+        public async Task<bool> addLanguage(LanguageItem languageItem){
+           
+           //userItem == Language
+            using (languageContext db = new languageContext())
+            {
+                Language language = db.Language.Where
+                         (x => x.LanguageValue == languageItem.language).FirstOrDefault();
+                //if the language doesn't exist
+                if (language == null)
+                {
+                    language = new Language()
+                    {
+                        LanguageShort = languageItem.languageShort,
+                        LanguageValue = languageItem.language,
+                        CountryShort  = languageItem.countryShort,
+                        Country = languageItem.country,
+                        CreateDate = DateTime.Now,
+                        ModifyDate = DateTime.Now
+                    };
+                    db.Language.Add(language);
+
+                }
+                else //update Language if it exist
+                {
+                    language.LanguageShort = languageItem.languageShort;
+                    language.LanguageValue = languageItem.language;
+                    language.CountryShort  = languageItem.countryShort;
+                    language.Country  = languageItem.country;
+                    language.ModifyDate = DateTime.Now;
+                }
+                return await db.SaveChangesAsync() >= 1;
+            }
+
+
+        }
+
+             
         
         public async Task<bool> Update(LanguageTextItem languageItem)
         {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { string } from 'prop-types';
-import { ButtonBase } from '@material-ui/core';
+import { ButtonBase, Box } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 
 class translation extends React.Component {
@@ -15,7 +15,7 @@ class translation extends React.Component {
         this.saveWord = this.saveWord.bind(this);
         this.saveWord2 = this.saveWord2.bind(this);
         this.handleInputChange2 = this.handleInputChange2.bind(this);
-        this.emptyBox = this.emptyBox.bind(this);
+        this.saveLanguage = this.saveLanguage.bind(this);
 
 
 
@@ -26,6 +26,7 @@ class translation extends React.Component {
     state = {
         query: '',
         query2: '',
+        queryAddLanguage: {},
         data: [],
         data2: [],
         stringMsg: {},
@@ -102,7 +103,6 @@ class translation extends React.Component {
     //fixa en global variabel
     //läsa value from språk knappen
     editWord2() {
-       
         this.setState({ edit : !this.state.edit, leftbox: this.state.objectL.languageText  })
     }
 
@@ -135,9 +135,6 @@ class translation extends React.Component {
         };
         var url = '';
 
-        alert(this.state.leftbox);
-         
-        //alert(this.state.leftbox)
         //skapa en edit variabel i state
         if(this.state.edit){
                                      //ändra untz till ord från boxen
@@ -307,8 +304,6 @@ class translation extends React.Component {
               
                     
                 return (
-                 // <button  onClick={ () => { this.buttonFunction(this);   this.setState({ objectL: item, enable: !this.state.enable }); }}><option key={i} value={item.id}>{language}</option></button>
-                  //<button  onClick={ () => { this.setState({ objectL: item, enable: !this.state.enable }); }}><option key={i} value={item.id}>{language}</option></button>
                   <option key={i} value={i}>{language}</option>
               
                    )
@@ -317,13 +312,35 @@ class translation extends React.Component {
         return languagesList
     }
    
-
-     emptyBox(){
+      //add Language
+     saveLanguage(){
        
-        
-       this.setState({leftbox: "", enable: false, edit: false }); 
+        let _this = this;
+        let language = {};
+        language["languageShort"] = this.search3.value;
+        language["language"] = this.search4.value;
+        language["countryShort"] = this.search5.value;
+        language["country"] = this.search6.value;
+      
+       const url = 'https://localhost:5001/api/Language/addLanguage';
+       const headers = new Headers();
+       headers.append('Content-Type', 'application/json');
+       const requestOptions = {
+           method: 'POST',
+           headers,
+           body: JSON.stringify(language)
+       };
+      
+       const request = new Request(url, requestOptions);
+        fetch(request);
 
-        
+        this.search3.value = '';
+        this.search4.value = '';
+        this.search5.value = '';
+        this.search6.value = '';
+
+        this.getLanguages();
+        window.location.reload();
      }
 
     filterArray = () => {
@@ -408,8 +425,8 @@ class translation extends React.Component {
                     <div className="editCreate">
                         <textarea type="text"
                             id="editText"
-                            placeholder= {this.state.leftbox}     //{this.state.objectL.languageText}
-                            defaultValue={this.state.leftbox}   //{this.state.objectL.languageText}
+                            placeholder="text here.." //{this.state.leftbox}     //{this.state.objectL.languageText}
+                            value={this.state.leftbox}   //{this.state.objectL.languageText}
                             ref={input => this.box2 = input}
                             onChange={this.handleInputChange2} />
                         <div>
@@ -461,7 +478,7 @@ class translation extends React.Component {
                         <textarea type="text"
                             id="editText"
                             placeholder={this.state.resultR.languageText}
-                            defaultValue={this.state.resultR.languageText}
+                            value={this.state.resultR.languageText}
                             ref={input => this.box = input}
                             onChange={this.handleInputChange} />
                         <button onClick={this.editWord}>Edit</button>
@@ -491,7 +508,48 @@ class translation extends React.Component {
                         </div>
                     </div>
                 </div>
+
+
+                <div id="SaveLanguage">
+                    <div>  <label>SaveLanguage</label></div>
+                        <textarea type="text"
+                            id="saveLanguage0"
+                            placeholder="LanguageShort(MAX 2 characters).."
+                            ref={input => this.search3 = input}
+                            onChange={() => {}} />
+                            <textarea type="text"
+                            id="saveLanguage0"
+                            placeholder="Language.."
+                            ref={input => this.search4 = input}
+                            onChange={() => {}} 
+                            
+                            />
+                            <textarea type="text"
+                            id="saveLanguage0"
+                            placeholder="CountryShort(MAX 2 characters).."
+                            ref={input => this.search5 = input}
+                            onChange={() => {}} />
+                            <textarea type="text"
+                            id="saveLanguage0"
+                            placeholder="Country.."
+                            ref={input => this.search6 = input}
+                            onChange={() => { }} />
+                        <button onClick={this.saveLanguage}>SaveLanguage</button>
+                        <div>
+                            {
+                                this.state.data.map((i) =>
+                                    <p>{i.name}</p>
+                                )
+                            }
+                        </div>
+                    </div>
+
+
+              
+               
             </div>
+
+            
         )
     }
 }

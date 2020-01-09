@@ -417,6 +417,20 @@ footer {
         padding:2px;
     }
 
+#SaveLanguage {
+        width: 25%;
+        height: 25%;
+        display: block;
+        position: relative;
+        float:right;
+        box-shadow: 0px 2px 5px 0px grey;
+}
+#saveLanguage0{
+
+    width: 45%;
+    height: 10%;
+}
+
 #translatetext {
     width: 30%;
     height: 70%;
