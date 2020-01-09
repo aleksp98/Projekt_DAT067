@@ -13,6 +13,9 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Security.Cryptography;
+using OAuth;
+using Newtonsoft.Json.Linq;
 
 namespace API.Service
 {
@@ -117,9 +120,8 @@ namespace API.Service
             }
         }
 
-        public async Task<bool> getTwitterUserInfo(String token, String verifier)
+        public async Task<SocialUserItem> getTwitterUserInfo(String token, String verifier)
         {
-            Console.WriteLine("Token=" + token + ", Verifier=" + verifier);
             WebRequest access_request = WebRequest.Create("https://api.twitter.com/oauth/access_token?oauth_token=" + token +
                 "&oauth_verifier=" + verifier);
             access_request.Method = "GET";
@@ -128,30 +130,146 @@ namespace API.Service
             Stream access_receiveStream = access_response.GetResponseStream();
             StreamReader access_readStream = new StreamReader(access_receiveStream, Encoding.UTF8);
             String acces_response_body = access_readStream.ReadToEnd();
-            Console.WriteLine(acces_response_body);
             NameValueCollection parsed_response = HttpUtility.ParseQueryString(acces_response_body);
+
             String user_token = parsed_response["oauth_token"];
             String user_secret = parsed_response["oauth_token_secret"];
             String consumer_key = "nJrY5ioXoNAP27qfW32E3V5Gs";
             String consumer_secret = "T1CWdHZfeI2SwPyha0bKZGTzgu6ssElfKJ2OiYhiJoHt9xC0Pv";
-            Console.WriteLine(user_token);
-            Console.WriteLine(user_secret);
+            String timestamp = "" + (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+            String nonce2 = "IW0mgx";
+            String URL = "https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true";
+            string SigBaseString = "GET&";
+            string SigBaseStringParams = "oauth_consumer_key=" + consumer_key;
+            SigBaseStringParams += "&" + "oauth_signature_method=HMAC-SHA1";
+            SigBaseStringParams += "&" + "oauth_timestamp=" + timestamp;
+            SigBaseStringParams += "&" + "oauth_nonce=" + nonce2;
+            SigBaseStringParams += "&" + "oauth_version=1.0";
+            SigBaseString += Uri.EscapeDataString(URL) + "&" + Uri.EscapeDataString(SigBaseStringParams);
+            String oauth_signature = GetSignature(SigBaseString, consumer_secret);
 
-            WebRequest account_info_request = WebRequest.Create("https://api.twitter.com/1.1/account/verify_credentials.json");
+            OAuthBase oAuth = new OAuthBase();
+            string nonce = oAuth.GenerateNonce();
+            string timeStamp = oAuth.GenerateTimeStamp();
+            string normalizedUrl;
+            string normalizedParameters;
+            var uri = new Uri(URL);
+            string sig = oAuth.GenerateSignature(uri,
+                consumer_key, consumer_secret, 
+                user_token, user_secret,
+                "GET", timeStamp, nonce,
+                OAuthBase.SignatureTypes.HMACSHA1,
+                out normalizedUrl, out normalizedParameters);
+            sig = HttpUtility.UrlEncode(sig);
+
+            WebRequest account_info_request = WebRequest.Create("https://api.twitter.com/1.1/account/verify_credentials.json?include_email=true");
             account_info_request.Method = "GET";
-            //https://gist.github.com/anova/9674023786ab31df43c07fd9bd53bc39#file-twitter-cs-L25
-            string strBearerRequest = HttpUtility.UrlEncode(consumer_key) + ":" + HttpUtility.UrlEncode(consumer_secret);
-            strBearerRequest = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(strBearerRequest));
-            account_info_request.Headers.Add("Authorization", "Basic " + strBearerRequest);
-            account_info_request.Headers.Add("oauth_token", user_token);
-            account_info_request.Headers.Add("oauth_token_secret", user_secret);
+            String oauth = "OAuth oauth_consumer_key=" + consumer_key + ",oauth_token=" + user_token + ",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp=" + timeStamp + ",oauth_nonce=" + nonce + ",oauth_version=\"1.0\",oauth_signature=" + sig;
+            account_info_request.Headers.Add("Authorization", oauth);
             WebResponse account_info_response = account_info_request.GetResponse();
 
             Stream account_info_receiveStream = account_info_response.GetResponseStream();
             StreamReader account_info_readStream = new StreamReader(account_info_receiveStream, Encoding.UTF8);
             String account_info_response_body = account_info_readStream.ReadToEnd();
-            Console.WriteLine(account_info_response_body);
-            return true;
+
+            dynamic json = JObject.Parse(account_info_response_body);
+            string email = json.email;
+            string name = json.name;
+            string screen_name = json.screen_name;
+
+            SocialUserItem socialUsers = new SocialUserItem();
+            socialUsers.Social_platform = "twitter";
+            socialUsers.Social_id = user_token;
+            socialUsers.Email = email;
+            socialUsers.First_name = name;
+            socialUsers.Last_name = screen_name;
+
+            await SaveUser(socialUsers);
+            return socialUsers;
+        }
+
+        public async Task<SocialUserItem> getLinkedInUserInfo(String code)
+        {
+            String consumer_key = "86wtuouhirmnef";
+            String consumer_secret = "uUZ5A6IWIQTnGHvz";
+            
+            WebRequest access_request = WebRequest.Create("https://www.linkedin.com/oauth/v2/accessToken");
+            access_request.Method = "POST";
+            access_request.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
+            var uri = new Uri("http://localhost:3000/LinkedInAccount");
+            var postData = "grant_type=authorization_code";
+                postData += "&code=" + code;
+                postData += "&redirect_uri=" + uri;
+                postData += "&client_id=" + consumer_key;
+                postData += "&client_secret=" + consumer_secret;
+            var data = Encoding.ASCII.GetBytes(postData);
+            access_request.ContentLength = data.Length;
+
+            using (var stream = access_request.GetRequestStream())
+            {
+                stream.Write(data, 0, data.Length);
+            }
+
+            WebResponse access_response = access_request.GetResponse();
+
+            Stream access_receiveStream = access_response.GetResponseStream();
+            StreamReader access_readStream = new StreamReader(access_receiveStream, Encoding.UTF8);
+            String acces_response_body = access_readStream.ReadToEnd();
+            dynamic json = JObject.Parse(acces_response_body);
+            string user_token = json.access_token;
+            Console.WriteLine("test");
+            Console.WriteLine(user_token);
+            Console.WriteLine("test");
+
+            WebRequest account_email_request = WebRequest.Create("https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))");
+            account_email_request.Method = "GET";
+            account_email_request.Headers.Add("Authorization", "Bearer " + user_token);
+            WebResponse account_email_response = account_email_request.GetResponse();
+
+            Stream account_email_receiveStream = account_email_response.GetResponseStream();
+            StreamReader account_email_readStream = new StreamReader(account_email_receiveStream, Encoding.UTF8);
+            String account_email_response_body = account_email_readStream.ReadToEnd();
+            dynamic account_email = JObject.Parse(account_email_response_body);
+            Console.WriteLine(account_email);
+            string email = account_email.elements[0]["handle~"].emailAddress;
+            Console.WriteLine(email);
+
+            WebRequest account_info_request = WebRequest.Create("https://api.linkedin.com/v2/me");
+            account_info_request.Method = "GET";
+            account_info_request.Headers.Add("Authorization", "Bearer " + user_token);
+            WebResponse account_info_response = account_info_request.GetResponse();
+
+            Stream account_info_receiveStream = account_info_response.GetResponseStream();
+            StreamReader account_info_readStream = new StreamReader(account_info_receiveStream, Encoding.UTF8);
+            String account_info_response_body = account_info_readStream.ReadToEnd();
+            dynamic account_info = JObject.Parse(account_info_response_body);
+            Console.WriteLine(account_info);
+            string id = account_info.id;
+            string first_name = account_info["localizedFirstName"];
+            string last_name = account_info["localizedLastName"];
+            Console.WriteLine(id);
+            Console.WriteLine(first_name);
+            Console.WriteLine(last_name);
+            
+            SocialUserItem socialUsers = new SocialUserItem();
+            socialUsers.Social_platform = "linkedin";
+            socialUsers.Social_id = id;
+            socialUsers.Email = email;
+            socialUsers.First_name = first_name;
+            socialUsers.Last_name = last_name;
+
+            await SaveUser(socialUsers);
+            return socialUsers;
+        }
+
+        string GetSignature(string signatureString, string secretKey)
+        {
+            var enc = Encoding.ASCII;
+            HMACSHA1 hmac = new HMACSHA1(enc.GetBytes(secretKey));
+            hmac.Initialize();
+
+            byte[] buffer = enc.GetBytes(signatureString);
+            return BitConverter.ToString(hmac.ComputeHash(buffer)).Replace("-", "").ToLower();
         }
 
         public async Task<bool> CheckUser(SocialUserItem userItem)

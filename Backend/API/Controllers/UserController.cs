@@ -145,6 +145,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Route("SaveLinkedInUser/code={Code}")]
+        public async Task<IActionResult> SaveLinkedInUser(String Code)
+        {
+            return Ok(await _socialUserService.getLinkedInUserInfo(Code));
+        }
+
+        [HttpGet]
         [Route("SocialUser/social_id={Social_id}&social_platform={Social_platform}")]
         public async Task<IActionResult> User(String Social_id, String Social_platform)
         {
