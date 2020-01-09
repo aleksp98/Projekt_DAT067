@@ -830,7 +830,6 @@ class form extends React.Component {
                                     callbackUrl={"http://localhost:3000/TwitterAccount"}
                                     children={<img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />}
                                 />
-                                {/*<img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />*/}
                             </article>
 
                             <footer onClick={() => this.setState({ forgotpass: true })}>
@@ -951,14 +950,26 @@ class form extends React.Component {
                                     <img src={FacebookIcon} onClick={renderPropss.onClick} disabled={renderPropss.disabled} className="socialAuthentication" alt="Facebook social authentication" />
                                 )}
                             />
+                            <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
+                            <LinkedIn
+                                clientId="86wtuouhirmnef"
+                                onFailure={this.handleFailure}
+                                onSuccess={this.handleSuccess}
+                                redirectUri={"http://localhost:3000/LinkedInAccount"}
+                                scope="r_emailaddress r_liteprofile "
+                                renderElement={({ onClick, disabled }) => (
+                                    <img src={LinkdinIcon} onClick={onClick} className="socialAuthentication" alt="Linkdin social authentication" />
+                                )}
+                            >
+                            </LinkedIn>
                             <TwitterLogin
+                                style={{ width: '100%' }}
                                 authCallback={responseTwitter}
                                 consumerKey={"nJrY5ioXoNAP27qfW32E3V5Gs"}
                                 consumerSecret={"T1CWdHZfeI2SwPyha0bKZGTzgu6ssElfKJ2OiYhiJoHt9xC0Pv"}
                                 callbackUrl={"http://localhost:3000/TwitterAccount"}
+                                children={<img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />}
                             />
-                            <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
-                            <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
                         </form>
                     :
                         null
