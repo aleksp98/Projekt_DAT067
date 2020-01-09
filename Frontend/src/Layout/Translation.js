@@ -478,7 +478,7 @@ class translation extends React.Component {
                         <textarea type="text"
                             id="editText"
                             placeholder={this.state.resultR.languageText}
-                            value={this.state.resultR.languageText}
+                            defaultValue={this.state.resultR.languageText}
                             ref={input => this.box = input}
                             onChange={this.handleInputChange} />
                         <button onClick={this.editWord}>Edit</button>
