@@ -23,12 +23,15 @@ import { bool } from 'prop-types';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';     //'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 import TwitterLogin from 'react-twitter-login';
-import LinkedIn from "linkedin-login-for-react";
+// import LinkedIn from "linkedin-login-for-react";
+import { LinkedIn } from 'react-linkedin-login-oauth2';
 
 class form extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.myRef = React.createRef();
 
         this.recaptchaLoaded = this.recaptchaLoaded.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
@@ -46,7 +49,9 @@ class form extends React.Component {
             loginForm: true,
             registerForm: false,
             registerCompleted: false,
-            forgotpass: false
+            forgotpass: false,
+            code: '',
+            errorMessage: '',
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -68,7 +73,6 @@ class form extends React.Component {
         }
     }
     handleRegister(e) {
-
         if (!this.state.isVerified) {
             //Hindrar att formuläret submitas   JE
             this.setState({
@@ -93,6 +97,7 @@ class form extends React.Component {
     }
 
     submituserRegistrationForm(e) {
+        e.preventDefault()
         let _this = this;
         if (this.validateForm()) {
             let user = {};
@@ -124,9 +129,9 @@ class form extends React.Component {
              //lägga in om man inte kunde registrera
              //visa fel
              fetch(request).then(function (response) {
-                return response.text().then(function (text) {
-                    if (text === true) {
-
+                 return response.text().then(function (text) {
+                     console.log(text);
+                     if (text === "true") {
                         _this.setState({
                             fields: fields,
                             snackbaropen: true,
@@ -136,9 +141,8 @@ class form extends React.Component {
                             registerForm: false, 
                             registerCompleted: true
                         })
-
                     }//den går in i else när användaren är reggad ändå, antagligen för att den inte skickar mail från just denna datorn
-                    else {
+                     else {
                            _this.setState({
                            fields: fields,
                             snackbaropen: true,
@@ -407,6 +411,7 @@ class form extends React.Component {
 
         const responseTwitter = (err, data) => {
             console.log(err, data);
+            window.location.reload();
         }
 
         const callbackLinkedIn = (error, code, redirectUri) => {
@@ -603,12 +608,6 @@ class form extends React.Component {
                                 consumerKey={"nJrY5ioXoNAP27qfW32E3V5Gs"}
                                 consumerSecret={"T1CWdHZfeI2SwPyha0bKZGTzgu6ssElfKJ2OiYhiJoHt9xC0Pv"}
                                 callbackUrl={"http://localhost:3000/TwitterAccount"}
-                            />
-
-                            <LinkedIn
-                                clientId="86wtuouhirmnef"
-                                callback={callbackLinkedIn}
-                                text="Login With LinkedIn"
                             />
                                                   
                             <div>
@@ -812,7 +811,26 @@ class form extends React.Component {
                                     )}
                                 />
                                 <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
-                                <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />
+                                <LinkedIn
+                                    clientId="86wtuouhirmnef"
+                                    onFailure={this.handleFailure}
+                                    onSuccess={this.handleSuccess}
+                                    redirectUri={"http://localhost:3000/LinkedInAccount"}
+                                    scope="r_emailaddress r_liteprofile "
+                                    renderElement={({ onClick, disabled }) => (
+                                        <img src={LinkdinIcon} onClick={onClick} className="socialAuthentication" alt="Linkdin social authentication" />
+                                    )}
+                                >
+                                </LinkedIn>
+                                <TwitterLogin
+                                    style={{ width: '100%' }}
+                                    authCallback={responseTwitter}
+                                    consumerKey={"nJrY5ioXoNAP27qfW32E3V5Gs"}
+                                    consumerSecret={"T1CWdHZfeI2SwPyha0bKZGTzgu6ssElfKJ2OiYhiJoHt9xC0Pv"}
+                                    callbackUrl={"http://localhost:3000/TwitterAccount"}
+                                    children={<img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />}
+                                />
+                                {/*<img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />*/}
                             </article>
 
                             <footer onClick={() => this.setState({ forgotpass: true })}>
@@ -932,6 +950,12 @@ class form extends React.Component {
                                 render={renderPropss => (
                                     <img src={FacebookIcon} onClick={renderPropss.onClick} disabled={renderPropss.disabled} className="socialAuthentication" alt="Facebook social authentication" />
                                 )}
+                            />
+                            <TwitterLogin
+                                authCallback={responseTwitter}
+                                consumerKey={"nJrY5ioXoNAP27qfW32E3V5Gs"}
+                                consumerSecret={"T1CWdHZfeI2SwPyha0bKZGTzgu6ssElfKJ2OiYhiJoHt9xC0Pv"}
+                                callbackUrl={"http://localhost:3000/TwitterAccount"}
                             />
                             <img src={TwitterIcon} className="socialAuthentication" alt="Twitter social authentication" />
                             <img src={LinkdinIcon} className="socialAuthentication" alt="Linkdin social authentication" />

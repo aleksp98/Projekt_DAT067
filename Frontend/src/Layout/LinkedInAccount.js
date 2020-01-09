@@ -3,14 +3,13 @@ import { Link } from 'react-router-dom';
 import qs from 'query-string';
 import * as Cookies from "js-cookie";
 
-export default class Twitter_account extends React.Component  {
+export default class LinkedInAccount extends React.Component  {
     handleTwitterAnswer() {
         console.log(this.props);
-        let token = require('query-string').parse(this.props.location.search).oauth_token;
-        let verifier = require('query-string').parse(this.props.location.search).oauth_verifier;
-        const url = 'https://localhost:5001/api/User/SaveTwitterUser/' +
-            'oauth_token=' + token +
-            '&oauth_verifier=' + verifier;
+        let code = require('query-string').parse(this.props.location.search).code;
+        console.log(code);
+        const url = 'https://localhost:5001/api/User/SaveLinkedInUser/' +
+            'code=' + code;
         const headers = new Headers();
         const requestOptions = {
             method: 'GET',
@@ -20,6 +19,7 @@ export default class Twitter_account extends React.Component  {
 
         fetch(request).then(function (response) {
             return response.text().then(function (text) {
+                console.log(text);
                 let user = JSON.parse(text);
                 console.log(user);
                 console.log(user.email);
@@ -29,7 +29,6 @@ export default class Twitter_account extends React.Component  {
                 window.close();
             });
         });
-        
 
         /*const url = 'https://api.twitter.com/1.1/account/verify_credentials.json';
         const headers = new Headers();

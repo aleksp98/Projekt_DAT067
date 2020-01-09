@@ -21,6 +21,7 @@ import loginPage from './Layout/loginPage';
 import Translation from './Layout/Translation';
 import Account from './Layout/Account';
 import TwitterAccount from './Layout/TwitterAccount';
+import LinkedInAccount from './Layout/LinkedInAccount';
 
 import Cookies from 'js-cookie';
 import Confirmation from './Layout/Confirmation';
@@ -112,6 +113,7 @@ class App extends Component {
                     <Route path="/loginPage" exact strict component={loginPage} />    
 
                     <Route path="/TwitterAccount" exact strict component={TwitterAccount} />    
+                    <Route path="/LinkedInAccount" exact strict component={LinkedInAccount} />    
                     
                     <section>
 

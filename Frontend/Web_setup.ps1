@@ -8,4 +8,5 @@ npm install react-facebook-login
 npm install react-google-login
 npm install react-twitter-login
 npm install linkedin-login-for-react
+npm install --save react-linkedin-login-oauth2
 npm install query-string
