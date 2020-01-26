@@ -7,6 +7,7 @@ Makalunga - Johan Blom\
 Orgardj - Jonathan Örgård\
 jonte134 - Jonathan Edfeldt\
 davherm - David Hermansson\
+Sam-1998 - Sam Sohrabpour\
 Feel free to add more names so we know who everyone is on git :)
 
 
